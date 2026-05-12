@@ -1,0 +1,44 @@
+{
+  "name": "langfuse-parent-support-workshop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:client": "vite --host 127.0.0.1",
+    "dev:server": "tsx watch src/server/index.ts",
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "vite build",
+    "build:server": "tsup src/server/index.ts --format esm --out-dir dist/server --clean",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/server/index.js",
+    "prompt:publish": "tsx scripts/publish-prompt.ts",
+    "dataset:seed": "tsx scripts/seed-dataset.ts",
+    "dataset:run": "tsx scripts/run-dataset.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "latest",
+    "@langfuse/client": "latest",
+    "@langfuse/otel": "latest",
+    "@langfuse/tracing": "latest",
+    "@opentelemetry/sdk-node": "latest",
+    "dotenv": "latest",
+    "express": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/express": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "concurrently": "latest",
+    "tsx": "latest",
+    "tsup": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  }
+}
+

@@ -1,22 +1,35 @@
 # Langfuse Parent Support Workshop
 
-This repository is being built as a workshop repo around one concrete sample application: a parent-support agent for everyday device questions.
+This repository is a compact TypeScript workshop app built around one concrete sample application: a parent-support agent for everyday device questions.
 
-The workshop goal is to teach the Langfuse AI engineering loop end to end:
+The app at this checkpoint is intentionally small:
 
-- tracing
-- prompt management
-- monitoring
-- datasets
-- experiments
-- iteration
+- `React + Vite` for a minimal but memorable web chat
+- `Express + TypeScript` for the server-side agent loop
+- `Anthropic` as the model provider
+- local tools and profile context so the app already feels practical
 
-The first step is setup.
+## Workshop goals
 
-## Start here
+- Make the sample app concrete before introducing Langfuse.
+- Keep the runtime small enough that every later step stays easy to explain.
+- Build toward tracing, prompt management, monitoring, datasets, experiments, and iteration.
 
-- [00 Setup](./docs/00-setup.md)
+## Quickstart
 
-## Current status
+1. Copy `.env.example` to `.env`.
+2. Add `ANTHROPIC_API_KEY`.
+3. Install dependencies with `npm install`.
+4. Run `npm run dev`.
+5. Open [http://127.0.0.1:3333](http://127.0.0.1:3333).
 
-This initial checkpoint focuses on account setup, API keys, and workshop prerequisites so the live session can move quickly once the sample app is introduced.
+## Workshop map
+
+- [Setup](./docs/00-setup.md)
+- [Base App](./docs/01-base-app.md)
+
+## Repo layout
+
+- `src/client`: the web chat UI
+- `src/server`: the agent loop, tools, prompt loading, and server routes
+- `docs`: workshop narration for each milestone
