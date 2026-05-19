@@ -12,26 +12,25 @@ export type GuideArticle = {
 export const DEFAULT_SUPPORT_CONTEXT: SupportContext = {
   id: "dad-default",
   label: "Dad",
-  relationship: "Dad's everyday setup for calls, photos, travel, printing, and small laptop tasks.",
-  devices: ["iPhone 15", "Windows 11 laptop", "HP wireless printer"],
+  relationship: "Dad's everyday iPhone setup for calls, photos, travel, and small phone tasks.",
+  devices: ["iPhone 15"],
   deviceSummary:
-    "Dad mostly uses WhatsApp, Photos, Apple Maps, Chrome, Outlook, and the HP printer. He likes exact button names and calm reassurance before clicking.",
+    "Dad mostly uses WhatsApp, Photos, Apple Maps, and Safari on his iPhone. He likes exact button names and calm reassurance before tapping.",
   responseStyle:
     "Talk directly to Dad in second person. Keep the tone calm, practical, and concrete with short numbered steps.",
-  notableApps: ["WhatsApp", "Photos", "Apple Maps", "Chrome", "Outlook", "HP Smart"],
+  notableApps: ["WhatsApp", "Photos", "Apple Maps", "Safari", "Messages"],
   scopeHighlights: [
     "iPhone settings basics",
     "Photos and sharing",
     "Bluetooth and Wi-Fi",
     "Maps basics",
-    "Printing and PDF basics",
-    "Simple Windows troubleshooting"
+    "Messaging basics"
   ],
   starterQuestions: [
     "How do I turn Bluetooth on on my iPhone?",
     "How do I take a photo and send it on WhatsApp?",
-    "How do I reconnect the laptop to Wi-Fi?",
-    "How do I print a PDF?"
+    "How do I reconnect my iPhone to Wi-Fi?",
+    "How do I find directions to a bus stop in Maps?"
   ]
 };
 
@@ -88,52 +87,27 @@ export const GUIDE_LIBRARY: GuideArticle[] = [
     caution: "The workshop demo can explain the taps, but it cannot see Dad's live location."
   },
   {
-    id: "windows-print-pdf",
-    title: "Print a PDF from Dad's Windows laptop",
-    searchableTerms: ["print", "pdf", "printer", "hp", "document", "windows"],
-    summary: "Print a PDF with exact button-by-button guidance.",
+    id: "iphone-photo-preview",
+    title: "Open the photo you just took on the iPhone",
+    searchableTerms: ["photo", "preview", "thumbnail", "open", "iphone", "camera"],
+    summary: "Quickly review the photo you just captured.",
     steps: [
-      "Open the PDF.",
-      "Press Control and P together, or click the Print icon.",
-      "Choose the HP printer from the printer list.",
-      "Click Print."
-    ],
-    caution: "If the wrong printer is selected, the document can quietly print somewhere else."
-  },
-  {
-    id: "windows-wifi",
-    title: "Reconnect Dad's Windows 11 laptop to Wi-Fi",
-    searchableTerms: ["wifi", "wi-fi", "internet", "network", "router", "windows", "laptop"],
-    summary: "Reconnect to Wi-Fi from the Windows taskbar.",
-    steps: [
-      "Click the network icon in the bottom-right corner of the taskbar.",
-      "Make sure Wi-Fi is turned on.",
-      "Choose the home network from the list.",
-      "Click Connect and enter the password if asked."
+      "Stay in the Camera app right after taking the photo.",
+      "Tap the small thumbnail in the bottom-left corner.",
+      "Swipe left or right to see other recent photos.",
+      "Tap Done to return to the camera when you are finished."
     ]
   },
   {
-    id: "windows-bluetooth",
-    title: "Pair Bluetooth headphones on Windows 11",
-    searchableTerms: ["bluetooth", "headphones", "earbuds", "pair", "audio", "windows"],
-    summary: "Pair a Bluetooth device from Windows settings.",
+    id: "iphone-messages-send",
+    title: "Send a text message from the iPhone",
+    searchableTerms: ["message", "messages", "text", "imessage", "send", "iphone"],
+    summary: "Send a text from the Messages app.",
     steps: [
-      "Open Settings and click Bluetooth and devices.",
-      "Turn Bluetooth on if it is off.",
-      "Click Add device, then choose Bluetooth.",
-      "Select the headphones when they appear."
-    ]
-  },
-  {
-    id: "windows-downloads",
-    title: "Find a downloaded file on the laptop",
-    searchableTerms: ["downloads", "file", "pdf", "save", "document", "windows", "laptop"],
-    summary: "Locate downloaded files through File Explorer.",
-    steps: [
-      "Open File Explorer.",
-      "Click Downloads in the left sidebar.",
-      "Look for the newest file near the top if the list is sorted by date.",
-      "Double-click the file to open it."
+      "Open the Messages app.",
+      "Tap the new message button in the top-right corner.",
+      "Type the contact name or phone number in the To field.",
+      "Tap the message area, type the message, then tap the blue send arrow."
     ]
   }
 ];

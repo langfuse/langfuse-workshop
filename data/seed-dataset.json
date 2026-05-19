@@ -46,50 +46,6 @@
   {
     "id": "dad-005",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I print a PDF from the laptop?" }]
-    },
-    "expectedOutput": {
-      "idealAnswer": "Open the PDF, press Control and P, choose the HP printer, and click Print.",
-      "expectedKeywords": ["Control", "P", "HP", "Print"]
-    },
-    "metadata": { "category": "windows-print", "difficulty": "easy" }
-  },
-  {
-    "id": "dad-006",
-    "input": {
-      "messages": [{ "role": "user", "content": "How do I reconnect the laptop to the home Wi-Fi?" }]
-    },
-    "expectedOutput": {
-      "idealAnswer": "Click the network icon, turn Wi-Fi on if needed, choose the network, and connect.",
-      "expectedKeywords": ["network icon", "Wi-Fi", "Connect", "password"]
-    },
-    "metadata": { "category": "windows-wifi", "difficulty": "easy" }
-  },
-  {
-    "id": "dad-007",
-    "input": {
-      "messages": [{ "role": "user", "content": "How do I pair Bluetooth headphones on the Windows laptop?" }]
-    },
-    "expectedOutput": {
-      "idealAnswer": "Open Settings, go to Bluetooth and devices, add a device, and pick the headphones.",
-      "expectedKeywords": ["Settings", "Bluetooth and devices", "Add device", "headphones"]
-    },
-    "metadata": { "category": "windows-bluetooth", "difficulty": "medium" }
-  },
-  {
-    "id": "dad-008",
-    "input": {
-      "messages": [{ "role": "user", "content": "Where do I find the file I just downloaded?" }]
-    },
-    "expectedOutput": {
-      "idealAnswer": "Open File Explorer, click Downloads, and look for the newest file.",
-      "expectedKeywords": ["File Explorer", "Downloads", "newest"]
-    },
-    "metadata": { "category": "windows-downloads", "difficulty": "easy" }
-  },
-  {
-    "id": "dad-009",
-    "input": {
       "messages": [{ "role": "user", "content": "My Bluetooth is already on but the earbuds are not showing up." }]
     },
     "expectedOutput": {
@@ -99,7 +55,7 @@
     "metadata": { "category": "iphone-bluetooth", "difficulty": "medium" }
   },
   {
-    "id": "dad-010",
+    "id": "dad-006",
     "input": {
       "messages": [{ "role": "user", "content": "I do not see the home Wi-Fi name on my phone." }]
     },
@@ -110,18 +66,7 @@
     "metadata": { "category": "iphone-wifi", "difficulty": "medium" }
   },
   {
-    "id": "dad-011",
-    "input": {
-      "messages": [{ "role": "user", "content": "How do I choose the HP printer before I print?" }]
-    },
-    "expectedOutput": {
-      "idealAnswer": "Open the print dialog and choose the HP printer from the printer list before clicking Print.",
-      "expectedKeywords": ["HP", "printer list", "Print"]
-    },
-    "metadata": { "category": "windows-print", "difficulty": "easy" }
-  },
-  {
-    "id": "dad-012",
+    "id": "dad-007",
     "input": {
       "messages": [{ "role": "user", "content": "How do I open the photo I just took?" }]
     },
@@ -132,29 +77,7 @@
     "metadata": { "category": "iphone-photo", "difficulty": "easy" }
   },
   {
-    "id": "dad-013",
-    "input": {
-      "messages": [{ "role": "user", "content": "How do I turn Wi-Fi on from the taskbar?" }]
-    },
-    "expectedOutput": {
-      "idealAnswer": "Tell Dad to click the network icon in the bottom-right corner and turn Wi-Fi on there.",
-      "expectedKeywords": ["network icon", "bottom-right", "Wi-Fi"]
-    },
-    "metadata": { "category": "windows-wifi", "difficulty": "easy" }
-  },
-  {
-    "id": "dad-014",
-    "input": {
-      "messages": [{ "role": "user", "content": "How do I add a Bluetooth device on the laptop?" }]
-    },
-    "expectedOutput": {
-      "idealAnswer": "Open Settings, go to Bluetooth and devices, click Add device, then choose Bluetooth.",
-      "expectedKeywords": ["Settings", "Bluetooth and devices", "Add device", "Bluetooth"]
-    },
-    "metadata": { "category": "windows-bluetooth", "difficulty": "easy" }
-  },
-  {
-    "id": "dad-015",
+    "id": "dad-008",
     "input": {
       "messages": [{ "role": "user", "content": "Can you see my live location and tell me which bus stop is closest?" }]
     },
@@ -165,18 +88,18 @@
     "metadata": { "category": "maps", "difficulty": "medium" }
   },
   {
-    "id": "dad-016",
+    "id": "dad-009",
     "input": {
       "messages": [{ "role": "user", "content": "Can you file my taxes for me?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Politely refuse because it is out of scope and redirect to device-support help.",
-      "expectedKeywords": ["out of scope", "help", "device"]
+      "idealAnswer": "Politely refuse because it is out of scope and redirect to phone-support help.",
+      "expectedKeywords": ["out of scope", "help", "phone"]
     },
     "metadata": { "category": "out-of-scope", "difficulty": "easy" }
   },
   {
-    "id": "dad-017",
+    "id": "dad-010",
     "input": {
       "messages": [{ "role": "user", "content": "What is my Wi-Fi password?" }]
     },
@@ -187,7 +110,7 @@
     "metadata": { "category": "limits", "difficulty": "easy" }
   },
   {
-    "id": "dad-018",
+    "id": "dad-011",
     "input": {
       "messages": [{ "role": "user", "content": "How do I search for the bus stop in Maps?" }]
     },
@@ -198,7 +121,7 @@
     "metadata": { "category": "maps", "difficulty": "easy" }
   },
   {
-    "id": "dad-019",
+    "id": "dad-012",
     "input": {
       "messages": [{ "role": "user", "content": "How do I send the photo after I pick it in WhatsApp?" }]
     },
@@ -209,13 +132,24 @@
     "metadata": { "category": "iphone-photo", "difficulty": "easy" }
   },
   {
-    "id": "dad-020",
+    "id": "dad-013",
+    "input": {
+      "messages": [{ "role": "user", "content": "How do I send a text message from my iPhone?" }]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Open Messages, start a new message, enter the contact, type the text, and tap the blue send arrow.",
+      "expectedKeywords": ["Messages", "new message", "send", "contact"]
+    },
+    "metadata": { "category": "iphone-messages", "difficulty": "easy" }
+  },
+  {
+    "id": "dad-014",
     "input": {
       "messages": [{ "role": "user", "content": "Book my train ticket to Munich for tomorrow." }]
     },
     "expectedOutput": {
-      "idealAnswer": "Say that booking travel is outside the support scope and redirect to device help the assistant can provide.",
-      "expectedKeywords": ["outside", "scope", "device help"]
+      "idealAnswer": "Say that booking travel is outside the support scope and redirect to phone help the assistant can provide.",
+      "expectedKeywords": ["outside", "scope", "phone help"]
     },
     "metadata": { "category": "out-of-scope", "difficulty": "easy" }
   }

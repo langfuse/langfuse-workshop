@@ -35,7 +35,7 @@ function createMessage(role: ChatMessage["role"], content: string): ChatMessage 
 function createGreeting() {
   return createMessage(
     "assistant",
-    "Hi Dad, I’m here to help with your iPhone, laptop, printer, Wi-Fi, Bluetooth, photos, maps, and other small tech tasks. Ask me one practical question and I’ll walk you through it."
+    "Hi Dad, I’m here to help with your iPhone — Wi-Fi, Bluetooth, photos, maps, messages, and other small phone tasks. Ask me one practical question and I’ll walk you through it."
   );
 }
 
@@ -160,17 +160,18 @@ export function App() {
           <p className="eyebrow">Langfuse workshop sample app</p>
           <h1>Dad IT Support Agent</h1>
           <p className="hero-copy">
-            A small, memorable web chat for practical device help. It is built
+            A small, memorable web chat for practical iPhone help. It is built
             to be easy to trace, easy to monitor, and easy to improve over time.
           </p>
 
           <div className="scope-ribbon">
             <span>In scope</span>
+            <span>iPhone</span>
             <span>Bluetooth</span>
             <span>Wi-Fi</span>
             <span>Photos</span>
             <span>Maps</span>
-            <span>Printing</span>
+            <span>Messages</span>
           </div>
 
           <div className="status-panel">
@@ -187,7 +188,7 @@ export function App() {
           <aside className="context-panel">
             <div className="panel-header">
               <p className="eyebrow">Known setup</p>
-              <h2>Dad&apos;s devices</h2>
+              <h2>Dad&apos;s iPhone</h2>
             </div>
 
             {supportContext ? (
@@ -199,7 +200,7 @@ export function App() {
                 </div>
 
                 <div className="detail-block">
-                  <strong>Devices</strong>
+                  <strong>Device</strong>
                   <div className="pill-row">
                     {supportContext.devices.map((device) => (
                       <span key={device} className="pill">
@@ -306,7 +307,7 @@ export function App() {
                 rows={4}
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
-                placeholder="How do I reconnect the laptop to Wi-Fi?"
+                placeholder="How do I reconnect my iPhone to Wi-Fi?"
               />
 
               <div className="composer-row">

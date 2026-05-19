@@ -2,125 +2,104 @@
 
 ## Starting point
 
-Start from `checkpoint/01-base-app`. You now have a working OpenAI-based Dad IT Support Agent, but the app is still a black box.
+```bash
+git checkout checkpoint/01-base-app
+```
+
+The Langfuse packages are already in `package.json` — run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse keys.
 
 ## Goal
 
-Manually add Langfuse tracing so one chat turn becomes a rich nested trace with:
+In two passes:
 
-- one root agent observation
-- one OpenAI generation
-- tool observations
-- deliberate root input and output
+1. **Logging the first trace** — every OpenAI call shows up in Langfuse.
+2. **Richer trace structure** — one chat turn becomes a nested trace with an agent root, the OpenAI generation, and the two tool calls.
 
-## Exact changes by file
+User/session attribution and tags come in `04-monitoring`.
 
-### `src/server/instrumentation.ts`
-
-Add the OpenTelemetry and Langfuse initialization layer.
-
-1. Import:
-   - `NodeSDK` from `@opentelemetry/sdk-node`
-   - `LangfuseSpanProcessor` from `@langfuse/otel`
-2. Create module-level variables for:
-   - `sdk`
-   - `langfuseSpanProcessor`
-3. Implement `ensureTracingInitialized()`:
-   - return early if Langfuse keys are not configured
-   - build the `LangfuseSpanProcessor`
-   - start the `NodeSDK`
-4. Export:
-   - `ensureTracingInitialized()`
-   - `flushTracing()`
-   - `shutdownTracing()`
-
-The finished file should be the one place that starts and stops Langfuse tracing.
+## Logging the first trace
 
 ### `src/server/index.ts`
 
-Make the server actually initialize tracing.
+Start the Langfuse span processor near the top of the file:
 
-1. Import:
-   - `ensureTracingInitialized`
-   - `shutdownTracing`
-2. Call `ensureTracingInitialized()` near the top of the file so traces are enabled before requests are handled.
-3. In the shutdown path, call `shutdownTracing()`.
-4. Keep `/api/health` returning `tracingConfigured`.
+```ts
+import { NodeSDK } from "@opentelemetry/sdk-node";
+import { LangfuseSpanProcessor } from "@langfuse/otel";
 
-The finished file should boot tracing automatically when Langfuse keys are present.
+new NodeSDK({ spanProcessors: [new LangfuseSpanProcessor()] }).start();
+```
 
-### `src/server/tools.ts`
-
-Wrap the tool work in Langfuse observations.
-
-1. Import `observe` from `@langfuse/tracing`.
-2. Keep `TOOL_DEFINITIONS` as they were.
-3. Instead of putting all the logic directly inside `executeTool(...)`, create observed helper functions:
-   - one for `get_support_context`
-   - one for `search_help_library`
-4. Wrap those helpers with:
-   - `name: "get_support_context"` and `asType: "tool"`
-   - `name: "search_help_library"` and `asType: "tool"`
-5. Make `executeTool(...)` delegate to those observed helpers.
-
-The finished file should create one child tool observation every time the model calls a tool.
+The processor reads `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, and `LANGFUSE_BASE_URL` from the environment.
 
 ### `src/server/support-agent.ts`
 
-This is the main tracing step.
+Wrap the OpenAI client:
 
-1. Import:
-   - `observeOpenAI` from `@langfuse/openai`
-   - `observe`, `propagateAttributes`, and `updateActiveObservation` from `@langfuse/tracing`
-2. Keep the plain OpenAI logic from step 1, but move it inside an observed wrapper.
-3. Add a helper that builds the trace-facing `messages` array:
-   - prepend the system prompt
-   - then append the conversation messages
-4. Wrap the top-level chat-turn function with `observe(...)` using:
-   - `name: "dad-it-support-chat-turn"`
-   - `asType: "agent"`
-   - `captureInput: false`
-   - `captureOutput: false`
-5. Inside that observed function:
-   - call `propagateAttributes(...)`
-   - set `userId`
-   - set `sessionId`
-   - set `traceName`
-   - set workshop tags and metadata
-6. Before the model call, use `updateActiveObservation(...)` to set the root input.
-7. Make the root input contain:
-   - `messages`
-   - `promptSource`
-   - `supportContext`
-8. Wrap the OpenAI client with `observeOpenAI(...)`.
-9. Give the wrapped generation a clear name such as `openai-chat-completion`.
-10. After the final answer is produced, use `updateActiveObservation(...)` again to set the root output.
-11. Make the root output contain:
-    - `answer`
-    - `promptSource`
-    - `usedTools`
-    - `model`
+```ts
+import { observeOpenAI } from "@langfuse/openai";
 
-The finished file should still answer questions exactly as before, but now it should produce a well-structured trace.
+const openai = observeOpenAI(new OpenAI({ apiKey: env.openaiApiKey }));
+```
 
-## What the finished trace should look like
+Use `openai.chat.completions.create(...)` as before.
 
-- Root observation:
-  - name `dad-it-support-chat-turn`
-  - type `agent`
-- Child generation:
-  - OpenAI completion from `observeOpenAI(...)`
-- Child tools:
-  - `get_support_context`
-  - `search_help_library`
+**Verify:** `npm run dev`, ask one question in the UI, refresh Langfuse — you should see one generation with prompt, response, tokens, and latency.
+
+## Richer trace structure
+
+### `src/server/support-agent.ts`
+
+Wrap the chat-turn function with `observe(...)` so each turn becomes one root observation:
+
+```ts
+import { observe } from "@langfuse/tracing";
+
+const observedRunSupportConversation = observe(
+  async (request: ChatRequest): Promise<ChatResponse> => {
+    // existing logic, including observeOpenAI(...)
+  },
+  { name: "dad-it-support-chat-turn", asType: "agent" }
+);
+
+export async function runSupportConversation(request: ChatRequest) {
+  return observedRunSupportConversation(request);
+}
+```
+
+`observe(...)` auto-captures the function argument as the trace input and the return value as the trace output.
+
+### `src/server/tools.ts`
+
+Wrap each tool body so tool calls become their own spans:
+
+```ts
+import { observe } from "@langfuse/tracing";
+
+const getSupportContextTool = observe(
+  async () => { /* existing body */ },
+  { name: "get_support_context", asType: "tool" }
+);
+
+const searchHelpLibraryTool = observe(
+  async (input: { question: string }) => { /* existing body */ },
+  { name: "search_help_library", asType: "tool" }
+);
+```
+
+Make `executeTool(...)` delegate to those wrapped functions.
+
+## Where the bootstrap lives in this repo
+
+`src/server/instrumentation.ts` already wraps the inline `NodeSDK.start()` snippet from above with two helpers, `ensureTracingInitialized()` (no-op when keys are missing) and `shutdownTracing()` (flushes spans on exit), and `index.ts` calls those instead of inlining. You do not need to edit either file — read `instrumentation.ts` once and move on.
 
 ## How to verify you are done
 
 - A single user turn creates a trace in Langfuse.
-- The trace shows the root agent observation, generation, and tool calls.
-- The root input contains the full `messages` array.
-- The root output contains `answer`.
-- Tool calls appear as children, not as unstructured logs.
+- Root observation: `dad-it-support-chat-turn` (type `agent`).
+- Child generation from `observeOpenAI(...)` with prompt, response, tokens, latency.
+- Child tool observations: `get_support_context`, `search_help_library`.
+- Root input is the chat request; root output is the chat response.
 
 ## End state
 

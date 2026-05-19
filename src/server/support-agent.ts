@@ -1,10 +1,6 @@
 import OpenAI from "openai";
 import { observeOpenAI } from "@langfuse/openai";
-import {
-  observe,
-  propagateAttributes,
-  updateActiveObservation
-} from "@langfuse/tracing";
+import { observe, propagateAttributes } from "@langfuse/tracing";
 import type { ChatMessage, ChatRequest, ChatResponse } from "../shared/types";
 import { env } from "./env";
 import { resolveSupportPrompt } from "./prompt-manager";
@@ -28,19 +24,6 @@ function toOpenAIMessages(
     role: message.role,
     content: message.content
   }));
-}
-
-function buildTraceMessages(systemPrompt: string, messages: ChatMessage[]) {
-  return [
-    {
-      role: "system",
-      content: systemPrompt
-    },
-    ...messages.map((message) => ({
-      role: message.role,
-      content: message.content
-    }))
-  ];
 }
 
 function readAssistantText(message: OpenAI.Chat.Completions.ChatCompletionMessage) {
@@ -70,7 +53,6 @@ const observedRunSupportConversation = observe(
     const context = getSupportContext();
     const prompt = await resolveSupportPrompt(context);
     const userId = request.userId ?? `workshop-${context.id}`;
-    const traceMessages = buildTraceMessages(prompt.promptText, request.messages);
 
     return propagateAttributes(
       {
@@ -85,19 +67,6 @@ const observedRunSupportConversation = observe(
         }
       },
       async () => {
-        updateActiveObservation({
-          input: {
-            messages: traceMessages,
-            promptSource: prompt.promptSource,
-            supportContext: {
-              id: context.id,
-              label: context.label,
-              devices: context.devices,
-              scopeHighlights: context.scopeHighlights
-            }
-          }
-        });
-
         const openai = observeOpenAI(getRawOpenAIClient(), {
           generationName: "openai-chat-completion",
           userId,
@@ -175,15 +144,6 @@ const observedRunSupportConversation = observe(
             "I ran out of room before finishing that answer. Please ask the question once more in a slightly shorter way.";
         }
 
-        updateActiveObservation({
-          output: {
-            answer: finalAnswer,
-            promptSource: prompt.promptSource,
-            usedTools: [...usedTools],
-            model: env.openaiModel
-          }
-        });
-
         return {
           answer: finalAnswer,
           promptSource: prompt.promptSource,
@@ -199,9 +159,7 @@ const observedRunSupportConversation = observe(
   },
   {
     name: "dad-it-support-chat-turn",
-    asType: "agent",
-    captureInput: false,
-    captureOutput: false
+    asType: "agent"
   }
 );
 

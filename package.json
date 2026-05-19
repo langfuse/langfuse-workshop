@@ -21,7 +21,7 @@
     "@langfuse/openai": "latest",
     "@langfuse/otel": "latest",
     "@langfuse/tracing": "latest",
-    "@opentelemetry/sdk-node": "latest",
+    "@opentelemetry/sdk-node": "^0.218.0",
     "dotenv": "latest",
     "express": "latest",
     "openai": "latest",
@@ -38,8 +38,8 @@
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "latest",
     "concurrently": "latest",
-    "tsx": "latest",
     "tsup": "latest",
+    "tsx": "latest",
     "typescript": "latest",
     "vite": "latest"
   }
