@@ -15,9 +15,7 @@ Two passes that mirror what monitoring needs:
 1. **Attribute the trace** — add `userId`, `sessionId`, tags, metadata via `propagateAttributes(...)`.
 2. **Wire the first two monitors** in the Langfuse UI: out-of-scope requests and user disagreement.
 
-<!-- TODO: insert the agent + tools diagram with userId / sessionId / tags labelled on the root observation. -->
-
-*[Diagram placeholder: same agent + tools picture, with attribution labels on the root.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 ## Step 1 — Attribute the trace
 

@@ -10,9 +10,7 @@ The shape of each item matters: we keep the dataset input as close to the agent'
 
 Seed a hosted Langfuse dataset that covers the realistic scope and failure modes of the Dad IT Support Agent.
 
-<!-- TODO: insert the agent + tools diagram with a "dataset" badge pointing into the trace tree — same picture as the intro. -->
-
-*[Diagram placeholder: agent + tools, with a dataset node feeding the agent input.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./images/specs_illustration.png)
 
 ## Starting point
 

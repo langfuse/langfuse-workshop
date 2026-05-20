@@ -13,9 +13,7 @@ By the end of this step:
 1. Every chat turn in Langfuse carries `userId`, `sessionId`, and workshop tags so we can filter and group it.
 2. At least one observation-level evaluator is wired up against the agent's root span (`dad-it-support-chat-turn`), watching for out-of-scope requests and user disagreement.
 
-<!-- TODO: insert the agent + tools diagram, with the trace now annotated with userId / sessionId / tags. -->
-
-*[Diagram placeholder: same agent + tools picture, with `userId`, `sessionId`, and tags labelled on the root observation.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./images/specs_illustration.png)
 
 ## Starting point
 

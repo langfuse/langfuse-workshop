@@ -24,9 +24,7 @@ Three steps that match the three things prompt management does:
 2. **Resolve from Langfuse at request time** — read the prompt from Langfuse with a local fallback.
 3. **Link generations to the prompt version** — so every trace points back at the prompt that produced it.
 
-<!-- TODO: insert the agent + tools diagram with the prompt path highlighted -->
-
-*[Diagram placeholder: agent + tools with the prompt arrow flowing from Langfuse.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 ## Step 1 — Publish the prompt
 

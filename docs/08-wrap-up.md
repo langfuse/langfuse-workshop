@@ -13,9 +13,7 @@ The wrap-up is where the workshop shifts from *"we built a demo"* to *"we learne
 - How to run experiments on the same agent code with no parallel implementation.
 - How to compare runs after a prompt change and decide what's better — by score and by reading individual outputs.
 
-<!-- TODO: insert the full agent + tools diagram, the same one used in the intro and earlier steps. -->
-
-*[Diagram placeholder: the full agent + tools + Langfuse picture, summarising what we built.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./images/specs_illustration.png)
 
 ## Bigger picture
 

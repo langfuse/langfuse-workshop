@@ -10,9 +10,7 @@ The dataset we seeded in step 05 becomes the input. The same `runSupportConversa
 
 By the end of this step you can run the full dataset against the agent on demand, attach a simple `keyword_overlap` score to every item, and look at the run summary in Langfuse — including item-level traces.
 
-<!-- TODO: insert the agent + tools diagram with the dataset → agent → trace flow highlighted. -->
-
-*[Diagram placeholder: dataset items feeding into the agent, traces fanning out into a run summary.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./images/specs_illustration.png)
 
 ## Starting point
 

@@ -15,9 +15,7 @@ Two passes:
 1. **Understand the run script** — same `runSupportConversation(...)` the web app calls, but driven by dataset items.
 2. **Run the dataset** and inspect the resulting run + scores in Langfuse.
 
-<!-- TODO: insert the agent + tools diagram with dataset → agent → run summary flow. -->
-
-*[Diagram placeholder: dataset items → agent → run summary.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 ## Step 1 — Understand the run script
 

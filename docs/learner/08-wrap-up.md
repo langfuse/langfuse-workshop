@@ -17,9 +17,7 @@ You have walked through every loop step.
 - Run experiments on the same agent code with no parallel implementation.
 - Compare runs after a prompt change and decide what's better — by score and by reading individual outputs.
 
-<!-- TODO: insert the full agent + tools + Langfuse diagram summarising the loop. -->
-
-*[Diagram placeholder: the full agent + tools + Langfuse picture, summarising what we built.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 ## Bigger picture
 

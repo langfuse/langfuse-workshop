@@ -8,9 +8,7 @@ Prompt management is not a separate product from tracing. It becomes useful beca
 
 By the end of this step, the running app loads its system prompt from Langfuse instead of from the code. If Langfuse is unreachable or the prompt is missing, the app silently falls back to the local copy so the dev loop never breaks.
 
-<!-- TODO: insert the agent + tools diagram with the prompt path highlighted (Langfuse → app), reused from the intro section. -->
-
-*[Diagram placeholder: same Dad / Specs / tools picture as in the intro, with the prompt arrow flowing from Langfuse into the agent.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./images/specs_illustration.png)
 
 ## Starting point
 

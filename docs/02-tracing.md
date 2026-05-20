@@ -8,9 +8,7 @@ This is the first real Langfuse moment. We take a working but opaque app and tur
 
 By the end of this step, one chat turn shows up in Langfuse as a nested trace that captures every part of the agent: the OpenAI generation, the tool calls, and the agent run that ties them together.
 
-<!-- TODO: insert the agent + tools diagram here. Same graphic that appears in the intro section so learners see the same mental model in both places. -->
-
-*[Diagram placeholder: the Dad IT Support Agent in the center, calling out to the OpenAI generation and to the two tools (`get_support_context`, `search_help_library`). Reused from the intro section.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./images/specs_illustration.png)
 
 ## Starting point
 

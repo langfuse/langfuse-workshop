@@ -16,9 +16,7 @@ Three passes:
 2. **Rerun the dataset** against the new prompt.
 3. **Compare runs** side by side.
 
-<!-- TODO: insert the agent + tools diagram with two prompt versions feeding the same dataset run. -->
-
-*[Diagram placeholder: two prompt versions feeding the same dataset run.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 ## Step 1 — Change the prompt
 

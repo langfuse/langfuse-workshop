@@ -21,9 +21,7 @@ Two passes:
 1. **Understand the item shape** so dataset inputs match the agent's real input.
 2. **Seed the hosted dataset** from the local JSON.
 
-<!-- TODO: insert the agent + tools diagram with a dataset node feeding the agent input. -->
-
-*[Diagram placeholder: dataset feeding the agent.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 ## Step 1 — Read the item shape
 

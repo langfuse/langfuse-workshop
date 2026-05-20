@@ -12,9 +12,7 @@ This is the blank slate for the tracing step — same code as `checkpoint/01-bas
 
 Make one chat turn a nested trace with the agent run, the OpenAI generation, and the two tool calls — built up in three steps that mirror the agent's structure.
 
-<!-- TODO: insert the agent + tools diagram here (same graphic as in the intro section). -->
-
-*[Diagram placeholder: agent → OpenAI generation + tools. Reused from intro.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 We will build up the trace in three steps:
 

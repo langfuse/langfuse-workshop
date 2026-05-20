@@ -8,9 +8,7 @@ This is where the loop closes. We found behavior in traces, defined scope with a
 
 Make one prompt change, rerun the same dataset, and compare the two runs side by side in Langfuse.
 
-<!-- TODO: insert the agent + tools diagram with two prompt versions feeding the agent — same picture as the intro. -->
-
-*[Diagram placeholder: agent + tools with two prompt versions stacked, both feeding the same dataset run.]*
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./images/specs_illustration.png)
 
 ## Starting point
 
