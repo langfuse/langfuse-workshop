@@ -3,7 +3,7 @@
 ## Starting point
 
 ```bash
-git checkout checkpoint/03-prompt-management
+git checkout checkpoint/04-monitoring
 ```
 
 You have a traced app with optional Langfuse-managed prompts. Every chat turn lands in Langfuse as a nested trace.
@@ -43,7 +43,7 @@ Langfuse ships published templates for **User Disagreement** and **Out-of-Scope 
    | `{{last_user_message}}` | `Input` | `$.messages[2].content` |
 
    The index `[2]` works because our chat starts with Specs' opening greeting at `[1]`, so the user's latest message lands at `[2]`. If your conversation has a different opening shape, adjust the index.
-4. Pick the judge model (e.g. `gpt-4.1-mini`) and save.
+4. Pick the judge model (e.g. `gpt-5.5-2026-04-23`) and save.
 5. Enable the evaluator.
 6. Repeat the same setup for the **User Disagreement** template — same JsonPaths.
 

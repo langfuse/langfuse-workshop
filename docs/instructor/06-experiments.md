@@ -24,7 +24,7 @@ By the end of this step you can run the full dataset against the agent on demand
 ## Starting point
 
 ```bash
-git checkout checkpoint/05-dataset
+git checkout checkpoint/06-experiments
 ```
 
 Your dataset is seeded in Langfuse. `scripts/run-dataset.ts` is already in the repo — we don't touch the script in this chapter.
@@ -52,7 +52,7 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
    - `question` (the user's query) ← `$.input.messages[-1].content` *or* `$.input.messages`
    - `actual_output` (what the agent answered) ← `$.output`
    - `expected_output` (the ideal answer) ← `$.expectedOutput.idealAnswer`
-4. Pick the judge model (e.g. `gpt-4.1-mini`) and save.
+4. Pick the judge model (e.g. `gpt-5.5-2026-04-23`) and save.
 5. Enable the evaluator.
 
 If the template's exact variable names differ from `question` / `actual_output` / `expected_output`, only the names on the template side change — the JSONPaths above stay the same.

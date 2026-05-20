@@ -20,7 +20,7 @@ The recommended repo strategy is:
 - `checkpoint/04-monitoring`
 - `checkpoint/05-dataset`
 - `checkpoint/06-experiments`
-- `checkpoint/07-prompt-iteration`
+- `checkpoint/07-evaluation`
 - `checkpoint/08-wrap-up`
 
 ## Canonical progression
@@ -54,7 +54,7 @@ Each checkpoint is the finished output of the previous module and the starting p
 - `06-experiments`
   Runs the app against the Langfuse dataset with the SDK experiment runner and one simple evaluator.
 
-- `07-prompt-iteration`
+- `07-evaluation`
   Changes the prompt, reruns the same dataset, and compares runs side by side.
 
 - `08-wrap-up`

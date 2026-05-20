@@ -15,7 +15,7 @@ By the end of this step, the running app loads its system prompt from Langfuse i
 ## Starting point
 
 ```bash
-git checkout checkpoint/02-tracing
+git checkout checkpoint/03-prompt-management
 ```
 
 You should have a working traced app: every chat turn lands in Langfuse as a nested trace with `dad-it-support-chat-turn` → OpenAI generation → tool spans.

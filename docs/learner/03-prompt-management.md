@@ -3,7 +3,7 @@
 ## Starting point
 
 ```bash
-git checkout checkpoint/02-tracing
+git checkout checkpoint/03-prompt-management
 ```
 
 You have a working traced app. The Langfuse client package (`@langfuse/client`) and the helper files (`src/server/prompt-manager.ts`, `scripts/publish-prompt.ts`) are already in the repo — you wire them up in this step.
@@ -74,7 +74,9 @@ The `{{context_summary}}`, `{{response_style}}`, and `{{scope_summary}}` placeho
 
 ![Creating the dad-it-support-agent prompt in Langfuse — name, type, body with template variables, and the production label.](../images/prompt-management/03-prompt-management-new-prompt-form.png)
 
-> 💡 *Alternative — publish via script.* If you prefer to keep prompt content under version control in code, `scripts/publish-prompt.ts` pushes the local template up for you (`npm run prompt:publish`). The manual UI flow above is the same workflow your team will use for ongoing iteration, so we lead with it.
+> 💡 *Alternative — publish via script.* If you prefer to keep prompt content under version control in code, `scripts/publish-prompt.ts` pushes the local `SYSTEM_PROMPT` constant from `src/server/support-agent.ts` up to Langfuse (`npm run prompt:publish`). The manual UI flow above is the same workflow your team will use for ongoing iteration, so we lead with it.
+>
+> *Production tip — auto-publish on dev start.* In CI or in a `predev` npm script you can hook `npm run prompt:publish` so every time the app boots, the current `SYSTEM_PROMPT` is pushed to Langfuse as a new version. Pair that with a stable label (`production`, `staging`) and you'll never run a workshop with a stale fallback. Skip this for the workshop — but worth knowing for your own app.
 
 ## Step 2 — Resolve the prompt at request time
 

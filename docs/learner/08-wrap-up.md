@@ -3,7 +3,7 @@
 ## Starting point
 
 ```bash
-git checkout checkpoint/07-prompt-iteration
+git checkout checkpoint/08-wrap-up
 ```
 
 You have walked through every loop step.

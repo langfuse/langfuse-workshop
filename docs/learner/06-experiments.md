@@ -3,7 +3,7 @@
 ## Starting point
 
 ```bash
-git checkout checkpoint/05-dataset
+git checkout checkpoint/06-experiments
 ```
 
 Your dataset is seeded in Langfuse. `scripts/run-dataset.ts` is already in the repo.
@@ -42,6 +42,46 @@ Open `scripts/run-dataset.ts`. The file is annotated with numbered comments (`//
 
 The traces produced are the same shape as production traces — same `dad-it-support-chat-turn` root, same OpenAI generation, same tool spans. We don't touch the script in this chapter.
 
+### `dataset.runExperiment(...)` — the moving parts
+
+The whole run is one call to `runExperiment`. The shape boils down to:
+
+```ts
+await dataset.runExperiment({
+  // 1. Identity
+  name: "Dad IT Support Agent experiment",
+  runName,           // unique label for this run; shows up in the Runs tab
+  description: "...",
+  metadata: { model: env.openaiModel },
+  maxConcurrency: 1, // run items one at a time
+
+  // 2. task — runs the agent on one dataset item.
+  //    Whatever you return becomes that item's `output` and is what the
+  //    evaluators below score.
+  task: async (item) => {
+    const response = await runSupportConversation({ /* item.input */ });
+    return response.answer;
+  },
+
+  // 3. evaluators — one entry per score. Each runs after task returns
+  //    and gets { input, output, expectedOutput, metadata }. Return
+  //    { name, value, comment } to attach the score to the item's trace.
+  evaluators: [
+    async ({ output, expectedOutput }) => ({
+      name: "keyword_overlap",
+      value: keywordOverlap(output as string, (expectedOutput as any).expectedKeywords),
+      comment: "..."
+    })
+  ]
+});
+```
+
+Three things to understand:
+
+- **`task`** is *your application logic* — we call straight into `runSupportConversation(...)`, which means every trace this script produces looks identical to a production trace.
+- **`evaluators`** is a list. Add more entries to attach more scores. Each evaluator is independent and runs against the same output, so combining a deterministic check like `keyword_overlap` with an LLM-as-a-judge check like the Correctness evaluator we set up below is just two list entries.
+- **`runName`** is what groups every per-item trace into one row in the Langfuse Runs view. Pick a name that changes per run (we include the timestamp) so two runs don't collide.
+
 ## Step 2 — Set up the correctness evaluator in Langfuse
 
 Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual answer to an ideal answer and returns a score. We wire it up against the experiment runs so every item gets both a deterministic keyword score and a model-judged correctness score.
@@ -54,7 +94,7 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
    - `question` (the user's query) ← `$.input.messages[-1].content` *or* `$.input.messages` (the template can usually accept either)
    - `actual_output` (what the agent answered) ← `$.output` (the experiment run records the agent's answer here)
    - `expected_output` (the ideal answer) ← `$.expectedOutput.idealAnswer` from the dataset item
-4. Pick the model you want the judge to use (e.g. `gpt-4.1-mini`) and save.
+4. Pick the model you want the judge to use (e.g. `gpt-5.5-2026-04-23`) and save.
 5. Enable the evaluator.
 
 > If the template's exact variable names differ from `question` / `actual_output` / `expected_output`, only the names on the template side change — the JSONPaths above stay the same.
@@ -89,4 +129,4 @@ The [**Langfuse Claude Code skill**](https://langfuse.com/docs) (`/langfuse`) kn
 
 ## End state
 
-This is the starting point for `07-prompt-iteration`.
+This is the starting point for `07-evaluation`.

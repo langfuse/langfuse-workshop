@@ -3,7 +3,7 @@
 ## Starting point
 
 ```bash
-git checkout checkpoint/06-experiments
+git checkout checkpoint/07-evaluation
 ```
 
 Your app is traced, monitored, has a hosted dataset, and at least one experiment run with both `keyword_overlap` and `correctness` scores. Now you make a change to the app and rerun the experiment to see whether it helped or hurt.

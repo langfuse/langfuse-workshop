@@ -83,7 +83,7 @@ async function main() {
   });
 
   const dataset = await langfuse.dataset.get(env.datasetName);
-  const runName = `dad-it-support-${env.workshopPromptVariant}-${new Date().toISOString()}`;
+  const runName = `dad-it-support-${new Date().toISOString()}`;
 
   // --- 5. runExperiment iterates the dataset, calls `task` for each
   //        item, and records every per-item trace + score under a
@@ -93,8 +93,7 @@ async function main() {
     runName,
     description: "Workshop dataset run for the Dad IT Support Agent",
     metadata: {
-      model: env.openaiModel,
-      promptVariant: env.workshopPromptVariant
+      model: env.openaiModel
     },
     maxConcurrency: 1,
     // `task` runs the agent on one dataset item. The return value

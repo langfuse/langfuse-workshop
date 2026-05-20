@@ -18,7 +18,7 @@ Seed a first hosted Langfuse dataset that captures the kinds of requests we expe
 ## Starting point
 
 ```bash
-git checkout checkpoint/04-monitoring
+git checkout checkpoint/05-dataset
 ```
 
 You have a traced, attributed, monitored app. `data/seed-dataset.json` (the iPhone-only 14-item starter set) and `scripts/seed-dataset.ts` are already in the repo — you read them and run the seed script.

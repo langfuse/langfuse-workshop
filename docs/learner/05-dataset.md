@@ -3,7 +3,7 @@
 ## Starting point
 
 ```bash
-git checkout checkpoint/04-monitoring
+git checkout checkpoint/05-dataset
 ```
 
 You have a traced, attributed, monitored app. `data/seed-dataset.json` and `scripts/seed-dataset.ts` are already in the repo at this checkpoint.
@@ -39,14 +39,11 @@ Dataset items in Langfuse follow a consistent shape — three fields, one requir
 | `expectedOutput` | optional | What a good answer would look like. Free-form — used by evaluators to compare actual vs expected. |
 | `metadata` | optional | Tags or other fields for filtering and grouping (`category`, `difficulty`, etc.). |
 
-For us, one concrete item looks like this:
+For us, the conceptual shape of one item is:
 
 ```json
 {
-  "id": "dad-001",
-  "input": {
-    "messages": [{ "role": "user", "content": "How do I turn Bluetooth on on my iPhone?" }]
-  },
+  "input": "How do I turn Bluetooth on on my iPhone?",
   "expectedOutput": {
     "idealAnswer": "Open Settings, tap Bluetooth, and turn the Bluetooth switch on.",
     "expectedKeywords": ["Settings", "Bluetooth", "switch", "on"]
@@ -55,11 +52,14 @@ For us, one concrete item looks like this:
 }
 ```
 
-- **`input.messages`** matches `/api/chat`'s shape exactly so the experiment script in step 06 can call the same `runSupportConversation(...)` without rewriting inputs.
-- **`expectedOutput`** has both an `idealAnswer` (for human review and LLM-as-a-judge correctness scoring) and `expectedKeywords` (for a quick deterministic check that the answer covered the right steps).
-- **`metadata`** lets us slice runs by category or difficulty later.
+The two fields inside `expectedOutput` answer two different evaluator questions:
 
-Open `data/seed-dataset.json` and skim the rest of the items.
+- **`idealAnswer`** is the human-readable reference reply. It's what the LLM-as-a-judge correctness evaluator (chapter 06) compares the agent's actual answer against to decide whether the meaning matches.
+- **`expectedKeywords`** is a small list of strings the answer *must* contain to be considered "covered the steps." A deterministic check (no model call) — fast, cheap, and great for catching regressions where the agent paraphrases away the actual menu names.
+
+`metadata` lets us slice runs by category or difficulty later when comparing experiment runs side by side.
+
+If you look at the actual JSON in `data/seed-dataset.json`, the `input` is the full `{ messages: [...] }` shape that `/api/chat` accepts, plus an `id` field for the dataset row. We've simplified the example above to show *what an item is*; the on-disk format is what the experiment script (step 06) can feed straight into `runSupportConversation(...)` without rewriting inputs.
 
 ## Step 2 — Seed the dataset
 

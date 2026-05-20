@@ -194,7 +194,7 @@ function TopBar() {
       </div>
       <span className="spacer"></span>
       <span className="status">
-        <span className="dot"></span> live · gpt-4.1-mini
+        <span className="dot"></span> live · gpt-5.5-2026-04-23
       </span>
     </header>
   );

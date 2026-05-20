@@ -36,7 +36,7 @@ Three passes:
 ## Starting point
 
 ```bash
-git checkout checkpoint/06-experiments
+git checkout checkpoint/07-evaluation
 ```
 
 You have an agent that is traced, monitored, runs against a hosted dataset, and has at least one experiment run with `keyword_overlap` and `correctness` scores. Now you change the prompt and run it again.

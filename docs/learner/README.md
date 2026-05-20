@@ -18,7 +18,7 @@ The important mental model for this repo is:
 - `04-monitoring` uses the trace shape you created in tracing.
 - `05-dataset` turns the app scope into reusable examples.
 - `06-experiments` runs the same app logic on the dataset.
-- `07-prompt-iteration` changes the prompt and compares runs.
+- `07-evaluation` changes the prompt and compares runs.
 
 When you read a module, pay special attention to:
 
@@ -35,5 +35,5 @@ Modules:
 - [04 Monitoring](./04-monitoring.md)
 - [05 Dataset](./05-dataset.md)
 - [06 Experiments](./06-experiments.md)
-- [07 Prompt Iteration](./07-prompt-iteration.md)
+- [07 Evaluation](./07-evaluation.md)
 - [08 Wrap-up](./08-wrap-up.md)

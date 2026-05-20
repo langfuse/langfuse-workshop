@@ -17,7 +17,7 @@ The goal of this chapter is to make every one of those steps visible in Langfuse
 ## Starting point
 
 ```bash
-git checkout checkpoint/02-tracing-start
+git checkout checkpoint/02-tracing
 ```
 
 This tag is the blank slate for this step: the base app from `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json` (`@langfuse/otel`, `@langfuse/openai`, `@langfuse/tracing`, `@opentelemetry/sdk-node`). Run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse keys.
