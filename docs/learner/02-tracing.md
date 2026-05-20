@@ -10,24 +10,25 @@ This is the blank slate for the tracing step — same code as `checkpoint/01-bas
 
 ## Why we trace
 
-TODO:Here is a very short paragraph on why tracing is important, and then let's link to our academy page on tracing. Tracing helps you log every step your agent is taking to achieve a certain goal and makes it possible for you to review inputs and outputs after things have happened. It is transparency into what is actually going on in your system and which inputs and outputs are seen in which order. Make a nicer sentence out of it, and then say that if you want to learn more about tracing and why it's important, you can check out our academy page. And say if people want the technicalities, they can check out the docs page.
+Tracing logs every step your agent takes — every model call, every tool invocation, the inputs that went in and the outputs that came back — in the order they happened. It turns the agent from a black box into something you can open up and inspect after the fact, so when an answer is wrong you can point at the exact step where it went wrong instead of guessing.
+
+If you want the bigger-picture motivation, see the [Langfuse Academy lesson on tracing](https://langfuse.com/academy/tracing). If you want the technical details (SDK options, OpenTelemetry internals, span attributes), the [tracing docs](https://langfuse.com/docs/tracing) cover that.
 
 ## Goal
 
-TODO: In the short explanation, whenever the agent asks something, it first says "bupubu" then looks up the user information, something like this. To really see if this is going on, we want to log each of these steps. The goal is to make one chat turn and ask the trace with the agent run bupubu.
+When Dad asks "How do I turn Bluetooth on?", the agent doesn't just hit OpenAI once. Behind the scenes it asks OpenAI what to do, calls `get_support_context` to fetch Dad's iPhone setup, asks OpenAI again, calls `search_help_library` for Bluetooth steps, then asks OpenAI one more time to produce the numbered answer. None of that is visible today.
 
-Make one chat turn a nested trace with the agent run, the OpenAI generation, and the two tool calls — built up in three steps that mirror the agent's structure.
+The goal of this chapter is to make every one of those steps visible in Langfuse — one chat turn becomes one nested trace with the agent run, the OpenAI generations, and the two tool calls all logged in order.
 
 ![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
-We will build up the trace in three steps:
+We will build up the trace in three steps that mirror the agent's structure:
 
 1. **First trace** — log the OpenAI generations themselves.
 2. **Nested traces** — group the generations under one agent run per turn.
 3. **Recording tool calls** — make each tool invocation its own observation.
 
-User/session attribution and tags come in `04-monitoring`.
-TODO: Don't talk about attribution. This is a weird word. Let's say user and session information will be picked up in 04 monitoring. Skip the tags. We don't want tags.
+User and session information is added in `04-monitoring`.
 
 ## Step 1 — First trace
 

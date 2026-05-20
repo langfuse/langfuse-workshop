@@ -16,7 +16,8 @@ LANGFUSE_PROMPT_LABEL=production
 WORKSHOP_PROMPT_VARIANT=baseline
 ```
 
-## Why manage
+## Why manage prompts
+TODO: Can you add here why prompt management makes sense? It's a way to collaborate and have prompts deployed independent of release cycles, so it's easier to make changes and also version them instead of having them in code. Also check our docs for what we actually say there, and share with them that they can learn more in the docs, but keep it very brief here as well.
 
 ## Goal
 
@@ -30,6 +31,8 @@ Three steps that match the three things prompt management does:
 
 ## Step 1 — Publish the prompt
 
+TODO: I would actually prefer to have the prompt here for people to copy/paste manually into LENQ so they see how it's just done in the UI, but we can then, in the end, also mention that they could also publish it via script.
+
 Without this, there's nothing in Langfuse for the resolver to fetch. `scripts/publish-prompt.ts` already does the work — run it:
 
 ```bash
@@ -40,6 +43,7 @@ Open Langfuse → **Prompts** → confirm `dad-it-support-agent` exists with a v
 
 ## Step 2 — Resolve the prompt at request time
 
+TODO: Can we explain this a little bit more in layman's terms?Just a little bit
 `src/server/prompt-manager.ts` already implements `resolveSupportPrompt(context)`. Read it once — it:
 
 - returns the local prompt if Langfuse keys are missing
@@ -86,6 +90,8 @@ You can delete the now-unused imports from `./local-prompt` (`buildPromptVariabl
 
 Move the `observeOpenAI` wrap **inside** `runSupportConversationInner` so it can carry the active prompt:
 
+TODO: Be a bit more explicit about what exactly has been done here.
+
 ```ts
 const openai = observeOpenAI(getRawOpenAIClient(), {
   ...(prompt.langfusePrompt ? { langfusePrompt: prompt.langfusePrompt as never } : {})
@@ -108,7 +114,8 @@ Ask one question, then in Langfuse:
 
 ## Wrap-up
 
-Prompt management is what closes the trace ↔ prompt loop. The `/langfuse` Claude Code skill applies the recommended pattern (caching, fallbacks, linking) automatically — this walkthrough exists so you can see what the skill is doing under the hood.
+Prompt management is what closes the trace ↔ prompt loop. The `/langfuse`  skill applies the recommended pattern (caching, fallbacks, linking) automatically — this walkthrough exists so you can see what the skill is doing under the hood.
+TODO: Add link to skill here.
 
 ## End state
 

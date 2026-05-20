@@ -1,17 +1,19 @@
 # 04 Monitoring
 
-## How to think about this step
+## Why monitor your AI app
 
-Tracing helps us understand *one* request. Monitoring helps us notice the requests that deserve attention. The point is not to score everything — it's to catch the kinds of events that help us decide what to improve next.
+In production, an AI app produces a lot of traces. Most of them are fine. The interesting ones — the answers that drift, the requests the agent shouldn't be handling at all, the patterns that change over time — are what you want to find. Monitoring is how you catch those signals without reading every single trace by hand.
 
-Before monitoring becomes useful we add a small bit of attribution to the trace — `userId`, `sessionId`, tags, metadata — so monitors and dashboards can actually slice traffic.
+For the bigger picture, see the [Langfuse Academy lesson on monitoring](https://langfuse.com/academy/monitoring).
 
 ## Goal
 
-By the end of this step:
+The goal of monitoring is finding the things that are worth knowing about for *your* AI application. For Specs, two events are worth catching:
 
-1. Every chat turn in Langfuse carries `userId`, `sessionId`, and workshop tags so we can filter and group it.
-2. At least one observation-level evaluator is wired up against the agent's root span (`dad-it-support-chat-turn`), watching for out-of-scope requests and user disagreement.
+- **User disagreement** — Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
+- **Out-of-scope requests** — Dad tries to use Specs for something it isn't built for ("Can you file my taxes?"). Useful both for spotting product expansion ideas and for confirming the agent refuses gracefully.
+
+Monitoring also has a quality-tracking dimension — average score on some metric over time. We recommend **signal detection first**: tracking aggregate quality is most useful once you and your team have a clear opinion about what quality even means in your context, and the fastest way to form that opinion is to look at the surprising traces.
 
 ![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./images/specs_illustration.png)
 
@@ -21,93 +23,23 @@ By the end of this step:
 git checkout checkpoint/03-prompt-management
 ```
 
-Your app traces every chat turn and links each generation to a Langfuse-managed prompt. No attribution yet.
+Your app traces every chat turn and links each generation to a Langfuse-managed prompt. You don't need to change any code in this step — the trace shape from `02-tracing` already has everything a judge-based monitor needs at the root observation: the full conversation as input and the agent's answer as output.
 
-We will build this step in two passes:
+## Step 1 — Wire the first two monitors (Langfuse UI)
 
-1. **Attribute the trace** — wrap the agent body in `propagateAttributes(...)` and forward the same fields into `observeOpenAI(...)`.
-2. **Wire the first two monitors** — define them in the Langfuse UI against the now-attributed agent observation.
+Langfuse ships templates for **User Disagreement** and **Out-of-Scope Detection**. Both are LLM-as-a-judge evaluators that read variables from the trace.
 
-## Step 1 — Attribute the trace
+1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Detection** template.
+2. Target the agent's root observation:
+   - Observation type: `agent`
+   - Observation name: `dad-it-support-chat-turn`
+3. Map the template's variables from our root observation's input/output:
+   - `messages` (or `conversation`) ← `$.messages` — the full chat history including the current user message
+   - `assistant_output` (or `response`) ← `$.answer` — the agent's final reply
+4. Save and enable.
+5. Repeat the same setup with the **User Disagreement** template.
 
-So far the agent loop is wrapped only in `observe(...)` and `observeOpenAI(...)`. The trace shows up in Langfuse but there's no way to slice it by user, by session, or by tag. We fix that by wrapping the body in `propagateAttributes(...)` from `@langfuse/tracing`.
-
-**Add `propagateAttributes` to the import** in `src/server/support-agent.ts`:
-
-```ts
-import { observe, propagateAttributes } from "@langfuse/tracing";
-```
-
-**Wrap the body** of `runSupportConversationInner` in `propagateAttributes(...)` and pass the same attribution into `observeOpenAI(...)`:
-
-```ts
-async function runSupportConversationInner(request: ChatRequest): Promise<ChatResponse> {
-  const context = getSupportContext();
-  const prompt = await resolveSupportPrompt(context);
-  const userId = request.userId ?? `workshop-${context.id}`;
-
-  return propagateAttributes(
-    {
-      userId,
-      sessionId: request.sessionId,
-      traceName: "dad-it-support-chat-turn",
-      tags: ["langfuse-workshop", "dad-it-support"],
-      version: "0.2.0",
-      metadata: {
-        contextId: context.id,
-        contextLabel: context.label
-      }
-    },
-    async () => {
-      const openai = observeOpenAI(getRawOpenAIClient(), {
-        generationName: "openai-chat-completion",
-        userId,
-        sessionId: request.sessionId,
-        tags: ["langfuse-workshop", "dad-it-support"],
-        generationMetadata: {
-          promptSource: prompt.promptSource,
-          contextId: context.id,
-          contextLabel: context.label
-        },
-        ...(prompt.langfusePrompt ? { langfusePrompt: prompt.langfusePrompt as never } : {})
-      });
-
-      // ...the existing tool-calling loop, unchanged...
-    }
-  );
-}
-```
-
-What each piece buys you:
-
-- `userId` — enables per-user filters and the "Users" view in Langfuse.
-- `sessionId` — groups multi-turn conversations into one session timeline.
-- `tags` — coarse filtering (`langfuse-workshop`, `dad-it-support`).
-- `metadata` — anything you want to filter by later that does not deserve its own first-class field.
-- Same attribution passed to `observeOpenAI` so the generation row carries it too, not just the root.
-
-## Step 2 — Wire the first two monitors
-
-Most of the actual work for this step happens in the Langfuse UI, against the observation shape we just attributed.
-
-**Pick the evaluator target:**
-
-- Observation type: `agent`
-- Observation name: `dad-it-support-chat-turn`
-
-**Pick the first two monitors:**
-
-- **Out-of-scope request** — catches things like "Can you file my taxes for me?"
-- **User disagreement** — catches things like "No, that menu is not there"
-
-Both are high-signal and easy to explain live.
-
-**Useful mappings** for the LLM-as-a-judge templates:
-
-- `messages` → `$.messages`
-- `assistant_output` → `$.answer`
-
-For disagreement detection, pass the whole `messages` array plus the final `answer`. That avoids brittle "last user message" mappings and keeps the evaluator grounded in the whole conversation.
+If the template uses variable names different from the ones above, the JSONPath sources stay the same — only the variable name on the template side changes.
 
 ## Where to find the fields in the trace
 
@@ -124,16 +56,18 @@ The system prompt is *not* on the root — it lives on the child `openai-chat-co
 npm run dev
 ```
 
-1. Send one in-scope question and one out-of-scope question ("Can you file my taxes for me?").
-2. Then push a disagreement ("No, that menu is not there").
-3. Open Langfuse:
-   - Filter traces by tag `langfuse-workshop` — you should see your traffic.
-   - Open a session and confirm consecutive turns roll up into one session timeline.
-   - Open the Users view and see your synthetic `workshop-dad-default` user.
-   - Wait for the evaluator to score — out-of-scope and disagreement traces should bubble to the top.
+Send three turns, one per monitor scenario:
+
+1. **In-scope** — "How do I turn Bluetooth on?" (should score clean on both monitors)
+2. **Out-of-scope** — "Can you file my taxes?"
+3. **Disagreement** — ask a normal question, then reply with "No, that menu isn't there"
+
+In Langfuse, wait a few seconds for the evaluator to run, then sort traces by the score. The out-of-scope and disagreement traces should bubble to the top.
 
 ## Teaching point
 
-Monitoring is the bridge from production traffic to future datasets and experiments. Attribution (`userId`, `sessionId`, tags) is what makes that bridge navigable — without it, every trace is an island.
+Good monitors are how you separate signal from noise. Production means a lot of traces, and the most important question is *which ones should I look at?* — monitors answer that.
 
-A more straightforward way to wire attribution and judge templates in line with Langfuse best practices is to use the **Langfuse skill** (`/langfuse`). The hand-rolled walkthrough in this step exists so you understand what the skill is doing under the hood.
+Once signal-detection monitors are in place, the next move over time is **average-metric tracking** — picking quality metrics and watching them drift. The right way to choose those metrics is **error analysis**: look at a sample of the surprising traces you're now catching, group them by failure mode, and turn the failure modes into evaluators. The [monitoring lesson on the Academy](https://langfuse.com/academy/monitoring) goes deeper.
+
+The traces you catch with these monitors are also the best source for `05-dataset` — they're real examples of behavior you want to lock in or fix.
