@@ -16,6 +16,8 @@ LANGFUSE_PROMPT_LABEL=production
 WORKSHOP_PROMPT_VARIANT=baseline
 ```
 
+## Why manage
+
 ## Goal
 
 Three steps that match the three things prompt management does:

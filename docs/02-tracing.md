@@ -65,9 +65,7 @@ Without this swap, the wrapped `openai` is a dead variable and no traces are emi
 
 Run `npm run dev`, ask one question in the UI, open Langfuse, and you should see one generation per OpenAI call with the prompt, response, model, tokens, and latency. That's already a real telemetry surface — but every generation shows up as its own top-level trace, and we have no view of "one chat turn" yet.
 
-<!-- TODO: screenshot of the Langfuse traces list after Step 1 — multiple top-level OpenAI generation traces, no agent grouping yet. -->
-
-> 📷 *Screenshot placeholder: the Langfuse Traces view after Step 1 — each chat turn appears as one or more standalone `openai-chat-completion` generations.*
+![Langfuse Traces view after Step 1 — each chat turn appears as standalone openai-chat-completion generations.](./images/02-tracing-step-1.png)
 
 ## Step 2 — Nested traces
 
@@ -108,9 +106,7 @@ export const runSupportConversation = observe(runSupportConversationInner, {
 
 Refresh Langfuse and you should now see one root `dad-it-support-chat-turn` observation per turn, with the OpenAI generation nested underneath it.
 
-<!-- TODO: screenshot of the Langfuse trace tree after Step 2 — one `dad-it-support-chat-turn` agent root with the OpenAI generation nested underneath. -->
-
-> 📷 *Screenshot placeholder: the trace tree after Step 2 — one `dad-it-support-chat-turn` (type `agent`) root, with the OpenAI generation as a child.*
+![Trace tree after Step 2 — one dad-it-support-chat-turn agent root with the OpenAI generation as a child.](./images/02-tracing-step-2.png)
 
 ## Step 3 — Recording tool calls
 
@@ -175,9 +171,7 @@ export async function executeTool(name: string, input: Record<string, unknown>):
 
 `TOOL_DEFINITIONS` at the top of the file stays untouched.
 
-<!-- TODO: screenshot of the full Langfuse trace after Step 3 — agent root, OpenAI generation, and the two tool observations all nested. -->
-
-> 📷 *Screenshot placeholder: the full trace after Step 3 — `dad-it-support-chat-turn` (agent) with the OpenAI generation **and** the `get_support_context` + `search_help_library` tool observations as siblings underneath.*
+![Full trace after Step 3 — dad-it-support-chat-turn (agent) with the OpenAI generation and get_support_context + search_help_library tool observations as siblings underneath.](./images/02-tracing-step-3.png)
 
 ## Run and verify
 
