@@ -19,7 +19,7 @@ Under the hood it's a normal OpenAI tool-calling loop. Specs has two tools avail
 - `get_support_context` — fetches Dad's iPhone setup (model, iOS version, installed apps, etc.)
 - `search_help_library` — returns step-by-step articles from a small local manual.
 
-![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./docs/images/specs_illustration.png)
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](./docs/images/sample_app.png)
 
 This is deliberately a small app. It exists so each Langfuse layer (trace, prompt, monitor, dataset, experiment) feels concrete instead of abstract, and so workshop participants can finish every module in a sitting.
 
