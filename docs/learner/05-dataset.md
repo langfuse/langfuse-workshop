@@ -78,6 +78,10 @@ npm run dataset:seed
 
 Open Langfuse → **Datasets** → `dad-it-support-workshop`. Confirm the items are there with input, expected output, and metadata.
 
+<!-- TODO: screenshot of the seeded dataset in the Langfuse UI — rows of items with input/expected output/metadata visible. -->
+
+> 📷 *Screenshot placeholder: the `dad-it-support-workshop` dataset in Langfuse — every seeded item visible as a row with input, expected output, and metadata columns.*
+
 ## What the starter dataset covers
 
 - iPhone Bluetooth basics and edge cases

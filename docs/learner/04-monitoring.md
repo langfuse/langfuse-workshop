@@ -64,6 +64,16 @@ Send three turns that should each light up one monitor:
 
 In Langfuse, wait for the evaluator to run (refresh after a few seconds), then sort traces by the evaluator score. The out-of-scope and disagreement traces should bubble to the top.
 
+![Out-of-scope evaluator firing on a trace — the generation is flagged as out-of-scope, and the left-hand panel shows the agent's reasoning that the request is outside the iPhone-help scope.](../images/monitoring/04-monitoring-out-of-scope.png)
+
+When the out-of-scope monitor fires, you can confirm the chatbot already rejected the request gracefully — exactly what we asked it to do. But those traces are also the most interesting ones to read end-to-end: a steady stream of out-of-scope hits is often the earliest signal that there's *additional scope* worth handling. *"Can you file my taxes?"* is silly, but *"Help me move photos to my new iPad"* might be a real feature request hiding in monitor output.
+
+<!-- TODO: screenshot of a user-disagreement trace where the evaluator scored `true`. -->
+
+> 📷 *Screenshot placeholder: a trace where the user disagreement evaluator scored `true` — the user's follow-up pushes back on the agent's earlier answer.*
+
+User disagreement is a much higher-signal event. When a user pushes back on an answer the agent just gave, something almost certainly went wrong — wrong tool result, missing context, an instruction that doesn't match the iPhone they're on. These are the traces you want to read first, and they're prime candidates to turn into dataset items for `05-dataset`.
+
 ## Wrap-up
 
 Good monitors are how you separate signal from noise. Production means a lot of traces, and the most important question is *which ones should I look at?* — monitors answer that.

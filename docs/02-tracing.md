@@ -69,7 +69,7 @@ Without this swap, the wrapped `openai` is a dead variable and no traces are emi
 
 Run `npm run dev`, ask one question in the UI, open Langfuse, and you should see one generation per OpenAI call with the prompt, response, model, tokens, and latency. That's already a real telemetry surface — but every generation shows up as its own top-level trace, and we have no view of "one chat turn" yet.
 
-![Langfuse Traces view after Step 1 — each chat turn appears as standalone openai-chat-completion generations.](./images/02-tracing-step-1.png)
+![Langfuse Traces view after Step 1 — each chat turn appears as standalone openai-chat-completion generations.](./images/tracing/02-tracing-step-1.png)
 
 ## Step 2 — Nested traces
 
@@ -110,7 +110,7 @@ export const runSupportConversation = observe(runSupportConversationInner, {
 
 Refresh Langfuse and you should now see one root `dad-it-support-chat-turn` observation per turn, with the OpenAI generation nested underneath it.
 
-![Trace tree after Step 2 — one dad-it-support-chat-turn agent root with the OpenAI generation as a child.](./images/02-tracing-step-2.png)
+![Trace tree after Step 2 — one dad-it-support-chat-turn agent root with the OpenAI generation as a child.](./images/tracing/02-tracing-step-2.png)
 
 ## Step 3 — Recording tool calls
 
@@ -175,7 +175,7 @@ export async function executeTool(name: string, input: Record<string, unknown>):
 
 `TOOL_DEFINITIONS` at the top of the file stays untouched.
 
-![Full trace after Step 3 — dad-it-support-chat-turn (agent) with the OpenAI generation and get_support_context + search_help_library tool observations as siblings underneath.](./images/02-tracing-step-3.png)
+![Full trace after Step 3 — dad-it-support-chat-turn (agent) with the OpenAI generation and get_support_context + search_help_library tool observations as siblings underneath.](./images/tracing/02-tracing-step-3.png)
 
 ## Run and verify
 

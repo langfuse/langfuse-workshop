@@ -77,6 +77,10 @@ npm run dataset:seed
 
 Open Langfuse → **Datasets** → `dad-it-support-workshop`. You should see the items as rows with input, expected output, and metadata. If the dataset already exists, the script upserts.
 
+<!-- TODO: screenshot of the seeded dataset in the Langfuse UI — rows of items with input/expected output/metadata visible. -->
+
+> 📷 *Screenshot placeholder: the `dad-it-support-workshop` dataset in Langfuse — every seeded item visible as a row with input, expected output, and metadata columns.*
+
 ## What the starter dataset covers
 
 The seed deliberately covers each part of the iPhone scope plus the obvious edge cases:

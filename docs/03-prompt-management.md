@@ -74,6 +74,8 @@ Rules:
 
 The `{{context_summary}}`, `{{response_style}}`, and `{{scope_summary}}` placeholders are template variables — the app fills them in at request time from Dad's context.
 
+![Creating the dad-it-support-agent prompt in Langfuse — name, type, body with template variables, and the production label.](./images/prompt-management/03-prompt-management-new-prompt-form.png)
+
 > 💡 *Alternative — publish via script.* `scripts/publish-prompt.ts` pushes the local template up for you (`npm run prompt:publish`). The manual UI flow above is the same workflow your team will use for ongoing iteration, so we lead with it.
 
 ## Step 2 — Resolve the prompt at request time
@@ -144,6 +146,8 @@ Ask a question, then in Langfuse:
 1. Open the trace. The OpenAI generation row should show a small **Prompt** badge linking to `dad-it-support-agent` at the version you just published.
 2. The root observation's output `promptSource` should now read `langfuse`.
 3. Go to Prompts, open `dad-it-support-agent`, scroll down — your trace appears under "Used in".
+
+![A traced openai-chat-completion with the Prompt badge in the top-right linking back to dad-it-support-agent · v1.](./images/prompt-management/03-prompt-management-prompt-badge.png)
 
 If your env doesn't have Langfuse keys, `promptSource` reads `local` and the app gracefully degrades.
 
