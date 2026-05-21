@@ -43,7 +43,7 @@ Open [http://127.0.0.1:3333](http://127.0.0.1:3333). You should land in the **Da
 
 ## Teaching note
 
-Langfuse credentials are not required for the app to boot — the local-prompt fallback handles a missing Langfuse setup. But every later step depends on them being present, so wire them up now.
+Langfuse credentials are not required for the app to boot — the local SYSTEM_PROMPT fallback handles a missing Langfuse setup. But every later step depends on them being present, so wire them up now.
 
 ## End state
 

@@ -20,7 +20,7 @@ When Dad asks "How do I turn Bluetooth on?", the agent doesn't just hit OpenAI o
 
 The goal of this chapter is to make every one of those steps visible in Langfuse — one chat turn becomes one nested trace with the agent run, the OpenAI generations, and the two tool calls all logged in order.
 
-![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../tracing/process_illustration.png)
+![Spec's step by step process](../tracing/process_illustration.png)
 
 We will build up the trace in three steps that mirror the agent's structure:
 
@@ -28,7 +28,6 @@ We will build up the trace in three steps that mirror the agent's structure:
 2. **Nested traces** — group the generations under one agent run per turn.
 3. **Recording tool calls** — make each tool invocation its own observation.
 
-User and session information is added in `04-monitoring`.
 
 ## Step 1 — First trace
 

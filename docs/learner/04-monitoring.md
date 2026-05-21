@@ -16,7 +16,7 @@ For the bigger picture, see the [Langfuse Academy lesson on monitoring](https://
 
 ## Goal
 
-The goal of monitoring is finding the things that are worth knowing about for *your* AI application. For Specs, two events are worth catching:
+The goal of monitoring is finding the things that are worth knowing about for *your* AI application. For Specs, we chose two events that are worth catching as a starting point:
 
 - **User disagreement** — Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
 - **Out-of-scope requests** — Dad tries to use Specs for something it isn't built for ("Can you file my taxes?"). Useful both for spotting product expansion ideas and for confirming the agent refuses gracefully.
@@ -46,6 +46,8 @@ Langfuse ships published templates for **User Disagreement** and **Out-of-Scope 
 4. Pick the judge model (e.g. `gpt-5.5-2026-04-23`) and save.
 5. Enable the evaluator.
 6. Repeat the same setup for the **User Disagreement** template — same JsonPaths.
+
+TODO: screenshot of varibale mapping
 
 > 💡 *Custom evaluators.* The shipped templates are a fast on-ramp, but you don't have to use them. **Evaluators → New evaluator → Custom** lets you write your own prompt and define your own variables. Same mapping flow — point each variable at the right JsonPath on the right observation, and you're done.
 

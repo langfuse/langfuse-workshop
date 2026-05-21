@@ -25,7 +25,7 @@ The Dad IT Support Agent is a small web chat where **Dad himself** is the user. 
 - `src/server/support-agent.ts` — the tool-calling loop you'll instrument next
 - `src/server/tools.ts` — `TOOL_DEFINITIONS` and `executeTool(...)`
 - `src/server/support-data.ts` — Dad's fixed setup and the local guide library
-- `src/server/local-prompt.ts` — the local system-prompt template
+- `src/server/support-agent.ts` — the local system-prompt template
 
 ## Try it before you go further
 

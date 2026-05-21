@@ -57,9 +57,9 @@ Prompts → `dad-it-support-agent` → edit body → add the rule above into the
 
 ![Review Prompt Changes in Langfuse — side-by-side diff between v1 and the draft with the new out-of-scope rule highlighted, ready to save as a new version and promote to production.](./images/evaluate-a-change/07-evaluate-a-change-prompt-diff.png)
 
-**Option B — Code-side (edit `src/server/local-prompt.ts` and republish):**
+**Option B — Code-side (edit `src/server/support-agent.ts` and republish):**
 
-Open `src/server/local-prompt.ts`, add the rule to the `baseline` template, then:
+Open `src/server/support-agent.ts`, add the rule to the `SYSTEM_PROMPT` constant, then:
 
 ```bash
 npm run prompt:publish

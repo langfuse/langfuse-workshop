@@ -52,7 +52,7 @@ Langfuse ships published templates for **User Disagreement** and **Out-of-Scope 
 Because `observe(...)` auto-captures the function argument and return value:
 
 - the **agent root** observation input is the full `ChatRequest` (`messages`, `sessionId`, optional `userId`) — no system prompt.
-- the **agent root** observation output is the full `ChatResponse` (`answer`, `promptSource`, `usedTools`, `traceMeta`).
+- the **agent root** observation output is the full `ChatResponse` (`answer`, `usedTools`, `traceMeta`).
 - the **child `openai-chat-completion` generation** input has the full prompt with the system message at `messages[0]`.
 
 That's why the published templates above target the generation, not the agent root — they need the system prompt.

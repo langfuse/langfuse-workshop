@@ -6,14 +6,13 @@
 git checkout checkpoint/03-prompt-management
 ```
 
-You have a working traced app. The Langfuse client package (`@langfuse/client`) and the helper files (`src/server/prompt-manager.ts`, `scripts/publish-prompt.ts`) are already in the repo — you wire them up in this step.
+You have a working traced app. The system prompt currently lives in code as a constant called `SYSTEM_PROMPT` in `src/server/support-agent.ts`. In this chapter we move it into Langfuse so it's versioned and editable in the UI, then have the app fetch it back at request time.
 
 Make sure `.env` has:
 
 ```bash
 LANGFUSE_PROMPT_NAME=dad-it-support-agent
 LANGFUSE_PROMPT_LABEL=production
-WORKSHOP_PROMPT_VARIANT=baseline
 ```
 
 ## Why manage prompts
@@ -24,35 +23,25 @@ Learn more in the [Langfuse prompts docs](https://langfuse.com/docs/prompts).
 
 ## Goal
 
-Three steps that match the three things prompt management does:
+Two steps:
 
-1. **First prompt** — publish the system prompt to Langfuse so a versioned copy lives there.
-2. **Resolve from Langfuse at request time** — read the prompt from Langfuse instead of from the file, with a local fallback if Langfuse is unreachable.
-3. **Link generations to the prompt version** — so every trace points back at the prompt that produced it.
+1. **Publish the system prompt to Langfuse** so a versioned copy lives there.
+2. **Fetch it back at request time** and link each OpenAI generation to the version that produced it.
 
 ![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 ## Step 1 — Publish the prompt (Langfuse UI)
 
-Without this, there's nothing in Langfuse for the resolver to fetch. The most direct way to create a prompt is to add it manually in the UI — it's the same workflow your team will use for every future iteration.
+The most direct way to create a prompt is to add it manually in the UI — it's the same workflow your team will use for every future iteration.
 
 1. In Langfuse, open **Prompts → New prompt**.
 2. **Name** it `dad-it-support-agent` (matching `LANGFUSE_PROMPT_NAME` in your `.env`).
 3. **Type** is `text`.
-4. **Paste** the body below into the prompt content:
+4. **Paste** the body below — it's the same string as `SYSTEM_PROMPT` in `src/server/support-agent.ts`:
 
 ```
 You are Dad IT Support Agent.
 You are talking directly to Dad. He opened this chat himself to get help with his iPhone.
-
-Known setup:
-{{context_summary}}
-
-Response style:
-{{response_style}}
-
-Support scope:
-{{scope_summary}}
 
 You do not yet know which iPhone Dad has or which apps he uses — call get_support_context to find out before giving any device-specific instructions.
 
@@ -70,79 +59,61 @@ Rules:
 5. **Label** the version `production` (matching `LANGFUSE_PROMPT_LABEL` in your `.env`).
 6. **Save**.
 
-The `{{context_summary}}`, `{{response_style}}`, and `{{scope_summary}}` placeholders are template variables — the app fills them in at request time from Dad's context.
+![Creating the dad-it-support-agent prompt in Langfuse.](../images/prompt-management/03-prompt-management-new-prompt-form.png)
 
-![Creating the dad-it-support-agent prompt in Langfuse — name, type, body with template variables, and the production label.](../images/prompt-management/03-prompt-management-new-prompt-form.png)
-
-> 💡 *Alternative — publish via script.* If you prefer to keep prompt content under version control in code, `scripts/publish-prompt.ts` pushes the local `SYSTEM_PROMPT` constant from `src/server/support-agent.ts` up to Langfuse (`npm run prompt:publish`). The manual UI flow above is the same workflow your team will use for ongoing iteration, so we lead with it.
+> 💡 *Alternative — publish via script.* `scripts/publish-prompt.ts` pushes the local `SYSTEM_PROMPT` constant up to Langfuse (`npm run prompt:publish`). Same outcome.
 >
-> *Production tip — auto-publish on dev start.* In CI or in a `predev` npm script you can hook `npm run prompt:publish` so every time the app boots, the current `SYSTEM_PROMPT` is pushed to Langfuse as a new version. Pair that with a stable label (`production`, `staging`) and you'll never run a workshop with a stale fallback. Skip this for the workshop — but worth knowing for your own app.
+> *Production tip — auto-publish on dev start.* In CI or a `predev` npm script you can hook `npm run prompt:publish` so every dev-server start pushes the current `SYSTEM_PROMPT` to Langfuse. Pair that with a stable label and you'll never run with a stale fallback.
 
-## Step 2 — Resolve the prompt at request time
+## Step 2 — Fetch the prompt and link it to the generation
 
-Right now the system prompt is read from `src/server/local-prompt.ts`. We need the app to fetch from Langfuse instead — but only if Langfuse is reachable. If keys are missing or the network is down, the local template still works.
-
-`src/server/prompt-manager.ts` already implements that logic in a function called `resolveSupportPrompt(context)`. Read it once — at a high level it does this:
-
-- If you don't have Langfuse keys set, use the local template.
-- If you do, fetch from Langfuse using the `LANGFUSE_PROMPT_NAME` + `LANGFUSE_PROMPT_LABEL` from `.env`. If that call fails for any reason, fall back to the local template.
-- Either way, fill in the template variables (Dad's context, response style, scope) and return the finished prompt text — plus a flag (`promptSource`) saying whether it came from Langfuse or local.
-
-Now wire it into the agent. In `src/server/support-agent.ts`:
+Now wire the app to read from Langfuse instead of the constant. The whole change in `src/server/support-agent.ts` is:
 
 **Add the import:**
 
 ```ts
-import { resolveSupportPrompt } from "./prompt-manager";
+import { LangfuseClient } from "@langfuse/client";
 ```
 
-**Replace the prompt compilation lines** at the top of `runSupportConversationInner` with:
+**Add a `getPrompt()` helper at module scope** that fetches the prompt with the local `SYSTEM_PROMPT` as a fallback:
 
 ```ts
-const context = getSupportContext();
-const prompt = await resolveSupportPrompt(context);
+let langfuse: LangfuseClient | null = null;
+
+async function getPrompt() {
+  if (!isLangfuseConfigured() || !env.langfusePromptName) {
+    return null;
+  }
+  langfuse ??= new LangfuseClient();
+  return await langfuse.prompt.get(env.langfusePromptName, {
+    fallback: SYSTEM_PROMPT,
+    cacheTtlSeconds: process.env.NODE_ENV === "development" ? 0 : 60
+  });
+}
 ```
 
-**Use `prompt.promptText`** in the system message:
+**Use it inside `runSupportConversationInner`** — fetch the prompt, compile to a string, and forward the prompt object to `observeOpenAI` so the generation row in Langfuse gets a Prompt badge linking back to the exact version:
 
 ```ts
-const transcript: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
-  { role: "system", content: prompt.promptText },
+const langfusePrompt = await getPrompt();
+const systemPrompt = langfusePrompt ? langfusePrompt.compile() : SYSTEM_PROMPT;
+
+const openai = getOpenAIClient({
+  generationName: "openai-chat-completion",
+  ...(langfusePrompt ? { langfusePrompt } : {})
+});
+
+const transcript = [
+  { role: "system", content: systemPrompt },
   ...toOpenAIMessages(request.messages)
 ];
 ```
 
-**Update the response** to flow `promptSource` through:
+Three things to notice:
 
-```ts
-return {
-  answer: finalAnswer,
-  promptSource: prompt.promptSource,
-  // ...
-};
-```
-
-You can delete the now-unused imports from `./local-prompt` (`buildPromptVariables`, `compileLocalPrompt`, `getLocalPromptTemplate`) from `support-agent.ts` — they only live inside the resolver now.
-
-## Step 3 — Link the generation to the prompt version
-
-Tracing is already capturing every OpenAI call. But right now Langfuse has no way of knowing *which prompt version produced this generation* — the prompt is just text the app sent. We fix that by handing the resolved prompt object to `observeOpenAI(...)`, which records the link on every generation it captures.
-
-Concretely, this does three things:
-
-- Each generation row in Langfuse gets a clickable **Prompt** badge linking back to the exact version that produced it.
-- The Prompts view shows a "Used in" section listing every trace that ran against that version — useful for sanity-checking a prompt change.
-- Later steps (monitoring, experiments) can filter or compare by prompt version with no extra wiring.
-
-Move the `observeOpenAI` wrap **inside** `runSupportConversationInner` so it has access to the resolved `prompt` object, and pass `langfusePrompt`:
-
-```ts
-const openai = observeOpenAI(getRawOpenAIClient(), {
-  ...(prompt.langfusePrompt ? { langfusePrompt: prompt.langfusePrompt as never } : {})
-});
-```
-
-`getRawOpenAIClient()` is your existing factory that returns `new OpenAI({ apiKey })` — rename `getOpenAIClient` from step 02 to `getRawOpenAIClient` if you haven't already. Drop the module-level `const openai = observeOpenAI(...)` from step 02; the wrap now happens per request because it needs the per-request prompt.
+- `langfuse.prompt.get(name, { fallback })` returns a prompt object even when Langfuse is unreachable — `fallback` kicks in silently, and the app keeps working.
+- `langfusePrompt.compile()` returns the prompt body as a string. (For chat prompts it would return a `messages` array; we use a text prompt.)
+- Passing `langfusePrompt` into `observeOpenAI` is what makes every generation under that client carry the **Prompt** badge linking back to the exact published version.
 
 ## Verify
 
@@ -153,10 +124,11 @@ npm run dev
 Ask one question, then in Langfuse:
 
 - Open the trace, click the OpenAI generation. It should show a **Prompt** badge linking to `dad-it-support-agent` at the version you published.
-- The root observation's output `promptSource` reads `langfuse`.
 - In the Prompts view for `dad-it-support-agent`, scroll to "Used in" and your trace appears.
 
 ![A traced openai-chat-completion with the Prompt badge in the top-right linking back to dad-it-support-agent · v1.](../images/prompt-management/03-prompt-management-prompt-badge.png)
+
+If your `.env` doesn't have Langfuse keys, `getPrompt()` returns `null` and the app uses `SYSTEM_PROMPT` directly — same answers, just no Prompt badge on the generation.
 
 ## Wrap-up
 

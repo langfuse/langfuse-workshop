@@ -6,7 +6,7 @@
 
 - Dad himself is the user. Specs (the agent) talks directly to him about his iPhone.
 - One OpenAI tool-calling loop. Two local tools (`get_support_context`, `search_help_library`).
-- The system prompt is rendered locally from `src/server/local-prompt.ts`. No Langfuse yet.
+- The system prompt is rendered locally from `src/server/support-agent.ts`. No Langfuse yet.
 
 ![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
@@ -17,7 +17,7 @@
 - `src/server/support-agent.ts` — the tool-calling loop you'll instrument in `02-tracing`
 - `src/server/tools.ts` — tool definitions and `executeTool(...)`
 - `src/server/support-data.ts` — Dad's fixed context + guide library
-- `src/server/local-prompt.ts` — system-prompt template
+- `src/server/support-agent.ts` — system-prompt template
 
 
 ## Bonus

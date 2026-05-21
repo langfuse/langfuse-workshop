@@ -12,13 +12,14 @@ Your dataset is seeded in Langfuse. `scripts/run-dataset.ts` is already in the r
 
 A trace tells you about *one* turn. An experiment tells you about behavior *across the dataset*. Every experiment run does the same three things:
 
+
 1. **Pulls each item from the dataset.**
 2. **Runs the item's input through the agent** — same `runSupportConversation(...)` the web app uses, so the trace shape is the same as production.
 3. **Scores the actual output against the expected output** with one or more evaluators.
 
 Different evaluators answer different questions. For a broader tour of evaluator types and when to pick which, see the [Langfuse Academy lesson on evaluate](https://langfuse.com/academy/evaluate). For this workshop we use two that give a quick first read on answer quality:
 
-- **Keyword match** (deterministic) — *did the answer cover the steps we expected?* Fast, cheap, no model call.
+- **Keyword match** (deterministic) — *did the answer cover the steps we expected?* Fast, cheap, no model call. Done via SDK.
 - **Correctness** (LLM-as-a-judge) — *is the answer actually correct?* More expressive, especially when the wording can vary but the underlying answer has to match the ideal.
 
 In this chapter you'll run both. The keyword match is already wired into the script. Evaluations like the keyword match can be run outside of Langfuse and written back as scores via API. The LLM-as-a-judge correctness evaluator you set yourself in the Langfuse UI.
@@ -98,6 +99,8 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
 5. Enable the evaluator.
 
 > If the template's exact variable names differ from `question` / `actual_output` / `expected_output`, only the names on the template side change — the JSONPaths above stay the same.
+
+TODO: screenshot of varibale mapping
 
 ## Step 3 — Run the dataset
 

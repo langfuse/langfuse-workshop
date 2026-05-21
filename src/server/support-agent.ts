@@ -8,8 +8,8 @@ import { getSupportContext } from "./support-data";
 import { TOOL_DEFINITIONS, executeTool } from "./tools";
 
 // --- The system prompt the agent runs on, kept here as a plain constant.
-//     Prompt management (step 03) will fetch a newer version of this from
-//     Langfuse at request time, with this constant as the fallback.
+//     Prompt management (step 03) publishes this to Langfuse and the agent
+//     fetches it back at request time, with this constant as the fallback.
 export const SYSTEM_PROMPT = `You are Dad IT Support Agent.
 You are talking directly to Dad. He opened this chat himself to get help with his iPhone.
 
@@ -26,49 +26,21 @@ Rules:
 - Do not invent button names or settings paths that were not confirmed by tool results.
 `;
 
-type ResolvedPrompt = {
-  promptText: string;
-  promptSource: "local" | "langfuse";
-  langfusePrompt?: unknown;
-};
+let langfuse: LangfuseClient | null = null;
 
-let langfuseClient: LangfuseClient | null = null;
-
-function getLangfuseClient() {
-  if (!isLangfuseConfigured()) {
+// Returns the active Langfuse-managed prompt for this request, or null if
+// Langfuse prompt management isn't configured (the caller falls back to
+// the local SYSTEM_PROMPT). The `fallback` option on `prompt.get` covers
+// the case where Langfuse is reachable but the fetch fails.
+async function getPrompt() {
+  if (!isLangfuseConfigured() || !env.langfusePromptName) {
     return null;
   }
-  if (!langfuseClient) {
-    langfuseClient = new LangfuseClient({
-      publicKey: env.langfusePublicKey,
-      secretKey: env.langfuseSecretKey,
-      baseUrl: env.langfuseBaseUrl
-    });
-  }
-  return langfuseClient;
-}
-
-// Returns the system prompt to use for this turn. If Langfuse prompt
-// management is configured, fetches the latest version (with the local
-// SYSTEM_PROMPT as a safety fallback). Otherwise just returns the constant.
-async function getPrompt(): Promise<ResolvedPrompt> {
-  const client = getLangfuseClient();
-  if (!client || !env.langfusePromptName) {
-    return { promptText: SYSTEM_PROMPT, promptSource: "local" };
-  }
-
-  const prompt = await client.prompt.get(env.langfusePromptName, {
-    type: "text",
-    label: env.langfusePromptLabel || undefined,
+  langfuse ??= new LangfuseClient();
+  return await langfuse.prompt.get(env.langfusePromptName, {
     fallback: SYSTEM_PROMPT,
     cacheTtlSeconds: process.env.NODE_ENV === "development" ? 0 : 60
   });
-
-  return {
-    promptText: prompt.compile({}),
-    promptSource: prompt.isFallback ? "local" : "langfuse",
-    langfusePrompt: prompt
-  };
 }
 
 // One-call OpenAI client factory: returns a Langfuse-observed client.
@@ -113,7 +85,8 @@ function parseToolArguments(argumentsText: string) {
 
 async function runSupportConversationInner(request: ChatRequest): Promise<ChatResponse> {
   const context = getSupportContext();
-  const prompt = await getPrompt();
+  const langfusePrompt = await getPrompt();
+  const systemPrompt = langfusePrompt ? langfusePrompt.compile() : SYSTEM_PROMPT;
   const userId = request.userId ?? `workshop-${context.id}`;
 
   return propagateAttributes(
@@ -135,15 +108,14 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
         sessionId: request.sessionId,
         tags: ["langfuse-workshop", "dad-it-support"],
         generationMetadata: {
-          promptSource: prompt.promptSource,
           contextId: context.id,
           contextLabel: context.label
         },
-        ...(prompt.langfusePrompt ? { langfusePrompt: prompt.langfusePrompt as never } : {})
+        ...(langfusePrompt ? { langfusePrompt: langfusePrompt as never } : {})
       });
 
       const transcript: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
-        { role: "system", content: prompt.promptText },
+        { role: "system", content: systemPrompt },
         ...toOpenAIMessages(request.messages)
       ];
       const usedTools = new Set<string>();
@@ -193,7 +165,6 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
 
       return {
         answer: finalAnswer,
-        promptSource: prompt.promptSource,
         usedTools: [...usedTools],
         traceMeta: {
           contextId: context.id,

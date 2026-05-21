@@ -27,7 +27,6 @@ export type ChatRequest = {
 
 export type ChatResponse = {
   answer: string;
-  promptSource: "local" | "langfuse";
   usedTools: string[];
   traceMeta: {
     contextId: string;

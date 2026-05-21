@@ -30,7 +30,7 @@ This chapter is framed around prompt iteration because changing the prompt is th
 - **The agent architecture** — add a tool, change tool ordering, change retries.
 - **The prompt** — what we'll do here.
 
-The shape is always the same: change *one* thing, rerun the dataset, compare runs side by side.
+The shape is always the same: change *one* thing (or a configuration of multiple variables), rerun the dataset, compare runs side by side.
 
 ## Goal
 
@@ -60,9 +60,9 @@ Prompts → `dad-it-support-agent` → edit body → add the rule above into the
 
 ![Review Prompt Changes in Langfuse — side-by-side diff between v1 and the draft with the new out-of-scope rule highlighted, ready to save as a new version and promote to production.](../images/evaluate-a-change/07-evaluate-a-change-prompt-diff.png)
 
-**Option B — Code-side (edit `src/server/local-prompt.ts` and republish):**
+**Option B — Code-side (edit `src/server/support-agent.ts` and republish):**
 
-Open `src/server/local-prompt.ts`, add the same rule into the `baseline` template's Rules block, then publish:
+Open `src/server/support-agent.ts`, add the same rule into the `SYSTEM_PROMPT` constant's Rules block, then publish:
 
 ```bash
 npm run prompt:publish
@@ -87,6 +87,8 @@ In Langfuse:
 - Dataset → **Runs** tab → both rows visible with `keyword_overlap` and `correctness` averages.
 - **Chart view** → per-run averages side by side.
 - Open a handful of items and read both answers — qualitative diffs are where the real signal usually is.
+
+TODO: add actual step by step for side by side result view
 
 Things to look for:
 
