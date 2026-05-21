@@ -42,7 +42,7 @@ For **Out-of-Scope Request**:
    | Template variable | Object field | JsonPath |
    | --- | --- | --- |
    | `{{system_prompt}}` | `Input` | `$.messages[0].content` |
-   | `{{last_user_message}}` | `Input` | `$.messages[.1:].content` |
+   | `{{last_user_message}}` | `Input` | `$.messages[-1:].content` |
 
    The index `[2]` works because our chat starts with Specs' opening greeting at `[1]`, so the user's latest message lands at `[2]`. If your conversation has a different opening shape, adjust the index.
 4. Pick the judge model (e.g. `gpt-5.5-2026-04-23`) and save.
