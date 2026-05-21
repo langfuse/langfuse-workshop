@@ -44,9 +44,8 @@ You should see the **Dad IT Support Agent** chat:
 - suggestion chips below the greeting
 - the iPhone panel on the right ("Dad" + iPhone 11 details)
 
-![Specs greeting on the running app](../images/specs_illustration.png)
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
-> 📷 *Screenshot placeholder: the running app at `http://127.0.0.1:3333`.*
 
 ## How to verify you are done
 

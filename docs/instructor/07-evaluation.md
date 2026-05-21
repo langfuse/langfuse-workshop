@@ -95,4 +95,4 @@ Things to look for:
 
 This step makes "evaluation" click for many people. A single score in isolation doesn't tell you much, but the same score *paired with a deliberate change* is suddenly informative. Once you've done this loop once — change → rerun → compare → decide — every future change has a free baseline to measure against.
 
-A more straightforward way to manage prompt versions and rerun experiments in line with Langfuse best practices is the [**Langfuse Claude Code skill**](https://langfuse.com/docs) (`/langfuse`). It knows how to bump prompt versions, link runs to versions, and produce a comparison chart. The walkthrough exists so you understand what the skill is doing under the hood.
+A more straightforward way to manage prompt versions and rerun experiments in line with Langfuse best practices is the [**Langfuse skill**](https://langfuse.com/docs) (`/langfuse`). It knows how to bump prompt versions, link runs to versions, and produce a comparison chart. The walkthrough exists so you understand what the skill is doing under the hood.

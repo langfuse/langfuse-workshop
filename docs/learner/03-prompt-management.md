@@ -162,7 +162,7 @@ Ask one question, then in Langfuse:
 
 Prompt management is what closes the trace ↔ prompt loop. Every prompt version is preserved, every generation knows which version produced it, and you can iterate prompts independent of code deploys.
 
-A more straightforward way to wire prompt management in line with Langfuse best practices is the [**Langfuse Claude Code skill**](https://langfuse.com/docs) (`/langfuse`). The skill applies the recommended caching, fallback, and linking patterns to your codebase without you hand-rolling each piece. This walkthrough exists so you can see what the skill is doing under the hood.
+A more straightforward way to wire prompt management in line with Langfuse best practices is the [**Langfuse skill**](https://langfuse.com/docs) (`/langfuse`). The skill applies the recommended caching, fallback, and linking patterns to your codebase without you hand-rolling each piece. This walkthrough exists so you can see what the skill is doing under the hood.
 
 ## End state
 

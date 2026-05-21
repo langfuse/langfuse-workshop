@@ -19,11 +19,10 @@
 - `src/server/support-data.ts` — Dad's fixed context + guide library
 - `src/server/local-prompt.ts` — system-prompt template
 
-## How to verify you are oriented
 
-- You can name the two tools and roughly what each returns.
-- You can point at the loop in `support-agent.ts` that calls `executeTool(...)`.
-- You can run the app and get one full iPhone answer with grounded steps.
+## Bonus
+
+You can customize your experience by changing the phone specs in support-data.ts file. Adding your dad's phone information means, you will get replies for the right type of phone.
 
 ## End state
 

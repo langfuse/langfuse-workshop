@@ -130,9 +130,27 @@ button {
   border-bottom: 1px dashed var(--line-divider-dash);
   text-align: center;
 }
+.chat-header.compact {
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  text-align: left;
+}
 .chat-header .mascot-wrap {
   width: 84px; height: 96px;
   position: relative;
+}
+.chat-header.compact .mascot-wrap {
+  width: 40px;
+  height: 46px;
+}
+.chat-header.compact .who h2 {
+  font-size: 18px;
+  line-height: 1;
+}
+.chat-header.compact .who h2 .mark {
+  padding: 0 4px;
 }
 .chat-header .who {
   display: flex;

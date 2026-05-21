@@ -18,13 +18,7 @@ const PHONE = {
   model: "iPhone 11",
   finish: "Black, 64 GB",
   os: "iOS 16.7.10",
-  latestAvail: "iOS 18.4",
-  carrier: "Verizon",
-  purchased: "Nov 2019",
-  lastBackup: "23 days ago",
-  battery: "78% · Service required",
-  storage: "58.2 / 64 GB",
-  storagePct: 91
+  purchased: "Nov 2019"
 };
 
 function createSessionId() {
@@ -135,45 +129,6 @@ function PhonePanel() {
             <div className="age">
               {PHONE.finish} · bought {PHONE.purchased}
             </div>
-          </div>
-        </div>
-
-        <div className="spec-list">
-          <div className="spec">
-            <span className="k">Latest available</span>
-            <span className="v mono">{PHONE.latestAvail}</span>
-          </div>
-          <div className="spec">
-            <span className="k">Carrier</span>
-            <span className="v">{PHONE.carrier}</span>
-          </div>
-          <div className="spec">
-            <span className="k">Storage</span>
-            <span className="v mono">
-              {PHONE.storage}
-              <span className="pct">{PHONE.storagePct}%</span>
-            </span>
-          </div>
-        </div>
-
-        <div className="storage-bar">
-          <div className="fill"></div>
-        </div>
-
-        <div className="spec-list" style={{ marginTop: 12 }}>
-          <div className="spec">
-            <span className="k">Last iCloud backup</span>
-            <span className="v">{PHONE.lastBackup}</span>
-          </div>
-          <div className="spec">
-            <span className="k">Battery health</span>
-            <span className="v" style={{ color: "var(--callout-warning)" }}>
-              {PHONE.battery}
-            </span>
-          </div>
-          <div className="spec">
-            <span className="k">Find My</span>
-            <span className="v">On (shared w/ you)</span>
           </div>
         </div>
       </div>
@@ -296,18 +251,14 @@ export function App() {
       <TopBar />
       <div className="main">
         <section className="chat">
-          <header className="chat-header">
+          <header className="chat-header compact">
             <div className="mascot-wrap">
-              <Mascot size={84} thinking={isSending} />
+              <Mascot size={40} thinking={isSending} />
             </div>
             <div className="who">
-              <div className="eyebrow">// agent · specs_v3</div>
               <h2>
                 Hi Dad, I'm <span className="mark">Specs</span>.
               </h2>
-              <div className="sub">
-                I help you with <em>your</em> iPhone. Wi-Fi, Bluetooth, photos, messages, maps — ask me one thing and I'll walk you through it.
-              </div>
             </div>
           </header>
 

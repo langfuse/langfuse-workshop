@@ -43,7 +43,7 @@ When participants go back to their own codebase, the recommended path is:
    langfuse auth
    ```
 
-2. **Install the Langfuse Claude Code skill** (`/langfuse`) — it packages the recommended tracing, prompt management, monitoring, and evaluator patterns from this workshop.
+2. **Install the Langfuse skill** (`/langfuse`) — it packages the recommended tracing, prompt management, monitoring, and evaluator patterns from this workshop.
 
 3. **Pick the smallest LLM-using surface** they have and wire `observe(...)` + `observeOpenAI(...)` first.
 

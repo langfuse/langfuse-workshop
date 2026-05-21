@@ -47,7 +47,7 @@ When you go back to your own codebase, do this in order:
    langfuse auth
    ```
 
-2. **Install the Langfuse Claude Code skill** (`/langfuse`) — it packages the recommended tracing, prompt management, monitoring, and evaluator patterns from this workshop and applies them to your codebase without you hand-rolling each piece.
+2. **Install the Langfuse skill** (`/langfuse`) — it packages the recommended tracing, prompt management, monitoring, and evaluator patterns from this workshop and applies them to your codebase without you hand-rolling each piece.
 
 3. **Pick the smallest LLM-using surface** you have and wire `observe(...)` + `observeOpenAI(...)` first. Get one trace before you do anything else.
 

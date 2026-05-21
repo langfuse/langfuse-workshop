@@ -20,7 +20,7 @@ When Dad asks "How do I turn Bluetooth on?", the agent doesn't just hit OpenAI o
 
 The goal of this chapter is to make every one of those steps visible in Langfuse — one chat turn becomes one nested trace with the agent run, the OpenAI generations, and the two tool calls all logged in order.
 
-![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
+![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../tracing/process_illustration.png)
 
 We will build up the trace in three steps that mirror the agent's structure:
 
@@ -196,15 +196,16 @@ export async function executeTool(name: string, input: Record<string, unknown>):
 
 Same pattern, different observation types, same concept: `observe(fn, { asType })` wraps a function and emits a span with the name and type you give it. `observeOpenAI(client)` is a specialized version of that wrap for the OpenAI SDK.
 
-A more straightforward way to add rich tracing in line with Langfuse best practices is the **Langfuse Claude Code skill** (`/langfuse`). It applies the recommended patterns to your codebase without you hand-rolling each wrap. This walkthrough exists so you understand what the skill is doing under the hood.
+A more straightforward way to add rich tracing in line with Langfuse best practices is the **Langfuse skill** (`/langfuse`). It applies the recommended patterns to your codebase without you hand-rolling each wrap. This walkthrough exists so you understand what the skill is doing under the hood.
 
 `observeOpenAI` itself wraps the official OpenAI SDK — under the hood it's the same as the Langfuse [auto-instrumentation for OpenAI JS](https://langfuse.com/integrations/model-providers/openai-js). If you're using a different SDK (Anthropic, Vercel AI SDK, your own HTTP client), the Langfuse [integrations catalogue](https://langfuse.com/integrations) has the equivalent wrapper or auto-instrumentation guide.
 
-## Appendix — User and session IDs
+## Appendi/Bonus section — User and session IDs
 
 The walkthrough above gets you tracing with a clean parent → generation → tool shape. The next thing most teams want is to **slice traces by user and by session** — so you can pull up "every turn this user has had with the agent" or "the full multi-turn session from yesterday morning."
+For simplicity reasons we skip this step in this workshop, but see information on [Sessions](https://langfuse.com/docs/observability/sessions) and [Users](https://langfuse.com/docs/observability/users) in the Langfuse docs.
 
-You don't have to do this yet; it's covered in [`04-monitoring`](./04-monitoring.md). The mechanism is small enough to mention here:
+In short:
 
 ```ts
 import { propagateAttributes } from "@langfuse/tracing";
@@ -223,7 +224,6 @@ return propagateAttributes(
 
 Anything inside the `propagateAttributes(...)` block — including all child spans emitted by `observeOpenAI` — automatically gets the `userId`, `sessionId`, and tags attached. The Langfuse **Users** view, **Sessions** view, and tag filters all light up as soon as the attributes are present.
 
-For the full reference, see [Sessions](https://langfuse.com/docs/observability/sessions) and [Users](https://langfuse.com/docs/observability/users) in the Langfuse docs.
 
 ## End state
 

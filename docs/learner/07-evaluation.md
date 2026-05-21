@@ -105,7 +105,7 @@ Things to look for:
 
 Closing the loop — change → rerun → compare → decide — is what makes prompt or model changes go from gut calls to engineering decisions. Every future change has a free baseline to measure against.
 
-The [**Langfuse Claude Code skill**](https://langfuse.com/docs) (`/langfuse`) bumps prompt versions, links runs to versions, and produces a comparison chart automatically — this walkthrough exists so you see what the skill is doing under the hood.
+The [**Langfuse skill**](https://langfuse.com/docs) (`/langfuse`) bumps prompt versions, links runs to versions, and produces a comparison chart automatically — this walkthrough exists so you see what the skill is doing under the hood.
 
 ## End state
 

@@ -75,4 +75,4 @@ The script reports progress per item and finishes with a summary line. Each item
 
 Experiments are not a separate app. They are the same application logic run repeatedly on a scoped dataset so behavior can be compared over time. The two scoring approaches give two angles on the same run: **keyword match** for "did we cover the right steps?" and **correctness** for "is the answer actually right?" Real evaluation programs typically combine deterministic and judge-based checks like this.
 
-The [**Langfuse Claude Code skill**](https://langfuse.com/docs) (`/langfuse`) knows the recommended evaluator shapes and how to wire them into `runExperiment` — this walkthrough exists so you understand what the skill is doing under the hood. Learn more in the [Langfuse Academy lesson on experiments](https://langfuse.com/academy/experiments).
+The [**Langfuse skill**](https://langfuse.com/docs) (`/langfuse`) knows the recommended evaluator shapes and how to wire them into `runExperiment` — this walkthrough exists so you understand what the skill is doing under the hood. Learn more in the [Langfuse Academy lesson on experiments](https://langfuse.com/academy/experiments).

@@ -125,7 +125,7 @@ The script attaches `keyword_overlap` itself. The Correctness evaluator you set 
 
 The two scoring approaches give you two angles on the same run: **keyword match** for "did we cover the right steps?" and **correctness** for "is the answer actually right?" Real evaluation programs typically combine deterministic and judge-based checks like this.
 
-The [**Langfuse Claude Code skill**](https://langfuse.com/docs) (`/langfuse`) knows the recommended evaluator shapes and how to wire them into `runExperiment` — this walkthrough exists so you see what the skill is doing under the hood. Learn more about experiments in the [Langfuse Academy lesson](https://langfuse.com/academy/experiments).
+The [**Langfuse skill**](https://langfuse.com/docs) (`/langfuse`) knows the recommended evaluator shapes and how to wire them into `runExperiment` — this walkthrough exists so you see what the skill is doing under the hood. Learn more about experiments in the [Langfuse Academy lesson](https://langfuse.com/academy/experiments).
 
 ## End state
 
