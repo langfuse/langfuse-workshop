@@ -31,7 +31,7 @@ You don't need to change any code in this step. The trace shape from `02-tracing
 
 Langfuse ships published templates for **User Disagreement** and **Out-of-Scope Request**. Both are LLM-as-a-judge evaluators that read variables from the trace. They expect access to the system prompt and the user's latest message, so the right place to target is the OpenAI generation observation — that's where the system prompt sits at `messages[0]`.
 
-For out **Out-of-Scope Request**:
+For **Out-of-Scope Request**:
 
 1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
 2. Target the OpenAI generation:
@@ -50,7 +50,7 @@ For out **Out-of-Scope Request**:
 
 ![Variable mapping](../images/monitoring/out-of-scope.png)
 
-For out **User Disagreement**:
+For **User Disagreement**:
 
 1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
 2. Target the OpenAI generation:
