@@ -5,7 +5,7 @@ description: "Tour the TypeScript support agent before instrumentation: chat UI,
 
 # 01 Base App
 
-> The base app is already in the repo. Nothing to build in this chapter — just orient yourself before tracing starts in `02-tracing`.
+> You already cloned the repo and checked out the workshop app in `00-setup`. The base app is in that same checkout, so there is nothing to build in this chapter — just orient yourself before tracing starts in `02-tracing`.
 
 ## What the running app does
 
