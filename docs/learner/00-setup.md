@@ -1,3 +1,8 @@
+---
+title: "Workshop: Setup"
+description: "Set up the workshop app with OpenAI and Langfuse credentials, configure evaluator access, and verify the local Dad IT Support Agent."
+---
+
 # 00 Setup
 
 ## Goal

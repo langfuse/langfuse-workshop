@@ -1,3 +1,8 @@
+---
+title: "Workshop: Dad IT Support Agent Base App"
+description: "Tour the TypeScript support agent before instrumentation: chat UI, Express API, OpenAI tool loop, local tools, and support data."
+---
+
 # 01 Base App
 
 > The base app is already in the repo. Nothing to build in this chapter — just orient yourself before tracing starts in `02-tracing`.

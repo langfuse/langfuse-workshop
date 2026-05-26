@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for Wrap-up"
+description: "Facilitator notes for closing the workshop by synthesizing the AI engineering loop and prompting learners to apply it to their own app."
+---
+
 # 08 Wrap-up
 
 Learner guide: [08 Wrap-up](../learner/08-wrap-up.md)

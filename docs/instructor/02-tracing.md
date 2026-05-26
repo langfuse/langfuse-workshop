@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for Tracing"
+description: "Facilitator notes for teaching Langfuse tracing in three layers: OpenAI generations, one agent root, and tool observations."
+---
+
 # 02 Tracing
 
 Learner guide: [02 Tracing](../learner/02-tracing.md)

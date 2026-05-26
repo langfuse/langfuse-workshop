@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for Monitoring"
+description: "Facilitator notes for the no-code monitoring chapter, including evaluator targets, variable mapping, and debugging first results."
+---
+
 # 04 Monitoring
 
 Learner guide: [04 Monitoring](../learner/04-monitoring.md)

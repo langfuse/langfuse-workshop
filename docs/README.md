@@ -1,3 +1,8 @@
+---
+title: "Workshop: AI Engineering Loop"
+description: "Build a TypeScript AI support agent while learning Langfuse tracing, prompt management, monitoring, datasets, experiments, and evaluation."
+---
+
 # Workshop docs
 
 The workshop has **two parallel paths** through the same nine modules. Pick the one that matches what you're doing.

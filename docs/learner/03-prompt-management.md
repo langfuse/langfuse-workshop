@@ -1,3 +1,8 @@
+---
+title: "Workshop: Prompt Management with Langfuse"
+description: "Move the system prompt into Langfuse, fetch the production prompt at runtime, and link every traced generation to its prompt version."
+---
+
 # 03 Prompt Management
 
 ## Starting point
