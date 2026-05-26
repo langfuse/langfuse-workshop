@@ -1,3 +1,8 @@
+---
+title: "Workshop: Monitoring AI Agent Behavior"
+description: "Configure Langfuse evaluators to catch out-of-scope requests and user disagreement without reading every production trace by hand."
+---
+
 # 04 Monitoring
 
 ## Starting point

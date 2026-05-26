@@ -1,3 +1,8 @@
+---
+title: "Workshop: Run Langfuse Experiments"
+description: "Run the support agent across the Langfuse dataset, attach keyword and correctness scores, and inspect per-item traces in experiment runs."
+---
+
 # 06 Experiments
 
 ## Starting point

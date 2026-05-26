@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for Prompt Management"
+description: "Facilitator notes for demonstrating the trace-to-prompt loop, publishing a prompt in Langfuse, fetching it, and showing the Prompt badge."
+---
+
 # 03 Prompt Management
 
 Learner guide: [03 Prompt Management](../learner/03-prompt-management.md)

@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for Experiments"
+description: "Facilitator notes for running Langfuse experiments, contrasting deterministic and LLM-as-a-judge scores, and inspecting run results."
+---
+
 # 06 Experiments
 
 Learner guide: [06 Experiments](../learner/06-experiments.md)

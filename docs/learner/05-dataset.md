@@ -1,3 +1,8 @@
+---
+title: "Workshop: Build a Langfuse Dataset"
+description: "Seed a starter dataset for the support agent with realistic inputs, expected outputs, and metadata for future evaluation runs."
+---
+
 # 05 Dataset
 
 ## Starting point

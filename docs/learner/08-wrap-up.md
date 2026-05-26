@@ -1,3 +1,8 @@
+---
+title: "Workshop: Wrap-up"
+description: "Review the complete AI engineering loop and how to apply tracing, monitoring, datasets, experiments, and evaluation to your own LLM app."
+---
+
 # 08 Wrap-up
 
 ## Starting point

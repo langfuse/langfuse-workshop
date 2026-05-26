@@ -1,3 +1,8 @@
+---
+title: "Workshop: Evaluate a Prompt Change"
+description: "Change one prompt rule, rerun the same dataset, and compare Langfuse experiment scores to decide whether the update improved the agent."
+---
+
 # 07 Evaluate a change
 
 ## Starting point

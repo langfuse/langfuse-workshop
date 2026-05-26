@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for the Base App Tour"
+description: "Facilitator notes for the base app chapter, including what to point out in the chat UI, Express route, agent loop, and local tools."
+---
+
 # 01 Base App
 
 Learner guide: [01 Base App](../learner/01-base-app.md)

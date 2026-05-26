@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for Datasets"
+description: "Facilitator notes for framing datasets as product scope, seeding curated examples into Langfuse, and connecting items back to monitoring."
+---
+
 # 05 Dataset
 
 Learner guide: [05 Dataset](../learner/05-dataset.md)
