@@ -24,7 +24,7 @@ The workshop is small enough to finish in a sitting and every module is independ
 
 ## How does it work?
 
-This workshop lives in a GitHub repository. `main` contains the complete reference app and the current workshop docs. Use it to inspect the finished implementation or compare your work against the end state.
+This workshop lives in a [GitHub repository](https://github.com/langfuse/langfuse-workshop). `main` contains the complete reference app and the current workshop docs. Use it to inspect the finished implementation or compare your work against the end state.
 
 The exercises themselves start from checkpoint tags. Each learner chapter tells you which checkpoint to check out before making changes. The walkthrough is split into nine modules, each with a paired guide:
 
