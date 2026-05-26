@@ -103,7 +103,9 @@ The index [2] works because the user's latest message lands at [2].</pre>
 {{last_user_message}} Input  $.messages[?(@.role=="user")][-1:].content
 
 The final generation's input includes tool results after the user message,
-so select the last message whose role is user instead of using a fixed index.</pre>
+so select the last message whose role is user instead of using a fixed index.
+Use Prompt Preview before saving; it should render Dad's latest message,
+not a tool result.</pre>
             </td>
           </tr>
         </tbody>
@@ -140,7 +142,8 @@ Map variables from the agent observation's Input:
 {{conversation_history}} Input  $.messages
 {{last_user_message}}   Input  $.messages[-1:].content
 
-The agent input is the browser chat request, so the last message is Dad's latest turn.</pre>
+The agent input is the browser chat request, so the last message is Dad's latest turn.
+Confirm that in Prompt Preview before enabling the evaluator.</pre>
             </td>
           </tr>
         </tbody>
