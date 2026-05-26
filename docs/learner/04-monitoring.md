@@ -45,9 +45,9 @@ For **Out-of-Scope Request**:
    | Template variable | Object field | JsonPath |
    | --- | --- | --- |
    | `{{system_prompt}}` | `Input` | `$.messages[0].content` |
-   | `{{last_user_message}}` | `Input` | `$.messages[?(@.role=="user")][-1:].content` |
+   | `{{last_user_message}}` | `Input` | `$.messages[-1:].content` |
 
-   The final generation's input includes tool results after the user message, so don't use a fixed index or "last message" selector. The JSONPath above selects the last message whose `role` is `user`. Use the evaluator's Prompt Preview before saving; it should render Dad's latest message, not a tool result.
+   The index `[2]` works because our chat starts with Specs' opening greeting at `[1]`, so the user's latest message lands at `[2]`. If your conversation has a different opening shape, adjust the index.
 4. Pick the judge model (e.g. `gpt-5.5-2026-04-23`) and save.
 5. Enable the evaluator.
 
@@ -66,7 +66,7 @@ For **User Disagreement**:
    | `{{conversation_history}}` | `Input` | `$.messages` |
    | `{{last_user_message}}` | `Input` | `$.messages[-1:].content` |
 
-   The agent input is the chat request from the browser, so the last message is Dad's latest message for that turn. Confirm that in Prompt Preview before enabling the evaluator.
+   The agent input is the chat request from the browser, so the last message is Dad's latest message for that turn.
 4. Pick the judge model (e.g. `gpt-5.5-2026-04-23`) and save.
 5. Enable the evaluator.
 
