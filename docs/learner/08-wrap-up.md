@@ -39,11 +39,21 @@ Langfuse in this workshop is a *shared surface*, not just observability:
 
 When you go back to your own codebase, do this in order:
 
-1. **Install the [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli)** so you can manage prompts, datasets, and runs from the terminal:
+1. **Run the [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli)** so you can manage prompts, datasets, and runs from the terminal. The CLI uses the same project API keys as the SDKs, so there is no separate CLI login step:
 
    ```bash
-   npm install -g @langfuse/cli
-   langfuse auth
+   export LANGFUSE_PUBLIC_KEY="pk-lf-..."
+   export LANGFUSE_SECRET_KEY="sk-lf-..."
+   export LANGFUSE_BASE_URL="https://cloud.langfuse.com"
+
+   npx langfuse-cli api __schema
+   ```
+
+   If you prefer a global binary, install the published `langfuse-cli` package:
+
+   ```bash
+   npm install -g langfuse-cli
+   langfuse api __schema
    ```
 
 2. **Install the [Langfuse skill](https://github.com/langfuse/skills)** (`/langfuse`) — it packages the recommended tracing, prompt management, monitoring, and evaluator patterns from this workshop and applies them to your codebase without you hand-rolling each piece.
