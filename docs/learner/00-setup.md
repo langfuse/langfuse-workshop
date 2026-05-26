@@ -11,9 +11,11 @@ Have the workshop app running locally with both OpenAI and Langfuse credentials 
 
 ## Starting point
 
-Use the setup checkpoint for this chapter:
+Clone the workshop repository, enter it, then check out the setup checkpoint for this chapter:
 
 ```bash
+git clone https://github.com/langfuse/langfuse-workshop.git
+cd langfuse-workshop
 git checkout checkpoint/00-setup
 ```
 
