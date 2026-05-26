@@ -25,16 +25,19 @@ Monitoring also has a quality-tracking dimension — average score on some metri
 
 
 
-You don't need to change any code in this step. The trace shape from `02-tracing` already has everything a judge-based monitor needs at the root observation: the full conversation as input and the agent's answer as output.
+You don't need to change any code in this step. The trace shape from `02-tracing` already has everything a judge-based monitor needs: the agent observation has the full conversation and final answer, and each OpenAI generation has the system prompt plus the same message array.
 
 ## Step 1 — Wire the first two monitors (Langfuse UI)
 
-Langfuse ships published templates for **User Disagreement** and **Out-of-Scope Request**. Both are LLM-as-a-judge evaluators that read variables from the trace. They expect access to the system prompt and the user's latest message, so the right place to target is the OpenAI generation observation — that's where the system prompt sits at `messages[0]`.
+Langfuse ships published templates for **User Disagreement** and **Out-of-Scope Request**. Both are LLM-as-a-judge evaluators that read variables from observations. The two templates need slightly different targets:
+
+- **Out-of-Scope Request** needs the system prompt, so target the final OpenAI generation.
+- **User Disagreement** needs the conversation history, so target the root `dad-it-support-chat-turn` agent observation.
 
 For **Out-of-Scope Request**:
 
 1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
-2. Target the OpenAI generation:
+2. Target the final OpenAI generation:
    - Observation type: `generation`
    - Tool Call count = 0 (to exclude tool decisions)
 3. Map the template's variables from the generation's **Input**:
@@ -42,9 +45,9 @@ For **Out-of-Scope Request**:
    | Template variable | Object field | JsonPath |
    | --- | --- | --- |
    | `{{system_prompt}}` | `Input` | `$.messages[0].content` |
-   | `{{last_user_message}}` | `Input` | `$.messages[-1:].content` |
+   | `{{last_user_message}}` | `Input` | `$.messages[?(@.role=="user")][-1:].content` |
 
-   The index `[2]` works because our chat starts with Specs' opening greeting at `[1]`, so the user's latest message lands at `[2]`. If your conversation has a different opening shape, adjust the index.
+   The final generation's input includes tool results after the user message, so don't use a fixed index or "last message" selector. The JSONPath above selects the last message whose `role` is `user`.
 4. Pick the judge model (e.g. `gpt-5.5-2026-04-23`) and save.
 5. Enable the evaluator.
 
@@ -52,16 +55,18 @@ For **Out-of-Scope Request**:
 
 For **User Disagreement**:
 
-1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
-2. Target the OpenAI generation:
+1. In Langfuse, open **Evaluators → New evaluator** and pick the **User Disagreement** template from the published library.
+2. Target the root agent observation:
    - Observation type: `agent`
-3. Map the template's variables from the generation's **Input**:
+   - Observation name: `dad-it-support-chat-turn`
+3. Map the template's variables from the agent observation's **Input**:
 
    | Template variable | Object field | JsonPath |
    | --- | --- | --- |
    | `{{conversation_history}}` | `Input` | `$.messages` |
    | `{{last_user_message}}` | `Input` | `$.messages[-1:].content` |
 
+   The agent input is the chat request from the browser, so the last message is Dad's latest message for that turn.
 4. Pick the judge model (e.g. `gpt-5.5-2026-04-23`) and save.
 5. Enable the evaluator.
 

@@ -42,7 +42,7 @@ You should see the **Dad IT Support Agent** chat:
 - the Specs mascot up top
 - a greeting from Specs
 - suggestion chips below the greeting
-- the iPhone panel on the right ("Dad" + iPhone 11 details)
+- the iPhone panel on the right ("Dad" + iPhone 15 details)
 
 ![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
@@ -55,4 +55,4 @@ You should see the **Dad IT Support Agent** chat:
 
 ## End state
 
-You are ready to start `02-tracing`.
+Your environment is ready. To build the workshop step-by-step, check out `checkpoint/02-tracing` next.

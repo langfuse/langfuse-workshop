@@ -1,3 +1,16 @@
 # 08 Wrap-up
 
-> Under construction.
+Learner guide: [08 Wrap-up](../learner/08-wrap-up.md)
+
+## Instructor notes
+
+- Keep this as a synthesis, not another feature tour.
+- Re-state the loop in operational terms: trace behavior, detect signals, collect examples, run experiments, compare changes.
+- Ask learners which one piece they would apply to their own app first.
+
+## Good closing prompts
+
+- Which trace view changed how you would debug an LLM app?
+- Which monitor would you create first for your own product?
+- What real examples would seed your first dataset?
+- Where would the Langfuse skill save implementation time in your codebase?

@@ -14,11 +14,11 @@ const SUGGESTIONS = [
 
 const PHONE = {
   ownerName: "Dad",
-  ownerSub: "Signed in · iPhone 11",
-  model: "iPhone 11",
-  finish: "Black, 64 GB",
-  os: "iOS 16.7.10",
-  purchased: "Nov 2019"
+  ownerSub: "Signed in · iPhone 15",
+  model: "iPhone 15",
+  finish: "Black, 128 GB",
+  os: "iOS 18.5",
+  purchased: "Sep 2023"
 };
 
 function createSessionId() {
@@ -327,12 +327,6 @@ export function App() {
                     <kbd>↵</kbd> send · <kbd>⇧</kbd>+<kbd>↵</kbd> newline
                   </span>
                   <span className="spacer"></span>
-                  <span
-                    className="hint"
-                    style={{ textTransform: "none", letterSpacing: 0, color: "var(--text-disabled)" }}
-                  >
-                    ▲ traced via langfuse
-                  </span>
                   <button className="send-btn" disabled={isSending || !draft.trim()} type="submit">
                     Send <span className="kbd">↵</span>
                   </button>
