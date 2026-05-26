@@ -100,7 +100,7 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
    - Dataset: `dad-it-support-workshop`
 3. **Map the template variables** to the trace's input/output and the dataset item's expected output:
    - `query` (the user's query) ← `$.input.messages[-1].content`
-   - `actual_output` (what the agent answered) ← Output (the experiment run records the agent's answer here)
+   - `generation` (what the agent answered) ← Output (the experiment run records the agent's answer here)
    - `ground_truth` (the ideal answer) ← Expected Output from the dataset item
 4. Use the default judge model you configured during setup, or pick another structured-output-capable judge model, and save.
 5. Enable the evaluator.

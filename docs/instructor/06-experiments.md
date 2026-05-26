@@ -23,6 +23,6 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 
 ## Watch for
 
-- Correctness evaluator mapping. The query comes from dataset input, actual output from run output, and ground truth from expected output.
+- Correctness evaluator mapping. `query` comes from dataset input, `generation` from run output, and `ground_truth` from expected output.
 - "No default model set" means Langfuse needs an LLM connection/default evaluator model; it is not fixed by editing `.env`.
 - Slow asynchronous evaluator results; refresh after the run finishes.
