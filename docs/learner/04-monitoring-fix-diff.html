@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>04 Monitoring evaluator mapping diff</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f6f6f3;
+        color: #222220;
+        font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      main {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 32px 24px 48px;
+      }
+      h1 {
+        font-size: 28px;
+        line-height: 1.15;
+        margin: 0 0 8px;
+      }
+      p {
+        max-width: 760px;
+        margin: 0 0 18px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border: 1px solid #d8d8d2;
+      }
+      th,
+      td {
+        vertical-align: top;
+        text-align: left;
+        border-bottom: 1px solid #e1e1dc;
+        padding: 12px;
+      }
+      th {
+        width: 50%;
+        background: #edede8;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      }
+      .old {
+        background: #fff5f3;
+      }
+      .new {
+        background: #f3fbf2;
+      }
+      .label {
+        display: inline-block;
+        margin: 24px 0 8px;
+        font-weight: 700;
+      }
+      code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>04 Monitoring evaluator mapping diff</h1>
+      <p>
+        The original instructions mixed generation-level and agent-level evaluator targets. The fixed version
+        maps each evaluator to the observation that actually contains the variables its template needs.
+      </p>
+
+      <div class="label">Out-of-Scope Request</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Before</th>
+            <th>Suggested fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="old">
+              <pre>Target the OpenAI generation:
+- Observation type: generation
+- Tool Call count = 0
+
+{{system_prompt}}      Input  $.messages[0].content
+{{last_user_message}} Input  $.messages[-1:].content
+
+The index [2] works because the user's latest message lands at [2].</pre>
+            </td>
+            <td class="new">
+              <pre>Target the final OpenAI generation:
+- Observation type: generation
+- Tool Call count = 0
+
+{{system_prompt}}      Input  $.messages[0].content
+{{last_user_message}} Input  $.messages[?(@.role=="user")][-1:].content
+
+The final generation's input includes tool results after the user message,
+so select the last message whose role is user instead of using a fixed index.</pre>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="label">User Disagreement</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Before</th>
+            <th>Suggested fix</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="old">
+              <pre>Pick the Out-of-Scope Request template.
+
+Target the OpenAI generation:
+- Observation type: agent
+
+Map variables from the generation's Input:
+{{conversation_history}} Input  $.messages
+{{last_user_message}}   Input  $.messages[-1:].content</pre>
+            </td>
+            <td class="new">
+              <pre>Pick the User Disagreement template.
+
+Target the root agent observation:
+- Observation type: agent
+- Observation name: dad-it-support-chat-turn
+
+Map variables from the agent observation's Input:
+{{conversation_history}} Input  $.messages
+{{last_user_message}}   Input  $.messages[-1:].content
+
+The agent input is the browser chat request, so the last message is Dad's latest turn.</pre>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </body>
+</html>

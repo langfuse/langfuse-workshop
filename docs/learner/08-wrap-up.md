@@ -52,7 +52,7 @@ When you go back to your own codebase, do this in order:
 
 4. **Add user/session information** only once you have at least two users or two sessions of traffic — there's no point until then.
 
-5. **Build your first dataset *from real traces, discussions with experts, or past examples*** rather than from imagination. Production behavior will tell you over tome what your dataset needs to cover.
+5. **Build your first dataset *from real traces, discussions with experts, or past examples*** rather than from imagination. Production behavior will tell you over time what your dataset needs to cover.
 
 6. **Run one experiment, change one thing, rerun.** Then repeat.
 
