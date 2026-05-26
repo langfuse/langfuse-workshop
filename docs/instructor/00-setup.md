@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for Setup"
+description: "Facilitator notes for setup: keep learners on the checkpoint, verify local ports and credentials, and prepare Langfuse evaluator configuration."
+---
+
 # 00 Setup
 
 Learner guide: [00 Setup](../learner/00-setup.md)

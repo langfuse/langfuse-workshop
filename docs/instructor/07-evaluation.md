@@ -1,3 +1,8 @@
+---
+title: "Workshop: Instructor Notes for Evaluating a Change"
+description: "Facilitator notes for evidence-driven prompt iteration: inspect low-scoring items, change one thing, rerun, and compare regressions."
+---
+
 # 07 Evaluate a Change
 
 Learner guide: [07 Evaluate a Change](../learner/07-evaluation.md)

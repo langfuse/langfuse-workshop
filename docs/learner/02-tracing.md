@@ -1,3 +1,8 @@
+---
+title: "Workshop: Tracing an LLM Agent with Langfuse"
+description: "Instrument the support agent so one chat turn becomes a nested Langfuse trace with OpenAI generations, agent spans, and tool calls."
+---
+
 # 02 Tracing
 
 ## Starting point
