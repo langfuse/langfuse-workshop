@@ -197,10 +197,10 @@ A more straightforward way to add rich tracing in line with Langfuse best practi
 
 `observeOpenAI` itself wraps the official OpenAI SDK — under the hood it's the same as the Langfuse [auto-instrumentation for OpenAI JS](https://langfuse.com/integrations/model-providers/openai-js). If you're using a different SDK (Anthropic, Vercel AI SDK, your own HTTP client), the Langfuse [integrations catalogue](https://langfuse.com/integrations) has the equivalent wrapper or auto-instrumentation guide.
 
-## Appendi/Bonus section — User and session IDs
+## Appendix/Bonus section — User and session IDs
 
 The walkthrough above gets you tracing with a clean parent → generation → tool shape. The next thing most teams want is to **slice traces by user and by session** — so you can pull up "every turn this user has had with the agent" or "the full multi-turn session from yesterday morning."
-For simplicity reasons we skip this step in this workshop, but see information on [Sessions](https://langfuse.com/docs/observability/sessions) and [Users](https://langfuse.com/docs/observability/users) in the Langfuse docs.
+For simplicity reasons we skip this step in the live tracing walkthrough, but the checkpoints after tracing include it so later chapters can use session/user views without another code step. See information on [Sessions](https://langfuse.com/docs/observability/sessions) and [Users](https://langfuse.com/docs/observability/users) in the Langfuse docs.
 
 In short:
 

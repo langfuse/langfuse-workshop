@@ -7,7 +7,7 @@ The workshop wants two things at once:
 
 The recommended repo strategy is:
 
-- Keep one linear git history.
+- Keep `main` as the complete reference app plus current docs.
 - Create milestone checkouts or tags for each finished workshop step.
 - Make every later step runnable through explicit fallbacks.
 
@@ -25,7 +25,7 @@ The recommended repo strategy is:
 
 ## Canonical progression
 
-Each checkpoint is the finished output of the previous module and the starting point of the next one.
+Each build checkpoint from `01-base-app` onward is the finished output of the previous module and the starting point of the next one. `main` and `checkpoint/00-setup` are complete-app setup/reference states so learners can validate credentials before jumping into the build checkpoints.
 
 - `00-setup`
   Setup, keys, Langfuse Cloud EU, [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli), [Langfuse skill](https://github.com/langfuse/skills), and workshop framing.
@@ -38,6 +38,7 @@ Each checkpoint is the finished output of the previous module and the starting p
   - OpenTelemetry setup
   - `observeOpenAI(new OpenAI())`
   - `observe(...)` wrappers on the app and tool functions
+  - optional `propagateAttributes(...)` for user/session metadata, included in later checkpoints
 
   The finished tracing state is the starting point for prompt management and monitoring.
 
@@ -64,7 +65,7 @@ Each checkpoint is the finished output of the previous module and the starting p
 
 - The OpenAI SDK is already in place before tracing starts, so step 2 is only about observability.
 - Prompt management falls back to the local prompt if the Langfuse prompt is absent.
-- Monitoring depends on a stable `messages` array and root `answer` field, not on provider-specific internals.
+- Monitoring depends on stable message arrays on the agent/generation observations and the root `answer` field, not on provider-specific internals.
 - Dataset and experiment scripts reuse the same app logic as the web UI.
 
 ## Recommended jump patterns
