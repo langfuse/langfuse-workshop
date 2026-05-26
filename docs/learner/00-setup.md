@@ -12,7 +12,7 @@ Use the setup checkpoint for this chapter:
 git checkout checkpoint/00-setup
 ```
 
-This checkpoint intentionally contains the complete reference app. Use it to confirm that your API keys, dependencies, and local ports work before switching to the build checkpoints.
+This checkpoint intentionally contains the same untraced base app as `checkpoint/01-base-app`. Use it to confirm that your API keys, dependencies, and local ports work before switching to the build chapters. The Langfuse keys are configured now, but traces start only after you add instrumentation in `02-tracing`.
 
 ## Step 1 — Get the API keys
 

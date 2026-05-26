@@ -11,7 +11,7 @@ Use it like this:
 
 The important mental model for this repo is:
 
-- `00-setup` uses `checkpoint/00-setup` for keys, install, and a known-good local run.
+- `00-setup` uses `checkpoint/00-setup` for keys, install, and a known-good local run. It is the same untraced app state as `01-base-app`.
 - `01-base-app` is read-only orientation. The base app is already in the repo; this chapter just tells you what's on screen.
 - `02-tracing` starts from that untraced app and adds Langfuse instrumentation.
 - `03-prompt-management` starts from the traced app and adds Langfuse-managed prompts.
