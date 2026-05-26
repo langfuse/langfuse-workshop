@@ -54,7 +54,7 @@ For **Out-of-Scope Request**:
    | `{{system_prompt}}` | `Input` | `$.messages[0].content` |
    | `{{last_user_message}}` | `Input` | `$.messages[-1:].content` |
 
-   The index `[2]` works because our chat starts with Specs' opening greeting at `[1]`, so the user's latest message lands at `[2]`. If your conversation has a different opening shape, adjust the index.
+   The `[-1:]` slice reads the final message in the generation input, so the mapping keeps working as the conversation grows. If your trace has a different message shape, inspect the generation input and adjust the JsonPath.
 4. Use the default judge model you configured during setup, or pick another structured-output-capable judge model, and save.
 5. Enable the evaluator.
 
