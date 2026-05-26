@@ -8,7 +8,8 @@ The workshop wants two things at once:
 The recommended repo strategy is:
 
 - Keep `main` as the complete reference app plus current docs.
-- Create milestone checkouts or tags for each finished workshop step.
+- Keep `checkpoint/00-setup` as the stable setup/reference checkout for environment validation.
+- Create milestone checkouts or tags for each workshop step.
 - Make every later step runnable through explicit fallbacks.
 
 ## Canonical milestone list
@@ -25,7 +26,9 @@ The recommended repo strategy is:
 
 ## Canonical progression
 
-Each build checkpoint from `01-base-app` onward is the finished output of the previous module and the starting point of the next one. `main` and `checkpoint/00-setup` are complete-app setup/reference states so learners can validate credentials before jumping into the build checkpoints.
+`checkpoint/00-setup` is a setup/reference checkpoint, not the finished output of an earlier build module. It should mirror the complete reference setup state at release time so learners can validate credentials against a known-good app before jumping into the build checkpoints.
+
+Each build checkpoint from `01-base-app` onward is the finished output of the previous module and the starting point of the next one.
 
 - `00-setup`
   Setup, keys, Langfuse Cloud EU, [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli), [Langfuse skill](https://github.com/langfuse/skills), and workshop framing.
