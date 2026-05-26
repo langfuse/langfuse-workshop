@@ -26,7 +26,7 @@ LANGFUSE_PROMPT_LABEL=production
 
 Keeping the system prompt in code means every prompt change is a code change: pull request, review, build, deploy. With Langfuse prompt management the prompt lives in Langfuse — versioned, labelled, and editable in the UI — and the app fetches it at request time. That means non-engineers can iterate on prompts, changes ship independent of release cycles, and every version is preserved and linked to the traces it produced.
 
-Learn more in the [Langfuse prompts docs](https://langfuse.com/docs/prompts).
+Learn more in the [Langfuse prompts docs](https://langfuse.com/docs/prompt-management/overview).
 
 ## Goal
 
