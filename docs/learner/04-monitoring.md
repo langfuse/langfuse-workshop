@@ -102,50 +102,99 @@ The two monitors above use LLM-as-a-judge because they need semantic judgment. T
 Code evaluators are a good fit for that pattern: no model call, no prompt design, just a simple rule that runs on live observations.
 
 1. In Langfuse, open **Evaluators → New evaluator → Code evaluator**.
-2. Choose **TypeScript**.
+2. Choose **Python**.
 3. Name the evaluator `user_all_caps_signal`.
 4. Paste this code:
 
-```ts
-function evaluate(ctx) {
-  const input = ctx.observation?.input;
-  const text =
-    typeof input === "string"
-      ? input
-      : Array.isArray(input?.messages)
-        ? [...input.messages]
-            .reverse()
-            .find(
-              (message) =>
-                message?.role === "user" && typeof message?.content === "string"
-            )?.content ?? ""
-        : "";
+```python
+from dataclasses import dataclass
+from typing import Any
 
-  const matches = text.match(/[A-Z]{6,}/g) ?? [];
-  const hasAllCapsSignal = matches.length > 0;
-  const longestRun = matches.reduce(
-    (max, match) => Math.max(max, match.length),
-    0
-  );
 
-  return {
-    scores: [
-      {
-        name: "user_all_caps_signal",
-        value: hasAllCapsSignal,
-        dataType: "BOOLEAN",
-        comment: hasAllCapsSignal
-          ? `Detected all-caps run(s) longer than 5 letters: ${matches.join(", ")}.`
-          : "No all-caps run longer than 5 letters detected.",
-        metadata: {
-          text,
-          matches,
-          longestRun,
-        },
-      },
-    ],
-  };
-}
+@dataclass
+class ObservationContext:
+    input: Any = None
+    output: Any = None
+    metadata: Any = None
+
+
+@dataclass
+class ExperimentContext:
+    item_expected_output: Any = None
+    item_metadata: Any = None
+
+
+@dataclass
+class EvaluationContext:
+    observation: ObservationContext
+    experiment: ExperimentContext | None = None
+
+
+@dataclass
+class Score:
+    value: int | float | str | bool
+    name: str
+    data_type: str | None = None
+    comment: str | None = None
+    config_id: str | None = None
+    metadata: dict[str, Any] | None = None
+
+
+@dataclass
+class EvaluationResult:
+    scores: list[Score]
+
+
+def evaluate(ctx: EvaluationContext) -> EvaluationResult:
+    """Flags a likely upset user when the latest user message contains a long all-caps run."""
+    input = ctx.observation.input
+    text = ""
+
+    if isinstance(input, str):
+        text = input
+    elif isinstance(input, dict):
+        messages = input.get("messages")
+        if isinstance(messages, list):
+            for message in reversed(messages):
+                if (
+                    isinstance(message, dict)
+                    and message.get("role") == "user"
+                    and isinstance(message.get("content"), str)
+                ):
+                    text = message["content"]
+                    break
+
+    longest_run = 0
+    current_run = 0
+
+    for ch in text:
+        if "A" <= ch <= "Z":
+            current_run += 1
+            if current_run > longest_run:
+                longest_run = current_run
+        else:
+            current_run = 0
+
+    has_all_caps_signal = longest_run >= 6
+
+    return EvaluationResult(
+        scores=[
+            Score(
+                name="user_all_caps_signal",
+                value=has_all_caps_signal,
+                data_type="BOOLEAN",
+                comment=(
+                    "Detected an all-caps run longer than 5 letters, which may indicate the user is upset."
+                    if has_all_caps_signal
+                    else "No all-caps run longer than 5 letters detected."
+                ),
+                metadata={
+                    "text": text,
+                    "longest_run": longest_run,
+                },
+            )
+        ]
+    )
 ```
 
 5. Target the same root agent observation as the disagreement monitor:
@@ -156,9 +205,7 @@ function evaluate(ctx) {
 
 Why this target? The root agent observation input is the chat request from the browser, so the evaluator can inspect Dad's latest user message before any tool calls or follow-up generations complicate the shape.
 
-This evaluator does **not** need the Langfuse evaluator model from Step 1, because it is pure TypeScript running inside Langfuse rather than an LLM judge.
-
-If the Langfuse editor is picky about the longer typed examples from the docs, prefer this minimal version. It uses the same `ctx.observation.input` contract, just with less TypeScript ceremony.
+This evaluator does **not** need the Langfuse evaluator model from Step 1, because it is pure Python running inside Langfuse rather than an LLM judge.
 
 ## Verify
 
