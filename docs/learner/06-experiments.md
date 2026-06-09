@@ -99,19 +99,22 @@ This is also a good default pattern for teams that want experiment logic to stay
 Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual answer to an ideal answer and returns a score. We wire it up against the dataset runs so every item gets both the local deterministic score and a model-judged correctness score that shows up in the run comparison view.
 
 > Fresh project check: Correctness is an LLM-as-a-judge evaluator. If you did not configure the default evaluator model in session 4, do it now: open **Project Settings → LLM Connections**, add your OpenAI key, then return to **Evaluators → Set up evaluator** and save a default evaluator model such as `openai / gpt-4.1`. Keep the API key in the Langfuse secret field only; do not paste it into workshop transcripts or shared notes.
+>
+> ⚠️ Scope must be **Dataset runs**, not **Observations**. The default UI selection is **Observations**. That targets live production traces and will never fire on experiment results. Select **Dataset runs** before configuring anything else.
 
 1. In Langfuse, open **Evaluators → New evaluator** and pick the **Correctness** template.
 2. Target the runs from this dataset:
    - Dataset: `dad-it-support-workshop`
    - Scope: **Dataset runs**
-3. Map the template variables:
+3. Map the template variables. In the UI, set the **Source** dropdown first, then add JsonPath only where needed:
 
-   | Template variable | Object field | JsonPath |
+   | Variable | Source dropdown | JsonPath |
    | --- | --- | --- |
-   | `query` | Experiment Input | `$.messages[-1:].content` |
-   | `generation` | Experiment Output | Use **Output** directly |
-   | `ground_truth` | Experiment Expected Output | `$.idealAnswer` |
+   | `query` | **Input** | `$.messages[-1].content` |
+   | `generation` | **Output** | Leave blank |
+   | `ground_truth` | **Expected Output** | `$.idealAnswer` |
 
+   A common broken setup is leaving all three variables on **Input** because that dropdown shows up first. If `generation` or `ground_truth` point to **Input**, the evaluator reads the wrong data for every run.
 4. Use the default judge model you configured in session 4 or in the fresh project check above, or pick another structured-output-capable judge model, and save.
 5. Enable the evaluator.
 

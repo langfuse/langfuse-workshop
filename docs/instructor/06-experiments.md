@@ -26,7 +26,9 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 ## Watch for
 
 - Correctness evaluator target. Keep it on **Dataset runs** if you want the score to show up on the run rows and in run comparison.
-- Correctness evaluator mapping. `query` comes from the experiment input, `generation` from the run `Output`, and `ground_truth` from `$.idealAnswer` in expected output.
+- Have learners switch from the default **Observations** view to **Dataset runs** before they configure anything else.
+- Correctness evaluator mapping uses three different source dropdowns: `query` is **Input** with `$.messages[-1].content`, `generation` is **Output** with no JsonPath, and `ground_truth` is **Expected Output** with `$.idealAnswer`.
+- A common misconfiguration is leaving all three variables on **Input**, which silently makes the evaluator read the wrong data for every field.
 - Learners assuming the deterministic check must live in Langfuse now. It does not; mention the code-evaluator docs only as an alternative.
 - "No default model set" means Langfuse needs an LLM connection/default evaluator model; it is not fixed by editing `.env`.
 - Slow asynchronous evaluator results; the console only shows the final summary, so refresh Langfuse after the run finishes if `correctness` is still pending.
