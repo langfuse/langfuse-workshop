@@ -1,3 +1,5 @@
+<img width="2400" height="600" alt="hero-b (1)" src="https://github.com/user-attachments/assets/a8fa4fbf-fd68-4167-acc4-0f68497602b3" />
+
 # Langfuse Workshop - the AI engineering loop, end to end
 
 This is a step-by-step Langfuse workshop built on a small TypeScript sample application: the **Dad IT Support Agent**. The workshop covers the full AI engineering loop with Langfuse: tracing, prompt management, monitoring, datasets, experiments, and evaluation.
