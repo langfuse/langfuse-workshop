@@ -42,20 +42,7 @@ The loop has two parts, and this module walks both.
 
 > Think of Part 2 as a `for` loop over the prioritized issues. This module runs **one full iteration** end to end (the follow-up-questions issue), and the same loop applies to every other issue you find.
 
-```
-production traffic
-       │
-   ┌───▼──────────────┐
-   │ Part 1: detect   │  → ranked list of concrete issues
-   │ & prioritize     │
-   └───┬──────────────┘
-       │  pick an issue
-   ┌───▼──────────────┐
-   │ Part 2: for each │   root cause → propose fix → try it
-   │ issue, fix &     │   → add to dataset → run old vs new
-   │ prove it         │   → evaluate (overall + per-item)
-   └──────────────────┘
-```
+![The self-healing loop workflow: from production traffic to a ranked issue list, then fix and prove each issue through the evaluation loop.](../images/auto-improvement/08-self-healing-loop-workflow.png)
 
 ---
 
