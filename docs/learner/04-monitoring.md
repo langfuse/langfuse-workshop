@@ -43,7 +43,7 @@ If your project already has a default evaluator model, keep it and continue to S
 2. Click **Add new LLM API key**.
 3. Choose **OpenAI**, name the connection, and paste your OpenAI API key into the secret field.
 4. Save the connection.
-5. Open **Evaluators → Set up evaluator**. If Langfuse asks for the default model first, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`, then save.
+5. Open **LLM-as-a-Judge → Set up evaluator**. If Langfuse asks for the default model first, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`, then save.
 
 Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
 
@@ -56,7 +56,7 @@ Langfuse ships published templates for **User Disagreement** and **Out-of-Scope 
 
 For **Out-of-Scope Request**:
 
-1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
+1. In Langfuse, open **LLM-as-a-Judge → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
 2. Target the final OpenAI generation:
    - Observation type: `generation`
    - Tool Call count = 0 (to exclude tool decisions)
@@ -75,7 +75,7 @@ For **Out-of-Scope Request**:
 
 For **User Disagreement**:
 
-1. In Langfuse, open **Evaluators → New evaluator** and pick the **User Disagreement** template from the published library.
+1. In Langfuse, open **LLM-as-a-Judge → New evaluator** and pick the **User Disagreement** template from the published library.
 2. Target the root agent observation:
    - Observation type: `agent`
    - Observation name: `dad-it-support-chat-turn`
@@ -93,7 +93,7 @@ For **User Disagreement**:
 
 ![Variable mapping for the User Disagreement evaluator.](../images/monitoring/user-disagreement-config.png)
 
-> 💡 *Custom evaluators.* The shipped templates are a fast on-ramp, but you don't have to use them. **Evaluators → New evaluator → Custom** lets you write your own prompt and define your own variables. Same mapping flow — point each variable at the right JsonPath on the right observation, and you're done.
+> 💡 *Custom evaluators.* The shipped templates are a fast on-ramp, but you don't have to use them. **LLM-as-a-Judge → New evaluator → Custom** lets you write your own prompt and define your own variables. Same mapping flow — point each variable at the right JsonPath on the right observation, and you're done.
 
 ## Step 3 — Add a code evaluator for all-caps frustration
 
