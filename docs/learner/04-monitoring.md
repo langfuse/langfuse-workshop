@@ -58,7 +58,7 @@ For **Out-of-Scope Request**:
 
 1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
 2. Target the final OpenAI generation:
-   - Observation type: `generation`
+   - Observation type: `agent`
    - Tool Call count = 0 (to exclude tool decisions)
 3. Map the template's variables from the generation's **Input**:
 
