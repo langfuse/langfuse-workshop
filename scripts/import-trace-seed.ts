@@ -29,7 +29,10 @@ async function main() {
   const snapshot = await readTraceSeedSnapshot(inputPath);
   validateSnapshot(snapshot, inputPath);
 
-  const events = buildIngestionEvents(snapshot);
+  const offsetMs = computeTimestampOffsetMs(snapshot, Date.now());
+  logTimestampShift(snapshot, offsetMs);
+
+  const events = buildIngestionEvents(snapshot, offsetMs);
   const batches = chunkIngestionBatch(events);
   const eventSummaryById = new Map(events.map((event) => [event.id, summarizeEvent(event)]));
 
@@ -95,32 +98,78 @@ function validateSnapshot(snapshot: TraceSeedSnapshot, inputPath: string) {
   }
 }
 
-function buildIngestionEvents(snapshot: TraceSeedSnapshot) {
-  const traceEvents = snapshot.traces.map((bundle) => buildTraceCreateEvent(bundle));
+function buildIngestionEvents(snapshot: TraceSeedSnapshot, offsetMs: number) {
+  const traceEvents = snapshot.traces.map((bundle) => buildTraceCreateEvent(bundle, offsetMs));
   const observationEvents = snapshot.traces.flatMap((bundle) =>
     orderObservationsParentFirst(bundle.observations).map((observation) =>
-      buildObservationIngestionEvent(bundle, observation)
+      buildObservationIngestionEvent(bundle, observation, offsetMs)
     )
   );
   const scoreEvents = snapshot.traces.flatMap((bundle) =>
-    bundle.scores.map((score) => buildScoreCreateEvent(score))
+    bundle.scores.map((score) => buildScoreCreateEvent(score, offsetMs))
   );
 
   return [...traceEvents, ...observationEvents, ...scoreEvents];
 }
 
-function buildTraceCreateEvent(bundle: TraceSeedTraceBundle): SeedIngestionEvent {
+// Uniformly shifts every seeded timestamp so the most recent one lands at `nowMs`,
+// preserving the original multi-day spread and each trace's internal timing.
+function computeTimestampOffsetMs(snapshot: TraceSeedSnapshot, nowMs: number) {
+  let latestMs = Number.NEGATIVE_INFINITY;
+
+  const consider = (value: string | null | undefined) => {
+    if (!value) return;
+    const parsed = Date.parse(value);
+    if (Number.isFinite(parsed) && parsed > latestMs) {
+      latestMs = parsed;
+    }
+  };
+
+  for (const bundle of snapshot.traces) {
+    consider(bundle.trace.timestamp);
+    for (const observation of bundle.observations) {
+      consider(observation.startTime);
+      consider(observation.endTime);
+      consider(observation.completionStartTime);
+    }
+    for (const score of bundle.scores) {
+      consider(score.timestamp);
+    }
+  }
+
+  return Number.isFinite(latestMs) ? nowMs - latestMs : 0;
+}
+
+function shiftTimestamp(value: string, offsetMs: number) {
+  const parsed = Date.parse(value);
+  if (!Number.isFinite(parsed)) return value;
+  return new Date(parsed + offsetMs).toISOString();
+}
+
+function logTimestampShift(snapshot: TraceSeedSnapshot, offsetMs: number) {
+  const days = (offsetMs / (1000 * 60 * 60 * 24)).toFixed(1);
+  console.log(
+    `Shifting all timestamps forward by ${days} day(s) so the newest of ${snapshot.summary.exportedTraces} traces lands at the current time.`
+  );
+}
+
+// Environment all seeded data is ingested into. Overridable via env var; defaults to "production".
+const SEED_ENVIRONMENT = process.env.LANGFUSE_SEED_ENVIRONMENT || "production";
+
+function buildTraceCreateEvent(bundle: TraceSeedTraceBundle, offsetMs: number): SeedIngestionEvent {
   const tags = bundle.trace.tags.includes(DEFAULT_TRACE_SEED_TAG)
     ? bundle.trace.tags
     : [...bundle.trace.tags, DEFAULT_TRACE_SEED_TAG];
 
+  const timestamp = shiftTimestamp(bundle.trace.timestamp, offsetMs);
+
   return {
     type: "trace-create",
     id: randomUUID(),
-    timestamp: bundle.trace.timestamp,
+    timestamp,
     body: {
       id: bundle.trace.id,
-      timestamp: bundle.trace.timestamp,
+      timestamp,
       name: bundle.trace.name ?? undefined,
       userId: bundle.trace.userId ?? undefined,
       input: bundle.trace.input,
@@ -130,7 +179,7 @@ function buildTraceCreateEvent(bundle: TraceSeedTraceBundle): SeedIngestionEvent
       version: bundle.trace.version ?? undefined,
       metadata: bundle.trace.metadata,
       tags,
-      environment: bundle.trace.environment,
+      environment: SEED_ENVIRONMENT,
       public: false
     }
   };
@@ -138,16 +187,22 @@ function buildTraceCreateEvent(bundle: TraceSeedTraceBundle): SeedIngestionEvent
 
 function buildObservationIngestionEvent(
   bundle: TraceSeedTraceBundle,
-  observation: TraceSeedObservation
+  observation: TraceSeedObservation,
+  offsetMs: number
 ): SeedIngestionEvent {
   const metadata = withImportedObservationMetadata(observation);
   const level = observation.level as ObservationLevel;
+  const startTime = shiftTimestamp(observation.startTime, offsetMs);
+  const endTime = observation.endTime ? shiftTimestamp(observation.endTime, offsetMs) : undefined;
+  const completionStartTime = observation.completionStartTime
+    ? shiftTimestamp(observation.completionStartTime, offsetMs)
+    : undefined;
   const commonBody = {
     id: observation.id,
     traceId: bundle.trace.id,
     name: observation.name ?? undefined,
-    startTime: observation.startTime,
-    endTime: observation.endTime ?? undefined,
+    startTime,
+    endTime,
     input: observation.input,
     output: observation.output,
     metadata,
@@ -155,17 +210,17 @@ function buildObservationIngestionEvent(
     statusMessage: observation.statusMessage ?? undefined,
     parentObservationId: observation.parentObservationId ?? undefined,
     version: observation.version ?? undefined,
-    environment: observation.environment || bundle.trace.environment
+    environment: SEED_ENVIRONMENT
   };
 
   if (observation.type === "GENERATION") {
     return {
       type: "generation-create",
       id: randomUUID(),
-      timestamp: observation.startTime,
+      timestamp: startTime,
       body: {
         ...commonBody,
-        completionStartTime: observation.completionStartTime ?? undefined,
+        completionStartTime,
         model: observation.model ?? undefined,
         modelParameters: asPlainRecord(observation.modelParameters),
         usage: toLegacyUsage(observation.usageDetails),
@@ -179,12 +234,12 @@ function buildObservationIngestionEvent(
     return {
       type: "event-create",
       id: randomUUID(),
-      timestamp: observation.startTime,
+      timestamp: startTime,
       body: {
         id: observation.id,
         traceId: bundle.trace.id,
         name: observation.name ?? undefined,
-        startTime: observation.startTime,
+        startTime,
         metadata,
         input: observation.input,
         output: observation.output,
@@ -192,21 +247,27 @@ function buildObservationIngestionEvent(
         statusMessage: observation.statusMessage ?? undefined,
         parentObservationId: observation.parentObservationId ?? undefined,
         version: observation.version ?? undefined,
-        environment: observation.environment || bundle.trace.environment
+        environment: SEED_ENVIRONMENT
       }
     };
   }
 
+  // NOTE: The public batch ingestion API only accepts observation types
+  // GENERATION/SPAN/EVENT (verified: `observation-create` with type AGENT/TOOL/etc.
+  // is rejected 400 "Invalid request data"). Richer types like AGENT/TOOL are only
+  // settable via the OTel ingestion path (span attribute `langfuse.observation.type`),
+  // which is how the live agent produces them. So everything non-GENERATION/EVENT is
+  // imported as a plain SPAN here.
   return {
     type: "span-create",
     id: randomUUID(),
-    timestamp: observation.startTime,
+    timestamp: startTime,
     body: {
       id: observation.id,
       traceId: bundle.trace.id,
       name: observation.name ?? undefined,
-      startTime: observation.startTime,
-      endTime: observation.endTime ?? undefined,
+      startTime,
+      endTime,
       metadata,
       input: observation.input,
       output: observation.output,
@@ -214,16 +275,16 @@ function buildObservationIngestionEvent(
       statusMessage: observation.statusMessage ?? undefined,
       parentObservationId: observation.parentObservationId ?? undefined,
       version: observation.version ?? undefined,
-      environment: observation.environment || bundle.trace.environment
+      environment: SEED_ENVIRONMENT
     }
   };
 }
 
-function buildScoreCreateEvent(score: TraceSeedScore): SeedIngestionEvent {
+function buildScoreCreateEvent(score: TraceSeedScore, offsetMs: number): SeedIngestionEvent {
   return {
     type: "score-create",
     id: randomUUID(),
-    timestamp: score.timestamp,
+    timestamp: shiftTimestamp(score.timestamp, offsetMs),
     body: {
       id: score.id,
       traceId: score.traceId,
@@ -233,7 +294,7 @@ function buildScoreCreateEvent(score: TraceSeedScore): SeedIngestionEvent {
       comment: score.comment ?? undefined,
       metadata: score.metadata,
       dataType: score.dataType,
-      environment: score.environment
+      environment: SEED_ENVIRONMENT
     }
   };
 }
