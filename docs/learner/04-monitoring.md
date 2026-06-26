@@ -40,7 +40,7 @@ The first two monitors in this chapter use LLM-as-a-judge templates. Langfuse ru
 If your project already has a default evaluator model, keep it and continue to Step 2.
 
 1. In Langfuse, open **Project Settings → LLM Connections**.
-2. Click **Add new LLM API key**.
+2. Click **Add new LLM Connection**.
 3. Choose **OpenAI**, name the connection, and paste your OpenAI API key into the secret field.
 4. Save the connection.
 5. Open **Evaluators → Set up evaluator**. If Langfuse asks for the default model first, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`, then save.
