@@ -12,6 +12,12 @@ git checkout checkpoint/04-monitoring
 ```
 
 You have a traced app with optional Langfuse-managed prompts. Every chat turn lands in Langfuse as a nested trace.
+ 
+If you want to use prompt management but have skipped module 3 run the following command to publish the prompt
+
+```bash
+npm run prompt:publish
+```
 
 ## Why monitor your AI app
 
