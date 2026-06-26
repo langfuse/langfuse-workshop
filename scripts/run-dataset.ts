@@ -59,6 +59,40 @@ function keywordOverlap(answer: string, expectedKeywords: string[]) {
   return matches.length / expectedKeywords.length;
 }
 
+// --- 3b. The "first answer grounding" evaluator.
+//        The module-08 follow-up triage found that ~all "where do I
+//        actually find that?" follow-ups came from first answers that tell
+//        Dad to open an app or Settings WITHOUT saying where it lives. This
+//        evaluator scores 1 when an answer that sends Dad into an app also
+//        grounds the starting point (Home Screen / gray gear icon /
+//        swipe-down search / a deep-path breadcrumb), and 0 when it opens
+//        something "blind". Answers that need no app-opening score 1 (n/a).
+const OPENS_APP = /\b(open|go to|launch|head (?:in)?to)\b.*\b(settings|health|app|photos|safari|messages|maps|mail)\b/i;
+const GROUNDING_CUES = [
+  "home screen",
+  "gray gear",
+  "gear",
+  "swipe down",
+  "search",
+  "look for",
+  "find the",
+  "app icon",
+  "control center",
+  "top-right",
+  "top right",
+  "→" // breadcrumb path arrow
+];
+
+function firstAnswerGrounding(answer: string) {
+  const normalized = answer.toLowerCase();
+  // If the answer never tells Dad to open an app, grounding isn't required.
+  if (!OPENS_APP.test(normalized)) {
+    return { value: 1, grounded: true, applicable: false };
+  }
+  const grounded = GROUNDING_CUES.some((cue) => normalized.includes(cue.toLowerCase()));
+  return { value: grounded ? 1 : 0, grounded, applicable: true };
+}
+
 // Convert a dataset item's messages array into the ChatMessage shape
 // the live server uses (adds id + timestamp on each message).
 function toRuntimeMessages(input: DatasetInput) {
@@ -83,7 +117,7 @@ async function main() {
   });
 
   const dataset = await langfuse.dataset.get(env.datasetName);
-  const runName = `dad-it-support-${new Date().toISOString()}`;
+  const runName = `dad-it-support-${env.langfusePromptLabel}-${new Date().toISOString()}`;
 
   // --- 5. runExperiment iterates the dataset, calls `task` for each
   //        item, and records every per-item trace + score under a
@@ -122,6 +156,20 @@ async function main() {
           comment: `Matched ${Math.round(
             overlap * expected.expectedKeywords.length
           )} of ${expected.expectedKeywords.length} expected keywords.`
+        };
+      },
+      async ({ output }) => {
+        const grounding = firstAnswerGrounding(output as string);
+        const comment = !grounding.applicable
+          ? "No app/Settings open required — grounding n/a (scored 1)."
+          : grounding.grounded
+            ? "Answer opens an app/Settings and grounds where to find it (Home Screen / icon / search / breadcrumb)."
+            : "Answer opens an app/Settings WITHOUT saying where to find it — likely to trigger a 'where do I find that?' follow-up.";
+
+        return {
+          name: "first_answer_grounding",
+          value: grounding.value,
+          comment
         };
       }
     ]

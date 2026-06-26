@@ -2,155 +2,554 @@
   {
     "id": "dad-001",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I turn Bluetooth on on my iPhone?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I turn Bluetooth on on my iPhone?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Open Settings, tap Bluetooth, and turn the Bluetooth switch on.",
-      "expectedKeywords": ["Settings", "Bluetooth", "switch", "on"]
+      "expectedKeywords": [
+        "Settings",
+        "Bluetooth",
+        "switch",
+        "on"
+      ]
     },
-    "metadata": { "category": "iphone-bluetooth", "difficulty": "easy" }
+    "metadata": {
+      "category": "iphone-bluetooth",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-002",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I take a photo and send it on WhatsApp?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I take a photo and send it on WhatsApp?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Take the photo in Camera, open WhatsApp, choose the chat, attach the photo, and send it.",
-      "expectedKeywords": ["Camera", "WhatsApp", "chat", "photo", "Send"]
+      "expectedKeywords": [
+        "Camera",
+        "WhatsApp",
+        "chat",
+        "photo",
+        "Send"
+      ]
     },
-    "metadata": { "category": "iphone-photo", "difficulty": "easy" }
+    "metadata": {
+      "category": "iphone-photo",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-003",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I reconnect the iPhone to Wi-Fi?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I reconnect the iPhone to Wi-Fi?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Open Settings, tap Wi-Fi, choose the network, and join it with the password.",
-      "expectedKeywords": ["Settings", "Wi-Fi", "network", "Join"]
+      "expectedKeywords": [
+        "Settings",
+        "Wi-Fi",
+        "network",
+        "Join"
+      ]
     },
-    "metadata": { "category": "iphone-wifi", "difficulty": "easy" }
+    "metadata": {
+      "category": "iphone-wifi",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-004",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I get directions to the next bus stop?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I get directions to the next bus stop?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Open Maps, search for the bus stop or nearby street, tap Directions, and choose walking or transit.",
-      "expectedKeywords": ["Maps", "search", "Directions", "walking", "transit"]
+      "expectedKeywords": [
+        "Maps",
+        "search",
+        "Directions",
+        "walking",
+        "transit"
+      ]
     },
-    "metadata": { "category": "maps", "difficulty": "medium" }
+    "metadata": {
+      "category": "maps",
+      "difficulty": "medium"
+    }
   },
   {
     "id": "dad-005",
     "input": {
-      "messages": [{ "role": "user", "content": "My Bluetooth is already on but the earbuds are not showing up." }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "My Bluetooth is already on but the earbuds are not showing up."
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Explain that the earbuds likely still need pairing mode, then tell Dad where to check Bluetooth.",
-      "expectedKeywords": ["pairing mode", "Bluetooth", "appear"]
+      "expectedKeywords": [
+        "pairing mode",
+        "Bluetooth",
+        "appear"
+      ]
     },
-    "metadata": { "category": "iphone-bluetooth", "difficulty": "medium" }
+    "metadata": {
+      "category": "iphone-bluetooth",
+      "difficulty": "medium"
+    }
   },
   {
     "id": "dad-006",
     "input": {
-      "messages": [{ "role": "user", "content": "I do not see the home Wi-Fi name on my phone." }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "I do not see the home Wi-Fi name on my phone."
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Tell Dad to stay in Wi-Fi settings, move closer to the router, and wait for the network list to refresh.",
-      "expectedKeywords": ["Wi-Fi", "router", "network", "refresh"]
+      "expectedKeywords": [
+        "Wi-Fi",
+        "router",
+        "network",
+        "refresh"
+      ]
     },
-    "metadata": { "category": "iphone-wifi", "difficulty": "medium" }
+    "metadata": {
+      "category": "iphone-wifi",
+      "difficulty": "medium"
+    }
   },
   {
     "id": "dad-007",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I open the photo I just took?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I open the photo I just took?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Tell Dad to tap the photo preview thumbnail after taking the picture.",
-      "expectedKeywords": ["photo", "preview", "thumbnail"]
+      "expectedKeywords": [
+        "photo",
+        "preview",
+        "thumbnail"
+      ]
     },
-    "metadata": { "category": "iphone-photo", "difficulty": "easy" }
+    "metadata": {
+      "category": "iphone-photo",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-008",
     "input": {
-      "messages": [{ "role": "user", "content": "Can you see my live location and tell me which bus stop is closest?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "Can you see my live location and tell me which bus stop is closest?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Explain that the assistant cannot see live location, then offer step-by-step help using Maps.",
-      "expectedKeywords": ["cannot", "live location", "Maps"]
+      "expectedKeywords": [
+        "cannot",
+        "live location",
+        "Maps"
+      ]
     },
-    "metadata": { "category": "maps", "difficulty": "medium" }
+    "metadata": {
+      "category": "maps",
+      "difficulty": "medium"
+    }
   },
   {
     "id": "dad-009",
     "input": {
-      "messages": [{ "role": "user", "content": "Can you file my taxes for me?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "Can you file my taxes for me?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Politely refuse because it is out of scope and redirect to phone-support help.",
-      "expectedKeywords": ["out of scope", "help", "phone"]
+      "expectedKeywords": [
+        "out of scope",
+        "help",
+        "phone"
+      ]
     },
-    "metadata": { "category": "out-of-scope", "difficulty": "easy" }
+    "metadata": {
+      "category": "out-of-scope",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-010",
     "input": {
-      "messages": [{ "role": "user", "content": "What is my Wi-Fi password?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "What is my Wi-Fi password?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Explain that the assistant cannot see passwords and then offer reconnection steps.",
-      "expectedKeywords": ["cannot", "password", "Wi-Fi"]
+      "expectedKeywords": [
+        "cannot",
+        "password",
+        "Wi-Fi"
+      ]
     },
-    "metadata": { "category": "limits", "difficulty": "easy" }
+    "metadata": {
+      "category": "limits",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-011",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I search for the bus stop in Maps?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I search for the bus stop in Maps?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Open Maps, use the search bar, type the bus stop or street name, and then ask for directions.",
-      "expectedKeywords": ["Maps", "search", "bus stop", "Directions"]
+      "expectedKeywords": [
+        "Maps",
+        "search",
+        "bus stop",
+        "Directions"
+      ]
     },
-    "metadata": { "category": "maps", "difficulty": "easy" }
+    "metadata": {
+      "category": "maps",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-012",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I send the photo after I pick it in WhatsApp?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I send the photo after I pick it in WhatsApp?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "After choosing the photo, tap Send in WhatsApp.",
-      "expectedKeywords": ["photo", "WhatsApp", "Send"]
+      "expectedKeywords": [
+        "photo",
+        "WhatsApp",
+        "Send"
+      ]
     },
-    "metadata": { "category": "iphone-photo", "difficulty": "easy" }
+    "metadata": {
+      "category": "iphone-photo",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-013",
     "input": {
-      "messages": [{ "role": "user", "content": "How do I send a text message from my iPhone?" }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I send a text message from my iPhone?"
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Open Messages, start a new message, enter the contact, type the text, and tap the blue send arrow.",
-      "expectedKeywords": ["Messages", "new message", "send", "contact"]
+      "expectedKeywords": [
+        "Messages",
+        "new message",
+        "send",
+        "contact"
+      ]
     },
-    "metadata": { "category": "iphone-messages", "difficulty": "easy" }
+    "metadata": {
+      "category": "iphone-messages",
+      "difficulty": "easy"
+    }
   },
   {
     "id": "dad-014",
     "input": {
-      "messages": [{ "role": "user", "content": "Book my train ticket to Munich for tomorrow." }]
+      "messages": [
+        {
+          "role": "user",
+          "content": "Book my train ticket to Munich for tomorrow."
+        }
+      ]
     },
     "expectedOutput": {
       "idealAnswer": "Say that booking travel is outside the support scope and redirect to phone help the assistant can provide.",
-      "expectedKeywords": ["outside", "scope", "phone help"]
+      "expectedKeywords": [
+        "outside",
+        "scope",
+        "phone help"
+      ]
     },
-    "metadata": { "category": "out-of-scope", "difficulty": "easy" }
+    "metadata": {
+      "category": "out-of-scope",
+      "difficulty": "easy"
+    }
+  },
+  {
+    "id": "dad-015",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I turn Bluetooth on on my iPhone?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "First help Dad open Settings: go to the Home Screen and look for the grey gear Settings icon, and if it is not visible, swipe down from the middle of the Home Screen and search for Settings. Then tap Bluetooth and turn the switch on.",
+      "expectedKeywords": [
+        "Home Screen",
+        "Settings",
+        "swipe",
+        "search",
+        "Bluetooth",
+        "switch"
+      ]
+    },
+    "metadata": {
+      "category": "find-and-open-app",
+      "difficulty": "medium"
+    }
+  },
+  {
+    "id": "dad-016",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I take a photo and send it on WhatsApp?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "First help Dad open the Camera app: go to the Home Screen and look for the Camera icon, and if it is not visible, swipe down from the middle of the Home Screen and search for Camera. Take the photo, then open WhatsApp, choose the chat, attach the photo, and tap Send.",
+      "expectedKeywords": [
+        "Home Screen",
+        "Camera",
+        "swipe",
+        "search",
+        "WhatsApp",
+        "Send"
+      ]
+    },
+    "metadata": {
+      "category": "find-and-open-app",
+      "difficulty": "medium"
+    }
+  },
+  {
+    "id": "dad-017",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I find directions to a bus stop in Maps?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "First help Dad open Maps: go to the Home Screen and look for the Maps icon, and if it is not visible, swipe down from the middle of the Home Screen and search for Maps. Then use the search bar, type the bus stop or nearby street, tap Directions, and choose walking or transit.",
+      "expectedKeywords": [
+        "Home Screen",
+        "Maps",
+        "swipe",
+        "search",
+        "Directions"
+      ]
+    },
+    "metadata": {
+      "category": "find-and-open-app",
+      "difficulty": "medium"
+    }
+  },
+  {
+    "id": "dad-018",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Where do I find the Settings app?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Tell Dad to go to the Home Screen and look for the grey gear Settings icon, and if it is not there, swipe down from the middle of the Home Screen and search for Settings, then tap it.",
+      "expectedKeywords": [
+        "Home Screen",
+        "Settings",
+        "swipe",
+        "search"
+      ]
+    },
+    "metadata": {
+      "category": "find-and-open-app",
+      "difficulty": "easy"
+    }
+  },
+  {
+    "id": "dad-019",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I turn off iCloud photo syncing on my iPhone?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Start by grounding where Settings is (Home Screen, grey gear icon; if not visible, swipe down and search for Settings). Give the full route as a breadcrumb first: Settings -> your name -> iCloud -> Photos. Then step through tapping your name, iCloud, Photos, and turning off Sync this iPhone.",
+      "expectedKeywords": [
+        "Settings",
+        "your name",
+        "iCloud",
+        "Photos",
+        "Sync this iPhone"
+      ]
+    },
+    "metadata": {
+      "category": "iphone-settings-deep",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "id": "dad-020",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I change which apps are allowed to send me notifications?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Ground the Settings app first (Home Screen, grey gear; swipe down to search if needed). Breadcrumb: Settings -> Notifications -> the app. Then open Notifications, tap the app, and turn Allow Notifications on or off.",
+      "expectedKeywords": [
+        "Settings",
+        "Notifications",
+        "Allow Notifications"
+      ]
+    },
+    "metadata": {
+      "category": "iphone-settings-deep",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "id": "dad-021",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I clear my Safari history and website data?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Ground the Settings app first (Home Screen, grey gear; swipe down to search if needed). Breadcrumb: Settings -> Safari -> Clear History and Website Data. Then open Settings, scroll to Safari, tap Clear History and Website Data, and confirm.",
+      "expectedKeywords": [
+        "Settings",
+        "Safari",
+        "Clear History",
+        "Website Data"
+      ]
+    },
+    "metadata": {
+      "category": "iphone-settings-deep",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "id": "dad-022",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I back up my iPhone to iCloud?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Ground the Settings app first (Home Screen, grey gear; swipe down to search if needed). Breadcrumb: Settings -> your name -> iCloud -> iCloud Backup. Then tap your name, iCloud, iCloud Backup, make sure Back Up This iPhone is on, and tap Back Up Now.",
+      "expectedKeywords": [
+        "Settings",
+        "your name",
+        "iCloud",
+        "iCloud Backup",
+        "Back Up Now"
+      ]
+    },
+    "metadata": {
+      "category": "iphone-settings-deep",
+      "difficulty": "hard"
+    }
+  },
+  {
+    "id": "dad-023",
+    "input": {
+      "messages": [
+        {
+          "role": "user",
+          "content": "How do I set a screen time limit for myself?"
+        }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Ground the Settings app first (Home Screen, grey gear; swipe down to search if needed). Breadcrumb: Settings -> Screen Time -> App Limits -> Add Limit. Then open Screen Time, tap App Limits, Add Limit, pick a category, set the time, and tap Add.",
+      "expectedKeywords": [
+        "Settings",
+        "Screen Time",
+        "App Limits",
+        "Add Limit"
+      ]
+    },
+    "metadata": {
+      "category": "iphone-settings-deep",
+      "difficulty": "hard"
+    }
   }
 ]

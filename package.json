@@ -14,7 +14,10 @@
     "start": "node dist/server/index.js",
     "prompt:publish": "tsx scripts/publish-prompt.ts",
     "dataset:seed": "tsx scripts/seed-dataset.ts",
-    "dataset:run": "tsx scripts/run-dataset.ts"
+    "dataset:run": "tsx scripts/run-dataset.ts",
+    "langfuse:seed": "tsx scripts/import-trace-seed.ts --input data/seed-production-traces.json",
+    "langfuse:seed:dry-run": "tsx scripts/import-trace-seed.ts --input data/seed-production-traces.json --dry-run",
+    "langfuse:seed:otel": "tsx scripts/import-trace-seed-otel.ts --input data/seed-traffic-followups-traces.json"
   },
   "dependencies": {
     "@langfuse/client": "latest",

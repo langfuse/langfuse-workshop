@@ -23,6 +23,9 @@ export type ChatRequest = {
   messages: ChatMessage[];
   sessionId: string;
   userId?: string;
+  // Optional string key-value pairs propagated onto the trace so scores
+  // (e.g. asks_follow_up) can be sliced by dimensions like `difficulty`.
+  metadata?: Record<string, string>;
 };
 
 export type ChatResponse = {
