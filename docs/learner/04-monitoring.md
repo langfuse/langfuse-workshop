@@ -57,7 +57,7 @@ Keep the API key in the Langfuse secret field only. Do not paste it into worksho
 
 Langfuse ships published templates for **User Disagreement** and **Out-of-Scope Request**. Both are LLM-as-a-judge evaluators that read variables from observations. The two templates need slightly different targets:
 
-- **Out-of-Scope Request** needs the system prompt, so target the final OpenAI generation.
+- **Out-of-Scope Request** needs the system prompt, and targets the root `dad-it-support-chat-turn` agent observation.
 - **User Disagreement** needs the conversation history, so target the root `dad-it-support-chat-turn` agent observation.
 
 For **Out-of-Scope Request**:
