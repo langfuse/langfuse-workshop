@@ -40,8 +40,8 @@ Prefer to install them yourself:
 # Langfuse CLI
 npm install -g langfuse-cli
 
-# langfuse skill — point your agent at:
-# https://github.com/langfuse/skills/tree/main/skills/langfuse
+# Langfuse Skill:
+npx skills add langfuse/skills --skill "langfuse"
 ```
 
 ## Step 3 — Configure `.env`
