@@ -26,7 +26,25 @@ This checkpoint intentionally contains the same untraced base app as `checkpoint
 1. **OpenAI** — [platform.openai.com](https://platform.openai.com) → API Keys → create one. Copy the `sk-...` value.
 2. **Langfuse** — sign up at [langfuse.com](https://langfuse.com) on the **EU region**, create a project, and copy the public + secret keys from **Settings → API Keys**.
 
-## Step 2 — Configure `.env`
+## Step 2 — Install the Langfuse skill and CLI
+
+Later modules drive Langfuse through a coding agent, which needs the `langfuse` skill and the Langfuse CLI.
+
+Paste this into your coding agent to install both:
+
+> "Please install the `langfuse` skill from `https://github.com/langfuse/skills/tree/main/skills/langfuse`, and install the Langfuse CLI with `npm install -g langfuse-cli`."
+
+Prefer to install them yourself:
+
+```bash
+# Langfuse CLI
+npm install -g langfuse-cli
+
+# langfuse skill — point your agent at:
+# https://github.com/langfuse/skills/tree/main/skills/langfuse
+```
+
+## Step 3 — Configure `.env`
 
 ```bash
 cp .env.example .env
@@ -47,7 +65,7 @@ The workshop app always loads this repository's `.env` file for the server and h
 
 Keep these values in your local `.env` only. Do not paste real API keys into shared workshop notes, transcripts, screenshots, or chat messages.
 
-## Step 3 — Install and run
+## Step 4 — Install and run
 
 ```bash
 npm install
@@ -56,7 +74,7 @@ npm run dev
 
 Open [http://127.0.0.1:3333](http://127.0.0.1:3333).
 
-## Step 4 — Confirm what you see
+## Step 5 — Confirm what you see
 
 You should see the **Dad IT Support Agent** chat:
 
