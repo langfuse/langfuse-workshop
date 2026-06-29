@@ -12,6 +12,7 @@ Learner guide: [07 Evaluate a Change](../learner/07-evaluation.md)
 - Make learners inspect run 1 before changing anything. The change should respond to evidence, not vibes.
 - Keep the iteration deliberately small: one prompt rule, one rerun, one comparison.
 - Emphasize regressions. The most useful comparison is often the item that got worse.
+- Remind learners that both experiment scores are platform-side now, so a missing score usually means "still pending" or "evaluator target mismatch," not a bug in `scripts/run-dataset.ts`.
 
 ## Demo rhythm
 

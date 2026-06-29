@@ -11,6 +11,7 @@ Learner guide: [05 Dataset](../learner/05-dataset.md)
 
 - Frame the dataset as product scope written down: expected user inputs, expected behavior, and metadata for slicing.
 - The code path is intentionally simple: seed curated JSON into Langfuse, then inspect the hosted dataset.
+- Call out why `expectedOutput` has two fields: `idealAnswer` feeds the Correctness judge, and `expectedKeywords` feeds the deterministic `keyword_overlap` check in the next chapter.
 - Connect this chapter back to monitoring: good dataset items often come from surprising production traces.
 
 ## Demo rhythm
