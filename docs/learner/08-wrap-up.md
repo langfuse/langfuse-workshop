@@ -65,7 +65,11 @@ When you go back to your own codebase, do this in order:
    langfuse api __schema
    ```
 
-2. **Install the [Langfuse skill](https://github.com/langfuse/skills)** (`/langfuse`) — it packages the recommended tracing, prompt management, monitoring, and evaluator patterns from this workshop and applies them to your codebase without you hand-rolling each piece.
+2. **Install the [Langfuse skill](https://github.com/langfuse/skills)** (`/langfuse`) — it packages the recommended tracing, prompt management, monitoring, and evaluator patterns from this workshop and applies them to your codebase without you hand-rolling each piece:
+
+   ```bash
+   npx skills add langfuse/skills --skill "langfuse"
+   ```
 
 3. **Pick the smallest LLM-using surface** you have and wire `observe(...)` + `observeOpenAI(...)` first. Get one trace before you do anything else.
 
