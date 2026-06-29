@@ -240,6 +240,22 @@ User disagreement is a much higher-signal event. When a user pushes back on an a
 
 The all-caps signal is intentionally rougher. It is not a claim that the user is definitely angry; it is just a cheap deterministic clue that the conversation might be going sideways. That makes it a good "review these first" monitor, especially when paired with the richer disagreement and out-of-scope judges.
 
+## Seed production traffic and watch the monitors fire
+
+Four hand-typed turns prove the wiring works. But monitoring earns its keep on *volume* — so let's now seed a batch of realistic production data and look at what happens.
+
+```bash
+npm run langfuse:seed:otel:no-scores
+```
+
+This replays a snapshot of real "Dad IT support" traffic — plus a handful of synthesized edge cases (out-of-scope asks, ALL-CAPS messages, and "no, that menu isn't there" disagreements) — into the `production` environment of your Langfuse project. It reuses the Langfuse keys already in your `.env` and shifts every timestamp so the newest trace lands at "now".
+
+The `:no-scores` variant seeds the traces **without** any pre-baked scores. That is the whole point: your evaluators are already live, so the scores that appear come from *your* monitors running against this fresh traffic — not from numbers baked into the seed.
+
+> ⚠️ The seed is **not idempotent**. OpenTelemetry mints fresh trace IDs on every run, so re-running doubles the data. Run it once; if you need a clean slate, delete the prior seed traces in Langfuse before seeding again.
+
+Now open **Tracing**, filter to the `production` environment, and refresh after a few seconds. Watch the scores land across the seeded batch as the evaluators chew through it — the out-of-scope, all-caps, and disagreement edge cases bubbling up just like the turns you sent by hand, only at scale. That is what your monitors will look like against real traffic, and it is exactly the pile of flagged traces you will mine for the next chapter.
+
 ## Wrap-up
 
 Good monitors are how you separate signal from noise. Production means a lot of traces, and the most important question is *which ones should I look at?* — monitors answer that.
