@@ -12,6 +12,12 @@ git checkout checkpoint/04-monitoring
 ```
 
 You have a traced app with optional Langfuse-managed prompts. Every chat turn lands in Langfuse as a nested trace.
+ 
+If you want to use prompt management but have skipped module 3 run the following command to publish the prompt
+
+```bash
+npm run prompt:publish
+```
 
 ## Why monitor your AI app
 
@@ -40,7 +46,7 @@ The first two monitors in this chapter use LLM-as-a-judge templates. Langfuse ru
 If your project already has a default evaluator model, keep it and continue to Step 2.
 
 1. In Langfuse, open **Project Settings → LLM Connections**.
-2. Click **Add new LLM API key**.
+2. Click **Add new LLM Connection**.
 3. Choose **OpenAI**, name the connection, and paste your OpenAI API key into the secret field.
 4. Save the connection.
 5. Open **Evaluators → Set up evaluator**. If Langfuse asks for the default model first, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`, then save.
@@ -51,14 +57,14 @@ Keep the API key in the Langfuse secret field only. Do not paste it into worksho
 
 Langfuse ships published templates for **User Disagreement** and **Out-of-Scope Request**. Both are LLM-as-a-judge evaluators that read variables from observations. The two templates need slightly different targets:
 
-- **Out-of-Scope Request** needs the system prompt, so target the final OpenAI generation.
+- **Out-of-Scope Request** needs the system prompt, and targets the root `dad-it-support-chat-turn` agent observation.
 - **User Disagreement** needs the conversation history, so target the root `dad-it-support-chat-turn` agent observation.
 
 For **Out-of-Scope Request**:
 
 1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
 2. Target the final OpenAI generation:
-   - Observation type: `generation`
+   - Observation type: `agent`
    - Tool Call count = 0 (to exclude tool decisions)
 3. Map the template's variables from the generation's **Input**:
 

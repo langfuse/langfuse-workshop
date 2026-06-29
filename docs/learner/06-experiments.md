@@ -102,16 +102,17 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
 
 1. In Langfuse, open **Evaluators → New evaluator** and pick the **Correctness** template.
 2. Target the runs from this dataset:
-   - Dataset: `dad-it-support-workshop`
-   - Scope: **Dataset runs**
-3. Map the template variables:
+   - Run on: **Experiments** (Default is observation, make sure to select the right 'Run on')
+   - Filter where: Dataset is 'dad-it-support-workshop'
+3. Map the template variables. In the UI, set the **Source** dropdown first, then add JsonPath only where needed:
 
-   | Template variable | Object field | JsonPath |
+   | Variable | Object Field | JsonPath |
    | --- | --- | --- |
-   | `query` | Experiment Input | `$.messages[-1:].content` |
-   | `generation` | Experiment Output | Use **Output** directly |
-   | `ground_truth` | Experiment Expected Output | `$.idealAnswer` |
+   | `query` | **Input** | `$.messages[-1].content` |
+   | `generation` | **Output** | Leave blank |
+   | `ground_truth` | **Expected Output** | `$.idealAnswer` |
 
+   A common broken setup is leaving all three variables on **Input** because that dropdown shows up first. If `generation` or `ground_truth` point to **Input**, the evaluator reads the wrong data for every run.
 4. Use the default judge model you configured in session 4 or in the fresh project check above, or pick another structured-output-capable judge model, and save.
 5. Enable the evaluator.
 
