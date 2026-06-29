@@ -14,7 +14,9 @@
     "start": "node dist/server/index.js",
     "prompt:publish": "tsx scripts/publish-prompt.ts",
     "dataset:seed": "tsx scripts/seed-dataset.ts",
-    "dataset:run": "tsx scripts/run-dataset.ts"
+    "dataset:run": "tsx scripts/run-dataset.ts",
+    "langfuse:seed:otel": "tsx scripts/import-trace-seed-otel.ts --input data/seed-traffic-followups-traces.json",
+    "langfuse:seed:otel:no-scores": "tsx scripts/import-trace-seed-otel.ts --input data/seed-traffic-followups-traces.json --no-scores"
   },
   "dependencies": {
     "@langfuse/client": "latest",
