@@ -51,6 +51,22 @@ new NodeSDK({ spanProcessors: [new LangfuseSpanProcessor()] }).start();
 
 The processor reads `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY`, and `LANGFUSE_BASE_URL` from the Node process environment. In this workshop, the server loads the repository `.env` before the Langfuse SDK starts, so edit `.env` instead of relying on exported shell values.
 
+Side note: if the last trace sometimes shows up late when you stop or restart `npm run dev`, come back to `index.ts` and turn the one-liner above into named `langfuseSpanProcessor` and `sdk` variables so `shutdown()` can flush them:
+
+```ts
+const langfuseSpanProcessor = new LangfuseSpanProcessor();
+const sdk = new NodeSDK({ spanProcessors: [langfuseSpanProcessor] });
+sdk.start();
+
+async function shutdown() {
+  server.close();
+  await langfuseSpanProcessor.forceFlush();
+  await sdk.shutdown();
+}
+```
+
+You do not need this to understand the tracing model, but it avoids confusing "where did my last trace go?" moments in local dev.
+
 ### `src/server/support-agent.ts`
 
 Add the import:

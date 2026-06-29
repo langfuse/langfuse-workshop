@@ -74,6 +74,8 @@ npm run dev
 
 Open [http://127.0.0.1:3333](http://127.0.0.1:3333).
 
+If you want to verify the server separately, check [http://127.0.0.1:8787/api/health](http://127.0.0.1:8787/api/health) or [http://127.0.0.1:8787/api/support-context](http://127.0.0.1:8787/api/support-context). During `npm run dev`, `127.0.0.1:8787/` is not the main app URL.
+
 ## Step 5 — Confirm what you see
 
 You should see the **Dad IT Support Agent** chat:
@@ -88,7 +90,8 @@ You should see the **Dad IT Support Agent** chat:
 
 ## How to verify you are done
 
-- `npm run dev` is running and listening on `http://127.0.0.1:3333` (client) and `http://127.0.0.1:8787` (server).
+- `npm run dev` is running and listening on `http://127.0.0.1:3333` (client) and `http://127.0.0.1:8787` (API server).
+- `http://127.0.0.1:8787/api/health` or `http://127.0.0.1:8787/api/support-context` returns a real response.
 - The browser shows the Specs greeting, not an error.
 - Sending one of the suggestion chips returns a real iPhone answer from the model.
 
