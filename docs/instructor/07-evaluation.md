@@ -24,4 +24,4 @@ Learner guide: [07 Evaluate a Change](../learner/07-evaluation.md)
 ## Watch for
 
 - Learners changing both model and prompt at the same time, making the comparison hard to interpret.
-- New prompt versions that are saved but not promoted to the label the app fetches.
+- Learners editing the prompt in the UI but forgetting they need a new saved version promoted to the label the app fetches.

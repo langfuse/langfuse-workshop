@@ -102,7 +102,7 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
 
 1. In Langfuse, open **Evaluators → New evaluator** and pick the **Correctness** template.
 2. Target the runs from this dataset:
-   - Run on: **Experiments** (Default is observation, make sure to select the right 'Run on')
+   - Run on: **Experiments** (the UI often opens on observations, so switch this first)
    - Filter where: Dataset is 'dad-it-support-workshop'
 3. Map the template variables. In the UI, set the **Source** dropdown first, then add JsonPath only where needed:
 
@@ -115,6 +115,8 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
    A common broken setup is leaving all three variables on **Input** because that dropdown shows up first. If `generation` or `ground_truth` point to **Input**, the evaluator reads the wrong data for every run.
 4. Use the default judge model you configured in session 4 or in the fresh project check above, or pick another structured-output-capable judge model, and save.
 5. Enable the evaluator.
+
+If this is your first experiment, the review table or prompt preview may still say **No results** or **No trace data found** at setup time. That is expected. You have not created any experiment runs yet, so there is nothing for Langfuse to preview against. Save the evaluator now; after Step 4 creates the first run, this evaluator will score the new experiment items asynchronously.
 
 Why target **Dataset runs** here? Because for this workshop we want `correctness` to appear on the dataset run items and in the run comparison view.
 
