@@ -58,9 +58,9 @@ That makes the out-of-scope behaviour explicit instead of letting the model impr
 
 Two ways to make the change:
 
-**Option A — Langfuse-side (edit in the UI, recommended):**
+**Option A — Langfuse-side (create a new version in the UI, recommended):**
 
-Prompts → `dad-it-support-agent` → edit body → add the rule above into the **Rules** section → save as a new version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
+Prompts → `dad-it-support-agent` → create a new version or draft → add the rule above into the **Rules** section → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
 
 ![Review Prompt Changes in Langfuse — side-by-side diff between v1 and the draft with the new out-of-scope rule highlighted, ready to save as a new version and promote to production.](../images/evaluate-a-change/07-evaluate-a-change-prompt-diff.png)
 
