@@ -24,6 +24,8 @@ No instructor is required. The learner lessons are complete enough to run the wo
 
 The instructor guide is for people who want to teach Langfuse to others. Use the notes in [`docs/instructor/`](./docs/instructor/) alongside the learner lessons when you are facilitating a live workshop, recording a walkthrough, or adapting the material for a team.
 
+For preparation we included a guide and slides on how to prepare for the workshop [`docs/preparation_and_materials/`](./docs/preparation_and_materials/).
+
 The workshop does not depend on an instructor. The instructor notes add teaching points, demo rhythm, setup reminders, and common pitfalls; they are not required for someone completing the workshop alone.
 
 ## Workshop scope
