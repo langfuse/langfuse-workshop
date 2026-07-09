@@ -13,7 +13,7 @@ This is a high-level guide on how to give the Langfuse workshop to your own audi
 
 - Workshop instructions: [langfuse.com/workshop](http://langfuse.com/workshop). There is an instructor guide in this repo as well.
 - GitHub repo: [https://github.com/langfuse/langfuse-workshop](https://github.com/langfuse/langfuse-workshop)
-- Slide template: [https://docs.google.com/presentation/d/1rrICEwno3P_AphsJyjItZ5iRN5ycejqzzRhYaxdRpgc/copy?usp=sharing](https://docs.google.com/presentation/d/1rrICEwno3P_AphsJyjItZ5iRN5ycejqzzRhYaxdRpgc/copy?usp=sharing)
+- Slide template: [https://c.house/jpTZK8zurb](https://c.house/jpTZK8zurb)
 
 ## Preparation
 
