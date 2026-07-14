@@ -71,9 +71,9 @@ For **Out-of-Scope Request**:
    | Template variable | Object field | JsonPath |
    | --- | --- | --- |
    | `{{system_prompt}}` | `Input` | `$.messages[0].content` |
-   | `{{last_user_message}}` | `Input` | `$.messages[-1:].content` |
+   | `{{last_user_message}}` | `Input` | `$.messages[1].content` |
 
-   The `[-1:]` slice reads the final message in the generation input, so the mapping keeps working as the conversation grows. If your trace has a different message shape, inspect the generation input and adjust the JsonPath.
+   Why index `1` and not a last-message slice? This evaluator targets the *final* generation of a tool-calling loop, and that generation's input transcript ends with tool results — `[system, user, assistant tool-calls, tool result]` — so `$.messages[-1:]` would hand the judge the tool payload instead of Dad's message (and the judge will confidently mis-score every turn). The transcript always starts `[system, user, ...]`, so index `1` is Dad's message. If your trace has a different message shape (for example multi-turn history), inspect the generation input and adjust the JsonPath.
 4. Use the default judge model you configured in Step 1, or pick another structured-output-capable judge model, and save.
 5. Enable the evaluator.
 

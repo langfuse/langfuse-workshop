@@ -92,6 +92,8 @@ Why keep it in the script?
 
 This is also a good default pattern for teams that want experiment logic to stay in the repo.
 
+Keep in mind that `keyword_overlap` checks literal wording, not behaviour. The out-of-scope items expect words like "outside" and "scope", so a perfectly good refusal phrased differently can score 0 on them. Treat a low `keyword_overlap` on those items as a prompt to read the answer and compare with `correctness`, not automatically as a failure — seeing the two metrics disagree is part of the point of running both.
+
 > Alternative: this same deterministic check could also be moved into a Langfuse code evaluator if you want to manage it in the platform instead of in the script. See the [Code evaluators docs](https://langfuse.com/docs/evaluation/evaluation-methods/code-evaluators) and the [Experiments via SDK docs](https://langfuse.com/docs/evaluation/experiments/experiments-via-sdk).
 
 ## Step 3 — Set up the `correctness` evaluator in Langfuse
@@ -108,11 +110,18 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
 
    | Variable | Object Field | JsonPath |
    | --- | --- | --- |
-   | `query` | **Input** | `$.messages[-1].content` |
+   | `query` | **Input** | `$.messages[-1:].content` |
    | `generation` | **Output** | Leave blank |
    | `ground_truth` | **Expected Output** | `$.idealAnswer` |
 
    A common broken setup is leaving all three variables on **Input** because that dropdown shows up first. If `generation` or `ground_truth` point to **Input**, the evaluator reads the wrong data for every run.
+
+   Two more pitfalls fail *silently* — the evaluator still runs, the judge receives an empty variable, and it returns a plausible-looking score with reasoning like "with no query provided…":
+
+   - Use the slice form `[-1:]`, not a bare negative index. The evaluator's JsonPath engine resolves `$.messages[-1:].content` but silently returns nothing for `$.messages[-1].content`.
+   - Watch for stray whitespace when copying JsonPaths. A leading space (`" $.idealAnswer"`) is saved as-is and resolves to nothing.
+
+   If a score looks off, open the judge's own execution trace (filter the Tracing view to the `langfuse-llm-as-a-judge` environment) and check that every variable in the compiled prompt is actually filled.
 4. Use the default judge model you configured in session 4 or in the fresh project check above, or pick another structured-output-capable judge model, and save.
 5. Enable the evaluator.
 
