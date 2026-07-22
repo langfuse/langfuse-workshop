@@ -116,12 +116,8 @@ Langfuse ships a **Correctness** LLM-as-a-judge template that compares an actual
 
    A common broken setup is leaving all three variables on **Input** because that dropdown shows up first. If `generation` or `ground_truth` point to **Input**, the evaluator reads the wrong data for every run.
 
-   Two more pitfalls fail *silently* — the evaluator still runs, the judge receives an empty variable, and it returns a plausible-looking score with reasoning like "with no query provided…":
-
-   - Use the slice form `[-1:]`, not a bare negative index. The evaluator's JsonPath engine resolves `$.messages[-1:].content` but silently returns nothing for `$.messages[-1].content`.
+   One more pitfall that might fail *silently* — the evaluator still runs, the judge receives an empty variable, and it returns a plausible-looking score with reasoning like "with no query provided…":
    - Watch for stray whitespace when copying JsonPaths. A leading space (`" $.idealAnswer"`) is saved as-is and resolves to nothing.
-
-   If a score looks off, open the judge's own execution trace (filter the Tracing view to the `langfuse-llm-as-a-judge` environment) and check that every variable in the compiled prompt is actually filled.
 4. Use the default judge model you configured in session 4 or in the fresh project check above, or pick another structured-output-capable judge model, and save.
 5. Enable the evaluator.
 
