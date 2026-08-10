@@ -49,7 +49,7 @@ If your project already has a default evaluator model, keep it and continue to S
 2. Click **Add new LLM Connection**.
 3. Choose **OpenAI**, name the connection, and paste your OpenAI API key into the secret field.
 4. Save the connection.
-5. Open **Evaluators → Set up evaluator**. If Langfuse asks for the default model first, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`, then save.
+5. The default evaluation model is set during evaluator creation: if the project doesn't have one yet, the **Set up evaluator** wizard asks for it at its **Set up LLM connection** step before you can continue. When that appears, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`, then save. Once set, it shows as **Default model** at the top of the Evaluators page, where you can also change it later.
 
 Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
 
@@ -62,7 +62,7 @@ Langfuse ships published templates for **User Disagreement** and **Out-of-Scope 
 
 For **Out-of-Scope Request**:
 
-1. In Langfuse, open **Evaluators → New evaluator** and pick the **Out-of-Scope Request** template from the published library.
+1. In Langfuse, open **Evaluators → Set up evaluator** (the button reads **Create Evaluator** while the list is still empty) and pick **Out-of-Scope Request** from the **Use existing** list (*Langfuse managed evaluators*). Don't start from the **Create from scratch** tiles — **LLM as a judge evaluator** there opens a blank *Create new evaluator* form, not the template. If you land in it, close the dialog and pick the managed evaluator from the list instead.
 2. Target the final OpenAI generation:
    - Observation type: `generation`
    - Tool Call count = 0 (to exclude tool decisions)
@@ -81,7 +81,7 @@ For **Out-of-Scope Request**:
 
 For **User Disagreement**:
 
-1. In Langfuse, open **Evaluators → New evaluator** and pick the **User Disagreement** template from the published library.
+1. In Langfuse, open **Evaluators → Set up evaluator** and pick **User Disagreement** from the **Use existing** list.
 2. Target the root agent observation:
    - Observation type: `agent`
    - Observation name: `dad-it-support-chat-turn`
@@ -99,7 +99,7 @@ For **User Disagreement**:
 
 ![Variable mapping for the User Disagreement evaluator.](../images/monitoring/user-disagreement-config.png)
 
-> 💡 *Custom evaluators.* The shipped templates are a fast on-ramp, but you don't have to use them. **Evaluators → New evaluator → Custom** lets you write your own prompt and define your own variables. Same mapping flow — point each variable at the right JsonPath on the right observation, and you're done.
+> 💡 *Custom evaluators.* The shipped templates are a fast on-ramp, but you don't have to use them. **Evaluators → Set up evaluator → Create from scratch → LLM as a judge evaluator** lets you write your own prompt and define your own variables. Same mapping flow — point each variable at the right JsonPath on the right observation, and you're done.
 
 ## Step 3 — Add a code evaluator for all-caps frustration
 
@@ -107,7 +107,7 @@ The two monitors above use LLM-as-a-judge because they need semantic judgment. T
 
 Code evaluators are a good fit for that pattern: no model call, no prompt design, just a simple rule that runs on live observations.
 
-1. In Langfuse, open **Evaluators → New evaluator → Code evaluator**.
+1. In Langfuse, open **Evaluators → Set up evaluator** and pick **Code evaluator** under **Create from scratch**.
 2. Choose **Python**.
 3. Name the evaluator `user_all_caps_signal`.
 4. Paste this code:
