@@ -9,6 +9,12 @@ description: "Set up the workshop app with OpenAI and Langfuse credentials, then
 
 Have the workshop app running locally with both OpenAI and Langfuse credentials in place. From here you can skim `01-base-app`, then start building in `02-tracing`.
 
+## Prerequisites
+
+**Node.js `^20.19.0 || >=22.12.0`** — check with `node -v` and upgrade before installing if you are below it (`nvm install 22`, or the equivalent for `asdf`, `fnm`, or `volta`).
+
+An older version fails in a way that is easy to misread. Vite's platform-specific binary is an optional dependency, so npm skips it **without reporting an error**: `npm install` looks like it succeeded, and the problem only appears later when `npm run dev` cannot start Vite. If you upgrade Node after installing, re-run `npm ci` so the skipped binary is fetched.
+
 ## Starting point
 
 Clone the workshop repository, enter it, then check out the setup checkpoint for this chapter:
@@ -75,6 +81,8 @@ npm run dev
 Open [http://127.0.0.1:3333](http://127.0.0.1:3333).
 
 If you want to verify the server separately, check [http://127.0.0.1:8787/api/health](http://127.0.0.1:8787/api/health) or [http://127.0.0.1:8787/api/support-context](http://127.0.0.1:8787/api/support-context). During `npm run dev`, `127.0.0.1:8787/` is not the main app URL.
+
+If nothing loads on `127.0.0.1:3333`, scroll the `npm run dev` output back to the `[dev:client]` lines. `concurrently` keeps the API server running even when Vite has crashed, so the terminal still looks alive — and opening `127.0.0.1:8787/` in that state answers with `ENOENT ... dist/index.html`, which only means the production build is absent and says nothing about the real failure. A `Cannot find native binding` crash in those `[dev:client]` lines is the Node version; see Prerequisites.
 
 ## Step 5 — Confirm what you see
 
