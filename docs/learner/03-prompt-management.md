@@ -80,6 +80,20 @@ const langfusePrompt = await getPrompt();
 const systemPrompt = langfusePrompt?.prompt ?? SYSTEM_PROMPT;
 ```
 
+**Send `systemPrompt` as the system message.** Find this line in the transcript a few lines below:
+
+```ts
+{ role: "system", content: SYSTEM_PROMPT },
+```
+
+and change it to:
+
+```ts
+{ role: "system", content: systemPrompt },
+```
+
+Without this change the model keeps receiving the local constant — the Prompt badge in the next step would still appear, but editing the prompt in Langfuse would have no effect on answers.
+
 **Pass `langfusePrompt` to the existing `observeOpenAI` call** so the generation gets linked to the published prompt version — only when we actually have one:
 
 ```ts
