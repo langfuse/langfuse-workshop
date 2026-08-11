@@ -142,7 +142,7 @@ The OpenAI generation already mentions the tool calls in its `tool_calls` output
 
 ### `src/server/tools.ts`
 
-Add the import and the two observed helpers above `executeTool`, then redirect the switch at them. `TOOL_DEFINITIONS` stays untouched.
+Add the import and the two observed helpers above `executeTool`, then **replace the existing `executeTool` with the version below** so the switch calls the wrapped helpers instead of doing the work inline. `TOOL_DEFINITIONS` stays untouched.
 
 ```ts
 import { observe } from "@langfuse/tracing";
@@ -198,6 +198,8 @@ export async function executeTool(name: string, input: Record<string, unknown>):
   }
 }
 ```
+
+If `npm run dev` stops with `Multiple exports with the same name "executeTool"`, the original `executeTool` is still further down the file. Delete it and keep only the version above.
 
 ![Full trace after Step 3 — dad-it-support-chat-turn (agent) with the OpenAI generation and get_support_context + search_help_library tool observations as siblings underneath.](../images/tracing/02-tracing-step-3.png)
 

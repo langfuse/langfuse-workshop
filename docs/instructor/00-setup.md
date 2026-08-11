@@ -21,7 +21,8 @@ Learner guide: [00 Setup](../learner/00-setup.md)
 ## Watch for
 
 - Missing `.env` values. The app may render while model calls fail.
-- People checking `127.0.0.1:8787/` in dev. The API server runs on that port, but the browser app is served by Vite on `127.0.0.1:3333`, so use an API route for the server check.
+- Node older than `^20.19.0 || >=22.12.0`. Worth a `node -v` check in the room before anyone runs `npm install`, because npm skips Vite's optional native binary silently and the failure only surfaces later inside `npm run dev`. Learners who upgrade afterwards need `npm ci`, not just a restart.
+- People checking `127.0.0.1:8787/` in dev. The API server runs on that port, but the browser app is served by Vite on `127.0.0.1:3333`, so use an API route for the server check. It also hides a crashed Vite: `concurrently` keeps the API server up, and `8787/` answers with `ENOENT ... dist/index.html`.
 - Learners editing shell exports instead of `.env`. The workshop intentionally treats `.env` as the Node-side source of truth.
 - People expecting evaluator setup during initial setup. The app can run and trace correctly before the Langfuse-side LLM connection exists.
 - People expecting traces on `checkpoint/00-setup` or `checkpoint/01-base-app`. Both are intentionally untraced; tracing starts only after the `02-tracing` edits.
