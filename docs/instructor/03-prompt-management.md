@@ -17,10 +17,12 @@ Learner guide: [03 Prompt Management](../learner/03-prompt-management.md)
 
 1. Create `dad-it-support-agent` as a text prompt and label it `production`.
 2. Fetch it with `LangfuseClient`.
-3. Pass `langfusePrompt` into `observeOpenAI`.
-4. Open a generation and show the Prompt badge.
+3. Swap the hardcoded system message for the fetched text, keeping `SYSTEM_PROMPT` as the fallback.
+4. Pass `langfusePrompt` into `observeOpenAI`.
+5. Open a generation and show the Prompt badge.
 
 ## Watch for
 
 - Prompt name/label mismatches between `.env` and Langfuse.
 - Learners forgetting that the SDK fetches the `production` label by default.
+- The Prompt badge proves linking, not usage. A transcript still sending the local `SYSTEM_PROMPT` passes every verify step while prompt edits in the UI change nothing — if an edit seems to have no effect, check the generation input.
