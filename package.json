@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
     "dev:client": "vite --host 127.0.0.1",
-    "dev:server": "tsx watch src/server/index.ts",
+    "dev:server": "node --import tsx --watch --watch-path=.env --watch-path=./src/server --watch-path=./src/shared ./src/server/index.ts",
     "build": "npm run build:client && npm run build:server",
     "build:client": "vite build",
     "build:server": "tsup src/server/index.ts --format esm --out-dir dist/server --clean",
