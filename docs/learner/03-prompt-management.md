@@ -39,7 +39,7 @@ Two steps:
 
 The most direct way to create a prompt is to add it manually in the UI — it's the same workflow your team will use for every future iteration.
 
-1. In Langfuse, open **Prompts → New prompt**.
+1. In Langfuse, open **Prompts → Create Prompt**.
 2. **Name** it `dad-it-support-agent` (matching `LANGFUSE_PROMPT_NAME` in your `.env`).
 3. **Type** is `text`.
 4. **Paste** the body of `SYSTEM_PROMPT` from `src/server/support-agent.ts`.
