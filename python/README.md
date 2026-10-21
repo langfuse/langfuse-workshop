@@ -1,20 +1,39 @@
 # Dad IT Support Agent — Python + FastAPI track
 
-A Python + FastAPI port of the workshop's Dad IT Support Agent. It matches the
-TypeScript app's behavior and API, and reuses the shared repo assets (`data/`,
-`docs/`, and the React client) instead of forking them.
+A small FastAPI app: an AI agent that helps Dad with his iPhone. It answers from
+a fixed Dad profile and a local how-to library, using OpenAI tool-calling. The
+later phases add Langfuse tracing, prompt management, datasets, and evaluation.
 
-The learner lessons in [`../docs/`](../docs/) still apply. This README covers only
-what is different on the Python side.
+It reads shared workshop assets (`data/`, `docs/`, and a prebuilt web client)
+from the repository root, so you run everything from the `python/` directory with
+nothing to copy in. The learner lessons in [`../docs/`](../docs/) walk through the
+concepts; this README is all you need to install, configure, and run the app.
 
 ## Install
 
-Requires [uv](https://docs.astral.sh/uv/) and Python 3.11+.
+- Requires [uv](https://docs.astral.sh/uv/) and Python 3.11+.
 
-```bash
-cd python
-make setup        # runs `uv sync`, creating .venv/ from uv.lock
-```
+- Install uv if you don't have it:
+
+  ```bash
+  # macOS (Homebrew)
+  brew install uv
+  # or the official installer (macOS/Linux)
+  curl -LsSf https://astral.sh/uv/install.sh | sh
+  ```
+
+- Confirm it is available:
+
+  ```bash
+  uv --version
+  ```
+
+- Then create the virtualenv:
+
+  ```bash
+  cd python
+  make setup        # runs `uv sync`, creating .venv/ from uv.lock
+  ```
 
 `uv` is the only package manager for this track. `pyproject.toml` lists the
 dependencies, and `uv.lock` (committed) pins them. Do not add a
@@ -22,14 +41,43 @@ dependencies, and `uv.lock` (committed) pins them. Do not add a
 
 ## Configure
 
-The Python app reads the same **repo-root `.env`** as the TypeScript app, so one
-config file serves both tracks. If you need a Python-only override, copy
-`.env.example` to `python/.env`; values there win over the root file.
+- The app reads a single `.env` file from the **repository root** (one level above
+`python/`). Create it before running:
 
-| Key | Used from | Default on the Python side |
+  ```bash
+  cd ..                 # repository root
+  cp .env.example .env   # then edit .env and set the keys below
+  ```
+
+At minimum set `OPENAI_API_KEY`. The root `.env.example` ships a default `OPENAI_MODEL` 
+that may not be callable with your key — set `OPENAI_MODEL` to a chat model your key 
+can call (for example `gpt-4.1-mini`).
+
+### Using OpenAI or OpenRouter
+
+The app talks to any OpenAI-compatible chat API.
+
+- **OpenAI (default):** set `OPENAI_API_KEY` to your OpenAI key and leave
+  `OPENAI_BASE_URL` unset. The app uses `https://api.openai.com/v1`.
+- **OpenRouter:** put your OpenRouter key in `OPENAI_API_KEY` (in place of an
+  OpenAI key), then add:
+
+  ```bash
+  OPENAI_BASE_URL=https://openrouter.ai/api/v1
+  OPENAI_MODEL=openai/gpt-4.1-mini
+  ```
+
+  `OPENAI_BASE_URL` is optional and only needed for OpenRouter (or another
+  OpenAI-compatible endpoint). Leave it unset to use OpenAI.
+
+If you ever want a setting that applies only to the Python app, copy 
+`python/.env.example` to `python/.env`; values there override the root `.env`.
+
+| Key | Needed from | Default |
 | --- | --- | --- |
-| `OPENAI_API_KEY` | py-01 | none (required) |
-| `OPENAI_MODEL` | py-01 | `gpt-4.1-mini` |
+| `OPENAI_API_KEY` | py-01 | none (required; OpenAI or OpenRouter key) |
+| `OPENAI_BASE_URL` | py-01 | unset (OpenAI); `https://openrouter.ai/api/v1` for OpenRouter |
+| `OPENAI_MODEL` | py-01 | `gpt-4.1-mini` (use `openai/gpt-4.1-mini` on OpenRouter) |
 | `PORT` | py-01 | `8787` |
 | `LANGFUSE_PUBLIC_KEY`, `LANGFUSE_SECRET_KEY` | py-02 | none |
 | `LANGFUSE_BASE_URL` | py-02 | `https://cloud.langfuse.com` |
@@ -38,47 +86,62 @@ config file serves both tracks. If you need a Python-only override, copy
 | `WORKSHOP_PROMPT_VARIANT` | py-03 | `default` |
 | `DATASET_NAME` | py-05 | `dad-it-support-workshop` |
 
-The TypeScript app defaults `OPENAI_MODEL` to `gpt-5.5-2026-04-23`. The Python
-side defaults to `gpt-4.1-mini` because it is broadly available; set
-`OPENAI_MODEL` to any chat model your key can call.
-
-The base app (`checkpoint/py-01-base-app`) needs only the OpenAI keys. It makes no
-calls to Langfuse.
+The base app (`checkpoint/py-01-base-app`) needs only `OPENAI_API_KEY` and
+`OPENAI_MODEL`. It makes no calls to Langfuse; the Langfuse keys matter from py-02
+onward.
 
 ## Run
 
-```bash
-make app          # FastAPI server on http://127.0.0.1:8787
-```
+- Run the app
 
-The server also serves the shared React client from the repo-root `dist/`.
-Build it once from the repo root with `npm install && npm run build:client`,
-then open http://127.0.0.1:8787.
+  ```bash
+  make app          # FastAPI server on http://127.0.0.1:8787
+  ```
 
-Smoke checks, with the server running in another terminal:
+- Smoke checks, with the server running in another terminal:
 
-```bash
-make health       # {"ok": true, "provider": "openai", "tracingConfigured": false}
-make chat         # Bluetooth question -> numbered steps + usedTools
-```
+  ```bash
+  make health       # {"ok": true, "provider": "openai", "tracingConfigured": false}
+  make chat         # Bluetooth question -> numbered steps + usedTools
+  ```
+
+`make chat` is the end-to-end test: it sends a real question and should return
+numbered steps, with `usedTools` listing `get_support_context` and
+`search_help_library`.
+
+### Optional: the web UI
+
+- The API is enough to use and test the agent.
+- If you also want the browser chat UI, the server serves a prebuilt web client from the repository-root `dist/` folder. That build is not checked in and is produced by the separate Node toolchain at the repository root:
+
+  ```bash
+  cd ..                               # repository root
+  npm install && npm run build:client # one-time, requires Node.js
+  ```
+
+Then restart `make app` and open http://127.0.0.1:8787. Skip this entirely if you
+only want the API.
 
 ## Layout
 
-| Python module | Mirrors (TypeScript) | Purpose |
+What each file does. (The middle column maps to the Node/TypeScript track and
+only matters if you maintain both; a Python reader can ignore it.)
+
+| Python module | Node/TypeScript counterpart | Purpose |
 | --- | --- | --- |
 | `app/env.py` | `src/server/env.ts`, `load-env.ts` | Env loading and defaults |
 | `app/support_data.py` | `src/server/support-data.ts` | Fixed Dad context and guide library |
 | `app/tools.py` | `src/server/tools.ts` | Tool JSON schemas and `execute_tool` |
 | `app/support_agent.py` | `src/server/support-agent.ts` | System prompt and the tool-calling loop (max 6 turns) |
-| `app/server.py` | `src/server/index.ts` | FastAPI routes and React client serving |
+| `app/server.py` | `src/server/index.ts` | FastAPI routes and web client serving |
 | `scripts/publish_prompt.py` | `scripts/publish-prompt.ts` | Stub until py-03 |
 | `scripts/seed_dataset.py` | `scripts/seed-dataset.ts` | Stub until py-05 |
 | `scripts/run_dataset.py` | `scripts/run-dataset.ts` | Stub until py-06 |
 
 ## Checkpoints
 
-The Python track has its own checkpoint tags. Each tag is cut from the merge
-commit of its phase:
+Each phase of the Python track has a git tag you can check out to start from that
+point:
 
 | Tag | Workshop step |
 | --- | --- |
@@ -92,17 +155,5 @@ commit of its phase:
 | `checkpoint/py-07-evaluation` | Compare prompt variants |
 | `checkpoint/py-08-wrap-up` | Recap and next steps |
 
-`py-00-setup` and `py-01-base-app` point at the same commit, as `00-setup` and
-`01-base-app` do on the TypeScript track.
-
-Rules for maintainers:
-
-- **TS checkpoint tags contain no Python code.** Never move or edit an existing
-  `checkpoint/0X-*` tag to add Python work. Python work only lands on
-  `checkpoint/py-0X-*` tags.
-- **Shared assets stay shared.** The Python side reads `data/`, `docs/`, and the
-  React client build from the repo root. Do not copy or fork them into `python/`.
-  When the workshop data changes, both tracks pick it up.
-- **Keep Python changes inside `python/`.** Do not edit TypeScript files or the
-  root `AGENTS.md` from this track. Root `AGENTS.md` Rule 1 would force-move every
-  TS checkpoint tag, so Python checkpoint notes live here instead.
+Maintaining these tags and the two-track repository is covered in
+[`AGENTS.md`](./AGENTS.md).
