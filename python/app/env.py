@@ -1,4 +1,4 @@
-"""Environment loading. Mirrors src/server/env.ts and src/server/load-env.ts."""
+"""Environment loading: reads the repository-root .env, then an optional python/.env override."""
 
 import os
 from dataclasses import dataclass
@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 PYTHON_ROOT = Path(__file__).resolve().parent.parent
 REPO_ROOT = PYTHON_ROOT.parent
 
-# The repository-level .env is the shared workshop config used by the TS app too.
+# The repository-level .env is the shared workshop config at the repo root.
 # An optional python/.env can override it for Python-only settings.
 load_dotenv(REPO_ROOT / ".env", override=True)
 load_dotenv(PYTHON_ROOT / ".env", override=True)

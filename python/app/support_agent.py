@@ -1,4 +1,4 @@
-"""OpenAI tool-calling loop for the Dad IT Support Agent. Mirrors src/server/support-agent.ts."""
+"""OpenAI tool-calling loop for the Dad IT Support Agent."""
 
 import json
 from typing import Any, Literal
@@ -34,7 +34,7 @@ FALLBACK_ANSWER = (
 )
 
 
-# Request/response models mirror src/shared/types.ts and the Zod schema in index.ts.
+# Request/response models for the chat API: session id required, at least one message.
 class ChatMessage(BaseModel):
     id: str
     role: Literal["user", "assistant"]

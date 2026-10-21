@@ -1,4 +1,4 @@
-"""Tool definitions and executor. Mirrors src/server/tools.ts."""
+"""Tool definitions and executor for the Dad IT Support Agent."""
 
 from typing import Any
 

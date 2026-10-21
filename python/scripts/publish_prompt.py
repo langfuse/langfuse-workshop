@@ -1,6 +1,6 @@
 """Publish the Dad IT Support prompt variants to Langfuse.
 
-Stub for checkpoint/py-03-prompt-management. Mirrors scripts/publish-prompt.ts.
+Stub for checkpoint/py-03-prompt-management.
 """
 
 

@@ -1,6 +1,6 @@
 """Seed the shared workshop dataset (data/seed-dataset.json) into Langfuse.
 
-Stub for checkpoint/py-05-dataset. Mirrors scripts/seed-dataset.ts.
+Stub for checkpoint/py-05-dataset.
 """
 
 

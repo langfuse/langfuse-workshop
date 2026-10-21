@@ -1,6 +1,6 @@
 """Run the agent against the Langfuse dataset with callback evaluators.
 
-Stub for checkpoint/py-06-experiments. Mirrors scripts/run-dataset.ts.
+Stub for checkpoint/py-06-experiments.
 """
 
 

@@ -1,4 +1,4 @@
-"""Fixed Dad support context and in-memory guide library. Mirrors src/server/support-data.ts."""
+"""Fixed Dad support context and in-memory guide library."""
 
 import re
 from typing import Any
@@ -125,6 +125,6 @@ def search_guides(question: str) -> list[dict[str, Any]]:
         if score > 0:
             scored.append((guide, score))
 
-    # sorted() is stable, matching Array.prototype.sort tie order in the TS app.
+    # sorted() is stable, so guides with equal scores keep their library order.
     scored.sort(key=lambda item: item[1], reverse=True)
     return [guide for guide, _ in scored[:3]]

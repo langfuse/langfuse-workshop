@@ -1,4 +1,4 @@
-"""FastAPI server for the Dad IT Support Agent. Mirrors src/server/index.ts."""
+"""FastAPI server for the Dad IT Support Agent."""
 
 import logging
 
@@ -18,7 +18,7 @@ app = FastAPI(title="Dad IT Support Agent")
 
 @app.exception_handler(RequestValidationError)
 async def validation_error_handler(_request: Request, error: RequestValidationError) -> PlainTextResponse:
-    # The TS app answers invalid payloads with 400 + the validation message, not FastAPI's default 422.
+    # Answer invalid payloads with 400 + the validation message, not FastAPI's default 422.
     return PlainTextResponse(str(error), status_code=400)
 
 
@@ -37,7 +37,7 @@ def support_context() -> dict:
 def chat(payload: ChatRequest):
     try:
         return run_support_conversation(payload)
-    except Exception as error:  # noqa: BLE001 - mirror the TS catch-all that returns 400
+    except Exception as error:  # noqa: BLE001 - catch-all so any agent failure returns 400, not 500
         logger.exception("Chat turn failed")
         return PlainTextResponse(str(error) or "Unknown server error", status_code=400)
 
