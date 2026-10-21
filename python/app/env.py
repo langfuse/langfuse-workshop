@@ -23,6 +23,7 @@ CLIENT_DIST = REPO_ROOT / "dist"
 class Env:
     port: int
     openai_api_key: str
+    openai_base_url: str
     openai_model: str
     langfuse_public_key: str
     langfuse_secret_key: str
@@ -36,7 +37,10 @@ class Env:
 env = Env(
     port=int(os.getenv("PORT", "8787")),
     openai_api_key=os.getenv("OPENAI_API_KEY", ""),
-    # The TS app pins gpt-5.5-2026-04-23; the Python side defaults to a widely available model.
+    # Optional. Leave unset for OpenAI. Set to an OpenAI-compatible endpoint
+    # (e.g. https://openrouter.ai/api/v1) to use OpenRouter instead.
+    openai_base_url=os.getenv("OPENAI_BASE_URL", ""),
+    # Defaults to a widely available model; override with any chat model your key can call.
     openai_model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
     langfuse_public_key=os.getenv("LANGFUSE_PUBLIC_KEY", ""),
     langfuse_secret_key=os.getenv("LANGFUSE_SECRET_KEY", ""),

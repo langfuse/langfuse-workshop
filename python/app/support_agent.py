@@ -90,7 +90,11 @@ def _to_assistant_message(message: ChatCompletionMessage) -> dict[str, Any]:
 
 def run_support_conversation(request: ChatRequest) -> ChatResponse:
     context = get_support_context()
-    client = OpenAI(api_key=env.openai_api_key or None)
+    # base_url=None when OPENAI_BASE_URL is unset, so the OpenAI default endpoint is used.
+    client = OpenAI(
+        api_key=env.openai_api_key or None,
+        base_url=env.openai_base_url or None,
+    )
 
     transcript: list[dict[str, Any]] = [
         {"role": "system", "content": SYSTEM_PROMPT},
