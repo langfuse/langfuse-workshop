@@ -207,7 +207,7 @@ export async function executeTool(name: string, input: Record<string, unknown>):
 
 If `npm run dev` stops with `Multiple exports with the same name "executeTool"`, the original `executeTool` is still further down the file. Delete it and keep only the version above.
 
-![Trace after Step 3. dad-it-support-chat-turn is selected, with three OpenAI.chat generations and the get_support_context and search_help_library tool calls nested under it. The preview shows the input for that turn: steps to reconnect an iPhone 15 to Wi-Fi, then the follow-up "ah ok tell me more".](../images/tracing/02-tracing-step-3.png)
+![Trace after Step 3. dad-it-support-chat-turn with OpenAI generations, get_support_context, and search_help_library.](../images/tracing/02-tracing-step-3.png)
 
 
 ## How to verify you are done
