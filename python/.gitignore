@@ -1,0 +1,8 @@
+# uv-managed virtualenv
+.venv/
+
+# Local secrets (the shared config lives in the repo-root .env)
+.env
+
+__pycache__/
+*.py[cod]
