@@ -3,6 +3,7 @@ import { observeOpenAI } from "@langfuse/openai";
 import { observe, propagateAttributes } from "@langfuse/tracing";
 import type { ChatMessage, ChatRequest, ChatResponse } from "../shared/types";
 import { env } from "./env";
+import { chatClientOptions } from "./llm";
 import { getSupportContext } from "./support-data";
 import { TOOL_DEFINITIONS, executeTool } from "./tools";
 
@@ -62,7 +63,7 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
       tags: ["langfuse-workshop", "dad-it-support"]
     },
     async () => {
-      const openai = observeOpenAI(new OpenAI({ apiKey: env.openaiApiKey }));
+      const openai = observeOpenAI(new OpenAI(chatClientOptions()));
 
       const transcript: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
         { role: "system", content: SYSTEM_PROMPT },
@@ -73,7 +74,7 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
 
       for (let attempt = 0; attempt < 6; attempt += 1) {
         const response = await openai.chat.completions.create({
-          model: env.openaiModel,
+          model: env.chatModel,
           messages: transcript,
           tools: TOOL_DEFINITIONS,
           tool_choice: "auto"
@@ -81,7 +82,7 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
 
         const message = response.choices[0]?.message;
         if (!message) {
-          throw new Error("OpenAI returned no assistant message.");
+          throw new Error("The model returned no assistant message.");
         }
         transcript.push(message as OpenAI.Chat.Completions.ChatCompletionMessageParam);
 
@@ -118,7 +119,7 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
         traceMeta: {
           contextId: context.id,
           contextLabel: context.label,
-          model: env.openaiModel
+          model: env.chatModel
         }
       };
     }
