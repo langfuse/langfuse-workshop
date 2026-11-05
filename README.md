@@ -32,7 +32,7 @@ The workshop does not depend on an instructor. The instructor notes add teaching
 
 ## Workshop scope
 
-The sample app is a small web chat where Dad opens the chat to get iPhone help. The agent is named **Specs** and answers with step-by-step instructions. Under the hood, it is a normal OpenAI tool-calling loop with two local tools.
+The sample app is a small web chat where Dad opens the chat to get iPhone help. The agent is named **Specs** and answers with step-by-step instructions. Under the hood, it is a normal OpenAI tool-calling loop with two local tools. Set `OPENAI_API_KEY`, or use Claude by setting `ANTHROPIC_API_KEY` instead. Claude is called through Anthropic's OpenAI-compatible endpoint, so the SDK and tracing lessons stay the same.
 
 ![The AI Engineering Loop](./docs/images/AI-engineering-loop.png)
 
