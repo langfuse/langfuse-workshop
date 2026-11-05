@@ -35,7 +35,7 @@ app.use(express.json({ limit: "1mb" }));
 app.get("/api/health", (_request, response) => {
   response.json({
     ok: true,
-    provider: "openai",
+    provider: env.llmProvider,
     tracingConfigured: isLangfuseConfigured()
   });
 });
