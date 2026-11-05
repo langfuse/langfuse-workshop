@@ -56,7 +56,7 @@ await dataset.runExperiment({
   name: "Dad IT Support Agent experiment",
   runName,           // unique label for this run; shows up in the Experiments tab
   description: "...",
-  metadata: { model: env.openaiModel },
+  metadata: { model: env.chatModel },
   maxConcurrency: 1, // run items one at a time
 
   task: async (item) => {
@@ -99,7 +99,7 @@ Keep in mind that `keyword_overlap` checks literal wording, not behaviour. The o
 
 ## Step 3 — Review the `correctness` LLM-as-a-judge callback
 
-The second callback in `evaluators` calls OpenAI with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint — paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
+The second callback in `evaluators` calls the same model provider as the agent with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint — paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
 
 Why run the judge as a callback instead of a Langfuse Platform evaluator?
 
@@ -107,7 +107,7 @@ Why run the judge as a callback instead of a Langfuse Platform evaluator?
 - The judge prompt and model live next to the experiment runner in git.
 - Both scores appear in the script's printed summary as soon as the run finishes.
 
-The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env` — the same credentials the agent already uses. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
+The judge uses the same provider and model as the agent (`OPENAI_API_KEY` / `OPENAI_MODEL`, or `ANTHROPIC_API_KEY` / `ANTHROPIC_MODEL` when Claude is selected). You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
 
 ## Step 4 — Run the dataset
 

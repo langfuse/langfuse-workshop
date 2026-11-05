@@ -11,7 +11,7 @@ description: "Instrument the support agent so one chat turn becomes a nested Lan
 git checkout checkpoint/02-tracing
 ```
 
-This is the blank slate for the tracing step — same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json` — run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse keys.
+This is the blank slate for the tracing step — same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json` — run `npm install` if you haven't. Make sure `.env` has your model key (`OPENAI_API_KEY`, or `ANTHROPIC_API_KEY` if you are using Claude) and Langfuse keys.
 
 ## Why we trace
 
@@ -84,13 +84,13 @@ import { observeOpenAI } from "@langfuse/openai";
 Then **wrap the OpenAI client where you create it**. Find this line in `runSupportConversation`:
 
 ```ts
-const openai = new OpenAI({ apiKey: env.openaiApiKey });
+const openai = new OpenAI(chatClientOptions());
 ```
 
 and change it to:
 
 ```ts
-const openai = observeOpenAI(new OpenAI({ apiKey: env.openaiApiKey }));
+const openai = observeOpenAI(new OpenAI(chatClientOptions()));
 ```
 
 That's the entire diff. No factory function, no separate raw client — `observeOpenAI` wraps the OpenAI client inline at the call site, and `openai.chat.completions.create(...)` below it now emits a trace for every call.
