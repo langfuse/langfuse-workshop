@@ -66,7 +66,7 @@ Canonical progression:
 
 What makes the checkpoints stitchable:
 
-- The OpenAI SDK is already in place before tracing starts, so step 2 is only about observability.
+- The OpenAI SDK is already in place before tracing starts, so step 2 is only about observability. An Anthropic key is optional: `chatClientOptions()` points that same SDK at Claude's OpenAI-compatible endpoint, and `observeOpenAI` still traces it. OpenAI remains the default when `OPENAI_API_KEY` is set.
 - Prompt management falls back to the local prompt if the Langfuse prompt is absent.
 - Monitoring depends on stable message arrays on the agent/generation observations and the root `answer` field, not provider-specific internals.
 - Dataset items carry both `idealAnswer` and `expectedKeywords`, which feed the step-06 `correctness` and `keyword_overlap` callback evaluators.
