@@ -43,7 +43,7 @@ The first monitor in this chapter uses an LLM-as-a-judge template. Langfuse runs
 If your project already has a default evaluator model, keep it and continue to Step 1.
 
 1. In Langfuse, open Project Settings → LLM Connections.
-2. Click Add new LLM Connection.
+2. Click Add LLM Connection.
 3. Choose OpenAI, name the connection, and paste your OpenAI API key into the secret field.
 4. Save the connection.
 5. No extra action after saving the connection — the default evaluation model is set during evaluator creation. When the wizard asks you to pick a model, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`.
@@ -56,7 +56,9 @@ Keep the API key in the Langfuse secret field only. Do not paste it into worksho
 
 Langfuse ships a published **Detect User Disagreement** template. It is an LLM-as-a-judge evaluator that reads variables from observations.
 
-**User Disagreement** needs the conversation history, so target the root `dad-it-support-chat-turn` agent observation.
+**Detect User Disagreement** maps `{{conversation_history}}` to every input message and `{{last_user_message}}` to the last input message. Target the root `dad-it-support-chat-turn` agent observation.
+
+**Detect Out-of-Scope Request** uses a different first variable, `{{system_prompt}}`, for the system prompt on a generation. Pick **Detect User Disagreement** for the mapping in this step.
 
 1. In Langfuse, open **Evaluators → New Evaluator** and pick **Detect User Disagreement** from the **Template Gallery**.
 2. On the right side, select the trace root as a sample observation, this will likely be preselected. We are targeting the root observation of type Agent, the place where the overall trace input and output is logged.
