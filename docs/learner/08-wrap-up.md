@@ -25,8 +25,6 @@ Complementary materials:
 git checkout checkpoint/08-wrap-up
 ```
 
-You have walked through every loop step.
-
 ## What you should be able to do now
 
 - Trace an LLM app end-to-end and read the result as a debugging surface.
@@ -46,19 +44,11 @@ Langfuse in this workshop is a *shared surface*, not just observability:
 - comparing changes — every prompt or code change has a baseline
 - improving systems continuously — the loop closes back on itself
 
-## Good closing questions
-
-- What did tracing reveal that was invisible before?
-- Which production events would you monitor first in your own app?
-- What would you add to the starter dataset next?
-- What change would you test after the first prompt iteration?
-- Where in your real app would the `/langfuse` skill have saved you the most hand-rolling?
-
 ## How to work on your own application
 
 When you go back to your own codebase, do this in order:
 
-1. **Run the [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli)** so you can manage prompts, datasets, and runs from the terminal. The CLI uses the same project API keys as the SDKs, so there is no separate CLI login step. Keep those values in your application's local `.env`:
+1. **Install the [Langfuse skill](https://github.com/langfuse/skills) and the [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli).** Keep your project keys in the application's local `.env`. The CLI uses the same keys as the SDKs.
 
    ```dotenv
    LANGFUSE_PUBLIC_KEY=pk-lf-...
@@ -66,31 +56,15 @@ When you go back to your own codebase, do this in order:
    LANGFUSE_BASE_URL=https://cloud.langfuse.com
    ```
 
-   Then run the CLI from a shell that has loaded that file:
-
-   ```bash
-   npx langfuse-cli api __schema
-   ```
-
-   If you prefer a global binary, install the published `langfuse-cli` package:
-
-   ```bash
-   npm install -g langfuse-cli
-   langfuse api __schema
-   ```
-
-2. **Install the [Langfuse skill](https://github.com/langfuse/skills)** (`/langfuse`) — it packages the recommended tracing, prompt management, monitoring, and evaluator patterns from this workshop and applies them to your codebase without you hand-rolling each piece:
-
    ```bash
    npx skills add langfuse/skills --skill "langfuse"
+   npm install -g langfuse-cli
    ```
 
-3. **Pick the smallest LLM-using surface** you have and wire `observe(...)` + `observeOpenAI(...)` first. Get one trace before you do anything else.
+2. **Ask the skill to add tracing** to your application. Start with the smallest LLM-using surface and get one trace before you do anything else.
 
-4. **Add user/session information** only once you have at least two users or two sessions of traffic — there's no point until then.
+3. **Run realistic cases through your app** so you have traces to work with for error analysis.
 
-5. **Build your first dataset *from real traces, discussions with experts, or past examples*** rather than from imagination. Production behavior will tell you over time what your dataset needs to cover.
+4. **Build your first dataset** so it represents what your application will actually do.
 
-6. **Run one experiment, change one thing, rerun.** Then repeat.
-
-The docs and Academy lessons for each step are linked in **Why close the loop** above.
+5. **Measure and iterate** on the quality of your system. Change one thing, rerun, and compare.
