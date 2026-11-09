@@ -5,6 +5,15 @@ description: "Instrument the support agent so one chat turn becomes a nested Lan
 
 # 02 Tracing
 
+## Why
+
+Tracing logs every step your agent takes — every model call, every tool invocation, the inputs that went in and the outputs that came back — in the order they happened. It turns the agent from a black box into something you can open up and inspect after the fact, so when an answer is wrong you can point at the exact step where it went wrong instead of guessing.
+
+Complementary materials:
+
+- Docs: [AI Observability and application tracing](https://langfuse.com/docs/observability/overview) — SDK options, OpenTelemetry setup, and span attributes.
+- Academy: [Tracing](https://langfuse.com/academy/tracing) — why tracing sits at the start of the AI engineering loop.
+
 ## Starting point
 
 ```bash
@@ -12,12 +21,6 @@ git checkout checkpoint/02-tracing
 ```
 
 This is the blank slate for the tracing step — same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json` — run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse keys.
-
-## Why we trace
-
-Tracing logs every step your agent takes — every model call, every tool invocation, the inputs that went in and the outputs that came back — in the order they happened. It turns the agent from a black box into something you can open up and inspect after the fact, so when an answer is wrong you can point at the exact step where it went wrong instead of guessing.
-
-If you want the bigger-picture motivation, see the [Langfuse Academy lesson on tracing](https://langfuse.com/academy/tracing). If you want the technical details (SDK options, OpenTelemetry internals, span attributes), the [tracing docs](https://langfuse.com/docs/tracing) cover that.
 
 ## Goal
 
