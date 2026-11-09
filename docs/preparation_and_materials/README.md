@@ -20,8 +20,7 @@ This is a high-level guide on how to give the Langfuse workshop to your own audi
 - Use **Langfuse Cloud**. Supporting self-hosted setups would mean maintaining the workshop against too many Langfuse versions, and this workshop is not about learning how to self-host Langfuse. It is about current features in their most up-to-date form. If participants ask about a company or local self-hosted instance, steer them to Cloud.
 - Update slides with training info. Ideally, copy them first.
 - Go through the workshop yourself.
-- Optional but generally recommended: prep an OpenAI API key for participants to use. Make sure to limit spend and delete it afterwards.
-- Optional: prep a Langfuse AI Gateway key instead. Create a service account key under Organization settings → AI Gateway → Gateway keys, set an expiration, and share it as `LANGFUSE_GATEWAY_KEY`. Revoke it after the session. Participants who set it can leave `OPENAI_API_KEY` empty.
+- Model access has two options. Prefer a Langfuse AI Gateway key: create a service account key under Organization settings → AI Gateway → Gateway keys, set an expiration, share it as `LANGFUSE_GATEWAY_KEY`, and revoke it after the session. The other option is an OpenAI API key for participants; limit spend and delete it afterwards. The app uses whichever key is set, and the gateway key when both are set.
 - Please note: the workshop is a changing resource. We update and improve it frequently, so make sure you check the workshop shortly before a session.
 
 ## Audience
