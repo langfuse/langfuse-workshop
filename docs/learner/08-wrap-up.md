@@ -61,7 +61,7 @@ When you go back to your own codebase, do this in order:
    npm install -g langfuse-cli
    ```
 
-2. **Ask the skill to add tracing** to your application. Start with the smallest LLM-using surface and get one trace before you do anything else.
+2. **Ask your coding agent to use the skill to add tracing** to your application. Start with the smallest LLM-using surface and get one trace before you do anything else.
 
 3. **Run realistic cases through your app** so you have traces to work with for error analysis.
 
