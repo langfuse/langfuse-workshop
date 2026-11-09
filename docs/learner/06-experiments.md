@@ -5,7 +5,7 @@ description: "Run the support agent across the Langfuse dataset, score every ite
 
 # 06 Experiments
 
-## Why
+## Why experiments
 
 A trace tells you about *one* turn. An experiment tells you about behavior *across the dataset*. Every experiment run does the same three things:
 

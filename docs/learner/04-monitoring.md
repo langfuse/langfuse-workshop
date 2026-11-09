@@ -5,7 +5,7 @@ description: "Configure Langfuse evaluators to catch user disagreement and all-c
 
 # 04 Monitoring
 
-## Why
+## Why we monitor
 
 In production, an AI app produces a lot of traces. Most of them are fine. The interesting ones — the answers that drift, the requests the agent shouldn't be handling at all, the patterns that change over time — are what you want to find. Monitoring is how you catch those signals without reading every single trace by hand.
 

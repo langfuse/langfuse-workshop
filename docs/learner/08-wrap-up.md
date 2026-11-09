@@ -5,7 +5,7 @@ description: "Review the complete AI engineering loop and how to apply tracing, 
 
 # 08 Wrap-up
 
-## Why
+## Why close the loop
 
 You have walked the loop once on a small app. This chapter is here so you leave with a sequence you can reuse on your own codebase: trace first, then monitor, then turn what you find into a dataset, then experiment and evaluate before you ship the next change. The workshop is the hands-on version of that loop. The docs and Academy are the reference and the conceptual version of the same steps.
 
@@ -93,4 +93,4 @@ When you go back to your own codebase, do this in order:
 
 6. **Run one experiment, change one thing, rerun.** Then repeat.
 
-The docs and Academy lessons for each step are linked in **Why** above.
+The docs and Academy lessons for each step are linked in **Why close the loop** above.
