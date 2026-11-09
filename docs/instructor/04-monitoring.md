@@ -42,7 +42,8 @@ Demo order after the seed:
 - Two signals: **Detect User Disagreement** uses LLM-as-a-judge, and **Detect User Frustration (ALL CAPS)** uses deterministic TypeScript.
 - The API keys in `.env` do not configure the judge model inside Langfuse. The disagreement evaluator needs the LLM connection.
 - Both evaluators target the logical root `dad-it-support-chat-turn` agent observation, because that observation carries the conversation input and the final answer.
-- Have learners use the right-side sample panel, filtered to `production`: map `conversation_history` to all input messages and `last_user_message` to the last input message, then test before saving.
+- The disagreement judge should run on **5.6 Luna** (`gpt-5.6-luna`) from the OpenAI connection.
+- Have learners use the right-side sample panel, filtered to `production`. In **Map variables to data**, bind variables with **Use** on the observation tree: `conversation_history` on **Input → messages**, `last_user_message` on **Input → messages → last**. Do not have them type a JSONPath. Test before saving.
 - `{{system_prompt}}` belongs to **Detect Out-of-Scope Request**. This section maps `conversation_history` on **Detect User Disagreement**.
 - After **Create evaluator**, review filters, estimated weekly volume and cost, and sampling rate, then click **Execute**.
 - Execute scores observations that arrive afterwards. The seeded batch is the mapping sample, not an automatic backfill. The two chat turns in Verify are what should light up. Historical scoring is batch evaluation, and re-running the seed is the wrong way to get scores.

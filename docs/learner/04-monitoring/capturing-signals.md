@@ -43,9 +43,9 @@ If your project already has a default evaluator model, keep it and continue to S
 2. Click Add LLM Connection.
 3. Choose OpenAI, name the connection, and paste your OpenAI API key into the secret field.
 4. Save the connection.
-5. No extra action after saving the connection. The default evaluation model is set during evaluator creation. When the wizard asks you to pick a model, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`.
+5. No extra action after saving the connection. The evaluation model is chosen while you create the evaluator. When the wizard asks you to pick a model, choose the OpenAI connection and **5.6 Luna** (`gpt-5.6-luna`).
 
-   ![Choose the project default evaluation model in the Set up evaluator wizard.](../../images/monitoring/default-evaluation-model.png)
+   ![Pick the evaluator model in the Set up evaluator wizard. Choose 5.6 Luna.](../../images/monitoring/default-evaluation-model.png)
 
 Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
 
@@ -61,16 +61,14 @@ Langfuse ships a published **Detect User Disagreement** template. It is an LLM-a
 2. On the right side, select the trace root as a sample observation. Filter to the `production` environment if the panel is showing something else. We are targeting the root observation of type Agent, the place where the overall trace input and output is logged.
    ![Select the trace root as a sample observation in the evaluator setup panel.](../../images/monitoring/select-sample-observation.png)
    **Hint**: If you hover over the filters in the filter bar, you will see what each of those filter out. You can also 'Ask AI' to configure your filters.
-3. Map the template's variables from the agent observation's **Input** through the UI selector:
+3. Under **Map variables to data**, bind each variable from the live observation tree. Open a row, hover the field, and press **Use**. Do not use **Type a JSONPath instead**.
 
-   | Template variable | Object field | JsonMapping  |
-   | --- | --- | --- |
-   | `{{conversation_history}}` | `Input` |        All messages|
-   | `{{last_user_message}}` | `Input` |  Last message|
+   - `{{conversation_history}}`: open **Input**, hover **messages**, and press **Use**. The binding reads **Input → messages** (every message).
+   - `{{last_user_message}}`: open **Input → messages**, hover **last**, and press **Use**. The binding reads **Input → messages → last**.
 
-   ![Map the conversation history variable to all input messages.](../../images/monitoring/user-disagreement-conversation-history-mapping.png)
+   ![Bind conversation history with Use on Input → messages.](../../images/monitoring/user-disagreement-conversation-history-mapping.png)
 
-   ![Map the last user message variable to the last input message.](../../images/monitoring/user-disagreement-last-user-message-mapping.png)
+   ![Bind the last user message with Use on Input → messages → last.](../../images/monitoring/user-disagreement-last-user-message-mapping.png)
 
 4. In the right panel, you can test run your evaluator on a sample observation.
 
