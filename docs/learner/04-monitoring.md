@@ -57,7 +57,7 @@ Use the same model credential as the app. Set one of these two. When both are se
 5. Paste the chosen key into **API Key**.
 6. Open **Advanced settings**. Set **API Base URL** only for the gateway key, as above. Leave **Use Responses API** off. This workshop uses Chat Completions.
 7. Save the connection.
-8. No extra action after saving the connection — the default evaluation model is set during evaluator creation. When the wizard asks you to pick a model, choose this connection and a structured-output-capable model such as `gpt-4.1`. The picker shows `{provider name} / gpt-4.1`, for example `langfuse / gpt-4.1` or `openai / gpt-4.1`.
+8. No extra action after saving the connection — the default evaluation model is set during evaluator creation. When the wizard asks you to pick a model, choose this connection and a structured-output-capable model such as `gpt-5.6-luna`. The picker shows `{provider name} / gpt-5.6-luna`, for example `langfuse / gpt-5.6-luna` or `openai / gpt-5.6-luna`.
 
    ![Choose the project default evaluation model in the Set up evaluator wizard.](../images/monitoring/default-evaluation-model.png)
 
