@@ -5,6 +5,20 @@ description: "Review the complete AI engineering loop and how to apply tracing, 
 
 # 08 Wrap-up
 
+## Why
+
+You have walked the loop once on a small app. This chapter is here so you leave with a sequence you can reuse on your own codebase: trace first, then monitor, then turn what you find into a dataset, then experiment and evaluate before you ship the next change. The workshop is the hands-on version of that loop. The docs and Academy are the reference and the conceptual version of the same steps.
+
+Complementary materials:
+
+- Docs: [Langfuse overview](https://langfuse.com/docs)
+- Academy: [The AI Engineering Loop](https://langfuse.com/academy/ai-engineering-loop)
+  - [Tracing](https://langfuse.com/academy/tracing)
+  - [Monitoring](https://langfuse.com/academy/monitoring)
+  - [Datasets](https://langfuse.com/academy/datasets)
+  - [Experiments](https://langfuse.com/academy/experiments)
+  - [Evaluate](https://langfuse.com/academy/evaluate)
+
 ## Starting point
 
 ```bash
@@ -79,11 +93,4 @@ When you go back to your own codebase, do this in order:
 
 6. **Run one experiment, change one thing, rerun.** Then repeat.
 
-For the bigger-picture material on each step, the [Langfuse Academy](https://langfuse.com/academy) has dedicated lessons:
-
-- [The AI Engineering Loop](https://langfuse.com/academy/ai-engineering-loop)
-- [Tracing](https://langfuse.com/academy/tracing)
-- [Monitoring](https://langfuse.com/academy/monitoring)
-- [Datasets](https://langfuse.com/academy/datasets)
-- [Experiments](https://langfuse.com/academy/experiments)
-- [Evaluate](https://langfuse.com/academy/evaluate)
+The docs and Academy lessons for each step are linked in **Why** above.

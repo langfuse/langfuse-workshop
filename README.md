@@ -2,7 +2,9 @@
 
 # Langfuse Workshop - the AI engineering loop, end to end
 
-This is a step-by-step Langfuse workshop built on a small TypeScript sample application: the **Dad IT Support Agent**. The workshop covers the full AI engineering loop with Langfuse: tracing, prompt management, monitoring, datasets, experiments, and evaluation.
+This is a step-by-step Langfuse workshop built on a small TypeScript sample application: the Dad IT Support Agent. The workshop covers the full AI engineering loop with Langfuse: tracing, prompt management, monitoring, datasets, experiments, and evaluation.
+
+The workshop is the hands-on version of many concepts explained in the [Langfuse Academy](https://langfuse.com/academy). The complementary materials are called out respectively.
 
 You can complete the workshop on your own from the learner lessons, or use the instructor notes to teach the same material to a group.
 
@@ -32,7 +34,7 @@ The workshop does not depend on an instructor. The instructor notes add teaching
 
 ## Workshop scope
 
-The sample app is a small web chat where Dad opens the chat to get iPhone help. The agent is named **Specs** and answers with step-by-step instructions. Under the hood, it is a normal OpenAI tool-calling loop with two local tools. Set `OPENAI_API_KEY`, or use Claude by setting `ANTHROPIC_API_KEY` instead. Claude is called through Anthropic's OpenAI-compatible endpoint, so the SDK and tracing lessons stay the same.
+The sample app is a small web chat where Dad opens the chat to get iPhone help. The agent is named **Specs** and answers with step-by-step instructions. Under the hood, it is a normal OpenAI tool-calling loop with two local tools.
 
 ![The AI Engineering Loop](./docs/images/AI-engineering-loop.png)
 
