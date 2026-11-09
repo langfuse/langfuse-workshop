@@ -43,19 +43,17 @@ For Specs, we start with two conversation signals. We identify whether Dad disag
 
 Check out the Academy page on [capturing signals](https://langfuse.com/academy/monitoring/capturing-signals) for the broader map of explicit ratings, behavioral signals, conversation signals, and outcomes.
 
-## Load production traffic
+## Seed production traffic
 
-These views need production traffic to work on.
+Monitoring becomes valuable with volume. Let's seed some sample interactions with the Dad IT Support Agent so we have data to work with.
 
 ```bash
 npm run langfuse:seed:otel:no-scores
 ```
 
-This replays a snapshot of Dad IT support traffic, plus a handful of synthesized edge cases (out-of-scope asks, ALL-CAPS messages, and "no, that menu isn't there" disagreements), into the `production` environment of your Langfuse project. It uses the Langfuse keys already in your `.env` and shifts every timestamp so the newest trace lands at now.
-
 > ⚠️ The seed is **not idempotent**. OpenTelemetry mints fresh trace IDs on every run, so re-running doubles the data. Run it once. If you need a clean slate, delete the prior seed traces in Langfuse before seeding again.
 
-Open **Tracing** and filter to the `production` environment. There is now a full set of traces in the project. The next sections work with this batch:
+Open [Tracing](https://cloud.langfuse.com/project/~/traces) and filter to the `production` environment. There is now a full set of traces in the project. The next sections work with this batch:
 
 1. [4.1 Error analysis](./04-monitoring/error-analysis.md) — read a sample and name the failures.
 2. [Topics and issues](./04-monitoring/topics.md) — see the intents and issues across the batch.
