@@ -3,6 +3,11 @@ import { getSupportContext, searchGuides } from "./support-data";
 
 type ToolResult = Record<string, unknown>;
 
+// The tools read local data and would finish in under 1 ms, which makes them
+// look like zero-length spans in Langfuse. A small fake delay stands in for the
+// network/database latency a real support tool would have.
+const simulateLatency = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   {
     type: "function",
@@ -39,6 +44,7 @@ export const TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] = [
 export async function executeTool(name: string, input: Record<string, unknown>): Promise<ToolResult> {
   switch (name) {
     case "get_support_context": {
+      await simulateLatency(150);
       const context = getSupportContext();
       return {
         ok: true,
@@ -54,6 +60,7 @@ export async function executeTool(name: string, input: Record<string, unknown>):
       };
     }
     case "search_help_library": {
+      await simulateLatency(300);
       const guides = searchGuides(String(input.question ?? ""));
       return {
         ok: true,
