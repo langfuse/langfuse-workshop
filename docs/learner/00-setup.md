@@ -1,13 +1,22 @@
 ---
 title: "Workshop: Setup"
-description: "Set up the workshop app with a model API key and Langfuse credentials, then verify the local Dad IT Support Agent."
+description: "Set up the workshop app with OpenAI and Langfuse credentials, then verify the local Dad IT Support Agent."
 ---
 
 # 00 Setup
 
+## Why
+
+The rest of the workshop assumes the Dad IT Support Agent runs locally and that Langfuse can accept data from it. This chapter puts OpenAI and Langfuse credentials in place, installs the Langfuse CLI and skill used in later modules, and checks that the app actually answers. Tracing itself starts in `02-tracing`; here you only confirm the environment.
+
+Complementary materials:
+
+- Docs: [Langfuse overview](https://langfuse.com/docs)
+- Academy: [Welcome](https://langfuse.com/academy) and [The AI Engineering Loop](https://langfuse.com/academy/ai-engineering-loop)
+
 ## Goal
 
-Have the workshop app running locally with Langfuse credentials and either an OpenAI or Anthropic API key. From here you can skim `01-base-app`, then start building in `02-tracing`.
+Have the workshop app running locally with both OpenAI and Langfuse credentials in place. From here you can skim `01-base-app`, then start building in `02-tracing`.
 
 > ⚠️ Use **Langfuse Cloud** so you have the latest features this workshop describes. Self-hosted instances may be on an older version and will not match the lessons.
 
@@ -31,7 +40,7 @@ This checkpoint intentionally contains the same untraced base app as `checkpoint
 
 ## Step 1 — Get the API keys
 
-1. **A model key** — OpenAI is the default path the rest of the lessons use. Create a key at [platform.openai.com](https://platform.openai.com) → API Keys and copy the `sk-...` value. If you have a Claude key instead, create one in the [Claude Console](https://console.anthropic.com/) (`sk-ant-...`). You will paste it into `.env` in Step 3.
+1. **OpenAI** — [platform.openai.com](https://platform.openai.com) → API Keys → create one. Copy the `sk-...` value; you will paste it into `.env` in Step 3.
 2. **Langfuse** — sign up at [langfuse.com](https://langfuse.com) on the **EU region**, create a project, and copy the public + secret keys from **Settings → API Keys**. You will paste those into `.env` in Step 3 as well.
 
 ## Step 2 — Install the Langfuse skill and CLI
@@ -69,9 +78,7 @@ LANGFUSE_BASE_URL=https://cloud.langfuse.com
 
 Leave the rest of the defaults as they are.
 
-To use Claude instead of OpenAI, leave `OPENAI_API_KEY` empty and set `ANTHROPIC_API_KEY`. If both keys are present, set `LLM_PROVIDER=anthropic`. The app still constructs an OpenAI SDK client; Anthropic's [OpenAI-compatible endpoint](https://docs.anthropic.com/en/api/openai-sdk) is what `chatClientOptions()` points at Claude. `observeOpenAI` in the later lessons traces that client either way. Optional: `ANTHROPIC_MODEL` (default `claude-sonnet-4-6`) and `ANTHROPIC_WORKSPACE_ID` for a personal or service-account key that is not scoped to a workspace.
-
-The workshop app always loads this repository's `.env` file for the server and helper scripts. If you have `LANGFUSE_*`, `OPENAI_*`, `ANTHROPIC_*`, `LLM_PROVIDER`, or `DATASET_NAME` values exported in your shell from another project, they will not override this file. To change the workshop configuration, edit `.env`.
+The workshop app always loads this repository's `.env` file for the server and helper scripts. If you have `LANGFUSE_*`, `OPENAI_*`, or `DATASET_NAME` values exported in your shell from another project, they will not override this file. To change the workshop configuration, edit `.env`.
 
 Keep these values in your local `.env` only. Do not paste real API keys into shared workshop notes, transcripts, screenshots, or chat messages.
 
