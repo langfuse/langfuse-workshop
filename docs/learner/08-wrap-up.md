@@ -15,6 +15,8 @@ Complementary materials:
 - Academy: [The AI Engineering Loop](https://langfuse.com/academy/ai-engineering-loop)
   - [Tracing](https://langfuse.com/academy/tracing)
   - [Monitoring](https://langfuse.com/academy/monitoring)
+    - [Error analysis](https://langfuse.com/academy/monitoring/error-analysis)
+    - [Capturing signals](https://langfuse.com/academy/monitoring/capturing-signals)
   - [Datasets](https://langfuse.com/academy/datasets)
   - [Experiments](https://langfuse.com/academy/experiments)
   - [Evaluate](https://langfuse.com/academy/evaluate)
@@ -29,7 +31,7 @@ git checkout checkpoint/08-wrap-up
 
 - Trace an LLM app end-to-end and read the result as a debugging surface.
 - Connect prompts to traces so a prompt change has a measurable next-trace effect.
-- Detect interesting production behavior (user disagreement, all-caps frustration) automatically.
+- Make sense of a pile of production traces: read failures, look at topics and issues, and detect disagreement and all-caps frustration automatically.
 - Turn product scope into a starter dataset of realistic examples.
 - Run experiments on the same agent code with no parallel implementation.
 - Compare runs after changes and decide which setup is better — by score and by reading individual outputs.

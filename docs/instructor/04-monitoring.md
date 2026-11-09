@@ -1,39 +1,72 @@
 ---
 title: "Workshop: Instructor Notes for Monitoring"
-description: "Facilitator notes for the monitoring chapter, including judge-based and code-based evaluator targets, variable mapping, and debugging first results."
+description: "Facilitator notes for the monitoring overview, error analysis, topics, and the disagreement and all-caps signal evaluators."
 ---
 
 # 04 Monitoring
 
 Learner guide: [04 Monitoring](../learner/04-monitoring.md)
 
+- [Error analysis](../learner/04-monitoring/error-analysis.md)
+- [Topics and issues](../learner/04-monitoring/topics.md)
+- [Capturing signals](../learner/04-monitoring/capturing-signals.md)
+
 ## Instructor notes
 
-- This is a UI-first chapter with two signals: **Detect User Disagreement** uses LLM-as-a-judge for semantic judgment, while **Detect User Frustration (ALL CAPS)** uses deterministic TypeScript logic.
-- Before the disagreement evaluator, confirm the project has **Project Settings → LLM Connections** configured. The API keys in `.env` do not configure the judge model inside Langfuse.
-- Both evaluators target the logical root `dad-it-support-chat-turn` agent observation because that observation carries the overall conversation input and final answer.
-- Have learners use the right-side sample panel instead of mapping from memory: select a root observation, map `conversation_history` to all input messages and `last_user_message` to the last input message, then test the evaluator before saving.
-- `{{system_prompt}}` is the system-prompt variable on **Detect Out-of-Scope Request**. The disagreement mapping in this chapter is `conversation_history`.
-- After **Create evaluator**, review the configured filters, estimated weekly volume and cost, and sampling rate before clicking **Execute**. That final action activates the evaluator for matching incoming observations.
-- The ALL-CAPS template is already implemented as a TypeScript code evaluator. Use it to show why deterministic signals do not need an LLM call or an evaluator-model connection.
-- Close with seeding: `npm run langfuse:seed:otel:no-scores` adds realistic `production` traffic without pre-baked scores, so the learners' own evaluators produce the results. Remind learners that the command is not idempotent; every rerun creates duplicate traces.
-- Use the first few evaluator results as a debugging exercise, not just a pass/fail check.
+The chapter is an overview plus three sections. The overview is short on purpose: what monitoring is for once production traces pile up, then four ways to work with them. Dashboards are a link out, not a build exercise. Error analysis, topics, and capturing signals each have their own page.
+
+Seed once, from the overview, before any of the three sections. `npm run langfuse:seed:otel:no-scores` loads realistic `production` traffic with no pre-baked scores. It is not idempotent. Every rerun creates a duplicate set of traces.
+
+Demo order after the seed:
+
+1. Error analysis, while the traces are still unscored and the room has to read them.
+2. Topics, for the aggregate view of intents and issues on that same batch.
+3. Capturing signals, so the two evaluators are the last thing they turn on.
+
+### Error analysis
+
+- Keep this a human pass. The room reads traces and names failures. Do not hand them a taxonomy, and do not let an evaluator substitute for the reading.
+- About 15 `production` traces is enough in the room. Mix ordinary turns with the seeded edge cases (all caps, disagreement, out of scope).
+- Push for specific names. "Wrong answer" should split when the fix would differ, such as a bad Settings path versus a request Specs should have refused.
+- Annotation queues are the product workflow when the sample gets bigger. Point at them. Do not make queue setup the exercise.
+
+### Topics and issues
+
+- Intent is what Dad was trying to do. Issues is the principal mistake, grouped across different asks. Sentiment and outcome can stay in the background.
+- Topics needs the project's LLM connection plus an embedding model. If you will open Topics before capturing signals, set **Project Settings → LLM Connections** first. Capturing signals Step 0 is the same connection.
+- Confirm **Topics** is in the sidebar before the demo. If the project does not have it, explain the intent and issue views from the page and move on. Error analysis and capturing signals do not depend on it.
+- Prefer the first-run flow. The manual path is **Process traces** on `production`, then **Update topics**. Summaries without an update are not a map yet.
+
+### Capturing signals
+
+- Two signals: **Detect User Disagreement** uses LLM-as-a-judge, and **Detect User Frustration (ALL CAPS)** uses deterministic TypeScript.
+- The API keys in `.env` do not configure the judge model inside Langfuse. The disagreement evaluator needs the LLM connection.
+- Both evaluators target the logical root `dad-it-support-chat-turn` agent observation, because that observation carries the conversation input and the final answer.
+- Have learners use the right-side sample panel, filtered to `production`: map `conversation_history` to all input messages and `last_user_message` to the last input message, then test before saving.
+- `{{system_prompt}}` belongs to **Detect Out-of-Scope Request**. This section maps `conversation_history` on **Detect User Disagreement**.
+- After **Create evaluator**, review filters, estimated weekly volume and cost, and sampling rate, then click **Execute**.
+- Execute scores observations that arrive afterwards. The seeded batch is the mapping sample, not an automatic backfill. The two chat turns in Verify are what should light up. Historical scoring is batch evaluation, and re-running the seed is the wrong way to get scores.
+- The ALL-CAPS template is there to show a deterministic signal that needs no model call.
 
 ## Demo rhythm
 
-1. Confirm or configure the project's default evaluator model.
-2. Create **Detect User Disagreement**, select a sample root observation, map both variables through the data tree, run a test, then create and execute the evaluator.
-3. Create **Detect User Frustration (ALL CAPS)** on the same root observation, run a test, then create and execute it.
-4. Send one disagreement turn and one ALL-CAPS turn, then in **Tracing** filter by the evaluator score (Boolean Scores → evaluator name → equals → true/false) to find the flagged traces.
-5. Seed production traffic with `npm run langfuse:seed:otel:no-scores`, refresh the Tracing view, and watch the two evaluators score the seeded batch.
+1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
+2. Run `npm run langfuse:seed:otel:no-scores` once. Open **Tracing**, filter to `production`, and show the batch.
+3. Error analysis: read a few traces out loud, write one-sentence notes, cluster them on a board, count, and pick one category to act on.
+4. Topics: set models if needed, run the first-run flow, then open one intent group and one issue group and a trace in each.
+5. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
+6. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
+7. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them.
 
 ## Watch for
 
-- Accidentally choosing **Out-of-Scope Request** or another gallery template instead of **Detect User Disagreement**. Out-of-Scope Request's first variable is `system_prompt` (the system prompt on a generation). This chapter maps `conversation_history` on **Detect User Disagreement**, plus the ALL-CAPS code evaluator.
-- Treating the Langfuse API keys from `.env` as enough for evaluators. Judge-based evaluators also need the Langfuse-side LLM connection.
-- Selecting a child generation instead of the root agent observation. The evaluator only receives data from the observation it targets; it does not automatically read sibling or child observations.
-- Mapping `conversation_history` to a single message, or `last_user_message` to every message. Use the live sample tree: **Input → messages** and **Input → messages → last**.
-- Forgetting to select a sample observation before testing. The right panel can be filtered with the preset buttons or **Ask AI**.
-- Clicking **Create evaluator** but not **Execute** in the saved-evaluator dialog, which leaves the live evaluator inactive.
-- Learners assuming the all-caps score is a guarantee of anger. Frame it as a triage signal, not a verdict.
-- Running the seed command more than once. It generates fresh trace IDs and duplicates the seeded traffic.
+- Re-running the seed. It mints new trace IDs and duplicates the batch.
+- Treating dashboards as a configuration step. The overview only points at them.
+- Skipping the reading in error analysis and jumping straight to evaluator templates.
+- Opening Topics in a project where the nav item is absent, or starting it with no LLM connection and no embedding model.
+- Accidentally choosing **Out-of-Scope Request** instead of **Detect User Disagreement**. Out-of-Scope Request's first variable is `system_prompt`.
+- Selecting a child generation instead of the root agent observation. The evaluator only receives the observation it targets.
+- Mapping `conversation_history` to a single message, or `last_user_message` to every message.
+- Clicking **Create evaluator** and not **Execute**, which leaves the live evaluator inactive.
+- Expecting scores on the seeded traces immediately after Execute. New turns are the check.
+- Treating the all-caps score as proof of anger. Frame it as a triage signal.
