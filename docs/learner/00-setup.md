@@ -5,15 +5,6 @@ description: "Set up the workshop app with OpenAI and Langfuse credentials, then
 
 # 00 Setup
 
-## Why
-
-The rest of the workshop assumes the Dad IT Support Agent runs locally and that Langfuse can accept data from it. This chapter puts OpenAI and Langfuse credentials in place, installs the Langfuse CLI and skill used in later modules, and checks that the app actually answers. Tracing itself starts in `02-tracing`; here you only confirm the environment.
-
-Complementary materials:
-
-- Docs: [Langfuse overview](https://langfuse.com/docs)
-- Academy: [Welcome](https://langfuse.com/academy) and [The AI Engineering Loop](https://langfuse.com/academy/ai-engineering-loop)
-
 ## Goal
 
 Have the workshop app running locally with both OpenAI and Langfuse credentials in place. From here you can skim `01-base-app`, then start building in `02-tracing`.
