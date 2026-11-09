@@ -7,11 +7,12 @@ description: "Instrument the support agent so one chat turn becomes a nested Lan
 
 ## Why we trace
 
-Tracing logs every step your agent takes — every model call, every tool invocation, the inputs that went in and the outputs that came back — in the order they happened. It turns the agent from a black box into something you can open up and inspect after the fact, so when an answer is wrong you can point at the exact step where it went wrong instead of guessing.
+Tracing logs every step your agent takes. Every model call, every tool invocation, the inputs that went in and the outputs that came back, in the order they happened. It turns the agent from a black box into something you can open up and inspect after the fact, so when an answer is wrong you can point at the exact step where it went wrong.
 
 Complementary materials:
 
 - Docs: [AI Observability and application tracing](https://langfuse.com/docs/observability/overview) — SDK options, OpenTelemetry setup, and span attributes.
+- Docs: [What does a good trace look like?](https://langfuse.com/docs/observability/best-practices)
 - Academy: [Tracing](https://langfuse.com/academy/tracing) — why tracing sits at the start of the AI engineering loop.
 
 ## Starting point
