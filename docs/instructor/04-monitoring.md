@@ -25,10 +25,10 @@ Demo order after the seed:
 
 ### Error analysis
 
-- Keep this a human pass. The room reads traces and names failures. Do not hand them a taxonomy, and do not let an evaluator substitute for the reading.
-- About 15 `production` traces is enough in the room. Mix ordinary turns with the seeded edge cases (all caps, disagreement, out of scope).
-- Push for specific names. "Wrong answer" should split when the fix would differ, such as a bad Settings path versus a request Specs should have refused.
-- Annotation queues are the product workflow when the sample gets bigger. Point at them. Do not make queue setup the exercise.
+- Section 4.1 is the annotation-queue pass: open coding and pass/fail on 10 to 15 `production` traces, then cluster, name the groups, label frequencies, and decide whether to fix each category or turn it into an evaluator.
+- Create the score configs before the queue. A queue does not pick up score configs added later. The category label is a new categorical config after the clusters have names.
+- The sample problem is still open. The seeded batch is mostly successful turns, so a random 10 to 15 can contain no failures. Do not pretend there is a selection method until there is one. Until then, steer the room toward the seeded edge cases (all caps, disagreement, out of scope) when the random slice is too clean.
+- Do not hand them the cluster names before they have written the open-coding notes.
 
 ### Topics and issues
 
@@ -52,7 +52,7 @@ Demo order after the seed:
 
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
 2. Run `npm run langfuse:seed:otel:no-scores` once. Open **Tracing**, filter to `production`, and show the batch.
-3. Error analysis: read a few traces out loud, write one-sentence notes, cluster them on a board, count, and pick one category to act on.
+3. Error analysis: create the open-coding and pass/fail configs, queue 10 to 15 production traces, mark pass or fail, write the failures, then cluster and name them in the room.
 4. Topics: set models if needed, run the first-run flow, then open one intent group and one issue group and a trace in each.
 5. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 6. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
