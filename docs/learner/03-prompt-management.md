@@ -7,12 +7,11 @@ description: "Move the system prompt into Langfuse, fetch the production prompt 
 
 ## Why manage prompts
 
-Keeping the system prompt in code means every prompt change is a code change: pull request, review, build, deploy. With Langfuse prompt management the prompt lives in Langfuse — versioned, labelled, and editable in the UI — and the app fetches it at request time. That means non-engineers can iterate on prompts, changes ship independent of release cycles, and every version is preserved and linked to the traces it produced.
+Keeping the system prompt in code means every prompt change is a code change: pull request, review, build, deploy. With Langfuse prompt management the prompt lives in Langfuse: versioned, labelled, and editable in the UI, and the app fetches it at request time. That means non-engineers can iterate on prompts, changes ship independent of release cycles, and every version is preserved and linked to the traces it produced.
 
 Complementary materials:
 
 - Docs: [Prompt management](https://langfuse.com/docs/prompt-management/overview)
-- Academy: [The AI Engineering Loop](https://langfuse.com/academy/ai-engineering-loop). Prompts are part of what you trace, then change and compare in [Experiments](https://langfuse.com/academy/experiments).
 
 ## Starting point
 
