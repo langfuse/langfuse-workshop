@@ -13,7 +13,7 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 - Contrast deterministic scoring (`keyword_overlap`) with LLM-as-a-judge scoring (`correctness`) — both as **callbacks** on `runExperiment`.
 - Point at the semantic-equivalence judge prompt in `scripts/run-dataset.ts`: expected output is the source of truth; paraphrases pass; missing material meaning fails.
 - Call out why this chapter avoids Langfuse Platform evaluators as the primary path: configuring one needs existing experiment data to preview mappings, which blocks a clean first run.
-- The correctness judge uses the learner's `OPENAI_API_KEY` / `OPENAI_MODEL`. Session 4's Langfuse default evaluator model is **not** required here.
+- The correctness judge uses the same model route as the agent (`LANGFUSE_GATEWAY_KEY` when set, otherwise `OPENAI_API_KEY` / `OPENAI_MODEL`). Session 4's Langfuse default evaluator model is **not** required here.
 - Emphasize that both scores should appear in the console summary when `npm run dataset:run` finishes.
 - Keep concurrency at one for workshops so traces and the final run summary are easy to follow.
 - Before running the dataset, confirm both the OpenAI and Langfuse credentials point to active projects. The runner can finish with exit code 0 after skipping every item, so always check that the console prints experiment results rather than only SDK errors.
@@ -32,4 +32,5 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 - Learners trying to set up **Check Correctness** in the UI before the first run. Redirect them to the script callbacks; platform setup is bonus-only.
 - Do not use `expectedKeywords` as the correctness reference. That field belongs to `keyword_overlap`; correctness uses `idealAnswer`.
 - `401 The project you are requesting has been archived` followed by `No experiment results to display` means the OpenAI key belongs to an archived project. Replace `OPENAI_API_KEY` locally with a key from an active project, then rerun.
+- A 401 `Invalid gateway credential` means `LANGFUSE_GATEWAY_KEY` is missing, expired, or revoked. Issue a new gateway key, or clear it and use `OPENAI_API_KEY`.
 - Missing `correctness` in the console usually means the judge call failed (bad key, model, or JSON parse). Check the terminal error rather than refreshing Langfuse for a pending platform score.

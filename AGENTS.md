@@ -66,7 +66,7 @@ Canonical progression:
 
 What makes the checkpoints stitchable:
 
-- The OpenAI SDK is already in place before tracing starts, so step 2 is only about observability.
+- The OpenAI SDK is already in place before tracing starts, so step 2 is only about observability. `chatClientOptions()` sends model calls to the Langfuse AI Gateway when `LANGFUSE_GATEWAY_KEY` is set, and to `https://api.openai.com/v1` when only `OPENAI_API_KEY` is set.
 - Prompt management falls back to the local prompt if the Langfuse prompt is absent.
 - Monitoring depends on stable message arrays on the agent/generation observations and the root `answer` field, not provider-specific internals.
 - Dataset items carry both `idealAnswer` and `expectedKeywords`, which feed the step-06 `correctness` and `keyword_overlap` callback evaluators.
