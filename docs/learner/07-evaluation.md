@@ -5,6 +5,17 @@ description: "Change one prompt rule, rerun the same dataset, and compare Langfu
 
 # 07 Evaluate a change
 
+## Why evaluate changes with experiments
+
+If you change anything about your AI app — a prompt, a model, the context you pass, even the agent architecture — you want to know whether the change actually made the system better. Eyeballing one or two outputs feels good but doesn't generalize. Rerunning the same dataset against the new version and comparing scores against the old run is the closest thing to a measurement.
+
+This is also what lets you close the loop and **ship with confidence**: when the new run's averages go up (and you read enough individual items to be sure the score reflects reality), you have evidence to deploy the change.
+
+Complementary materials:
+
+- Docs: [Evaluation overview](https://langfuse.com/docs/evaluation/overview)
+- Academy: [Evaluate](https://langfuse.com/academy/evaluate)
+
 ## Starting point
 
 ```bash
@@ -19,12 +30,6 @@ Look at your first experiment run before making changes. Open the dataset → **
 - `keyword_overlap` average — what fraction covered the expected steps?
 
 Open the items where either score is low and read the agent's answer. A typical finding at this stage: the agent skips a step, refuses something it shouldn't, or gives generic advice instead of the iPhone-specific instructions. Whatever you see is the *problem you're about to try to fix*.
-
-## Why evaluate changes with experiments
-
-If you change anything about your AI app — a prompt, a model, the context you pass, even the agent architecture — you want to know whether the change actually made the system better. Eyeballing one or two outputs feels good but doesn't generalize. Rerunning the same dataset against the new version and comparing scores against the old run is the closest thing to a measurement.
-
-This is also what lets you close the loop and **ship with confidence**: when the new run's averages go up (and you read enough individual items to be sure the score reflects reality), you have evidence to deploy the change.
 
 ## What you could change
 

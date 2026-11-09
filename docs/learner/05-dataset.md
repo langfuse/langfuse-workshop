@@ -5,6 +5,15 @@ description: "Seed a starter dataset for the support agent with realistic inputs
 
 # 05 Dataset
 
+## Why build datasets
+
+A dataset is your representation of what the system will face in production: the inputs you expect, and for each, what a good answer looks like. With a clear set of expectations written down, you can rerun the agent against them after every change and know whether you helped or hurt. A good dataset is the foundation for shipping confidently and iterating without regressing.
+
+Complementary materials:
+
+- Docs: [Datasets](https://langfuse.com/docs/evaluation/experiments/datasets)
+- Academy: [Datasets](https://langfuse.com/academy/datasets)
+
 ## Starting point
 
 ```bash
@@ -18,12 +27,6 @@ Make sure `.env` has:
 ```bash
 DATASET_NAME=dad-it-support-workshop
 ```
-
-## Why build datasets
-
-A dataset is your representation of what the system will face in production — the inputs you expect, and for each, what a good answer looks like. With a clear set of expectations written down, you can rerun the agent against them after every change and know whether you helped or hurt. A good dataset is the foundation for shipping confidently and iterating without regressing.
-
-Learn more in the [Langfuse Academy lesson on datasets](https://langfuse.com/academy/datasets).
 
 ## Goal
 

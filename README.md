@@ -2,7 +2,9 @@
 
 # Langfuse Workshop - the AI engineering loop, end to end
 
-This is a step-by-step Langfuse workshop built on a small TypeScript sample application: the **Dad IT Support Agent**. The workshop covers the full AI engineering loop with Langfuse: tracing, prompt management, monitoring, datasets, experiments, and evaluation.
+This is a step-by-step Langfuse workshop built on a small TypeScript sample application: the Dad IT Support Agent. The workshop covers the full AI engineering loop with Langfuse: tracing, prompt management, monitoring, datasets, experiments, and evaluation.
+
+The workshop is the hands-on version of many concepts explained in the [Langfuse Academy](https://langfuse.com/academy). The complementary materials are called out respectively.
 
 You can complete the workshop on your own from the learner lessons, or use the instructor notes to teach the same material to a group.
 
