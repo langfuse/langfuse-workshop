@@ -155,6 +155,7 @@ import { observe } from "@langfuse/tracing";
 
 const getSupportContextTool = observe(
   async () => {
+    await simulateLatency(150);
     const context = getSupportContext();
 
     return {
@@ -175,6 +176,7 @@ const getSupportContextTool = observe(
 
 const searchHelpLibraryTool = observe(
   async (input: { question: string }) => {
+    await simulateLatency(300);
     const guides = searchGuides(input.question);
 
     return {
@@ -204,6 +206,8 @@ export async function executeTool(name: string, input: Record<string, unknown>):
   }
 }
 ```
+
+The `simulateLatency(...)` calls are already in the base app. They stand in for the network or database time a real tool would take, so the tool observations get a visible duration in the trace instead of 0 ms.
 
 If `npm run dev` stops with `Multiple exports with the same name "executeTool"`, the original `executeTool` is still further down the file. Delete it and keep only the version above.
 
