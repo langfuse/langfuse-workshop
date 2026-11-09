@@ -13,7 +13,7 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 - Contrast deterministic scoring (`keyword_overlap`) with LLM-as-a-judge scoring (`correctness`) — both as **callbacks** on `runExperiment`.
 - Point at the semantic-equivalence judge prompt in `scripts/run-dataset.ts`: expected output is the source of truth; paraphrases pass; missing material meaning fails.
 - Call out why this chapter avoids Langfuse Platform evaluators as the primary path: configuring one needs existing experiment data to preview mappings, which blocks a clean first run.
-- The correctness judge uses the same model route as the agent (`LANGFUSE_GATEWAY_KEY` when set, otherwise `OPENAI_API_KEY` / `OPENAI_MODEL`). Session 4's Langfuse default evaluator model is **not** required here.
+- The correctness judge uses the same model route as the agent (`OPENAI_API_KEY` / `OPENAI_MODEL`). Optional `LANGFUSE_GATEWAY_KEY`, when set, sends those calls through the Langfuse AI Gateway. Session 4's Langfuse default evaluator model is **not** required here.
 - Emphasize that both scores should appear in the console summary when `npm run dataset:run` finishes.
 - Keep concurrency at one for workshops so traces and the final run summary are easy to follow.
 - Before running the dataset, confirm both the OpenAI and Langfuse credentials point to active projects. The runner can finish with exit code 0 after skipping every item, so always check that the console prints experiment results rather than only SDK errors.

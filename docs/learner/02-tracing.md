@@ -11,7 +11,7 @@ description: "Instrument the support agent so one chat turn becomes a nested Lan
 git checkout checkpoint/02-tracing
 ```
 
-This is the blank slate for the tracing step — same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json` — run `npm install` if you haven't. Make sure `.env` has a model credential (`LANGFUSE_GATEWAY_KEY`, or `OPENAI_API_KEY` when the gateway key is empty) and your Langfuse project keys.
+This is the blank slate for the tracing step — same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json` — run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse project keys. `LANGFUSE_GATEWAY_KEY` is optional; when it is set, model calls use the Langfuse AI Gateway.
 
 ## Why we trace
 

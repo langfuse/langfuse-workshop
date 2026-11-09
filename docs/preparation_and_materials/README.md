@@ -21,6 +21,7 @@ This is a high-level guide on how to give the Langfuse workshop to your own audi
 - Update slides with training info. Ideally, copy them first.
 - Go through the workshop yourself.
 - Optional but generally recommended: prep an OpenAI API key for participants to use. Make sure to limit spend and delete it afterwards.
+- Optional: prep a Langfuse AI Gateway key instead. Create a service account key under Organization settings → AI Gateway → Gateway keys, set an expiration, and share it as `LANGFUSE_GATEWAY_KEY`. Revoke it after the session. Participants who set it can leave `OPENAI_API_KEY` empty.
 - Please note: the workshop is a changing resource. We update and improve it frequently, so make sure you check the workshop shortly before a session.
 
 ## Audience

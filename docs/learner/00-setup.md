@@ -31,10 +31,9 @@ This checkpoint intentionally contains the same untraced base app as `checkpoint
 
 ## Step 1 — Get the API keys
 
-1. **A model credential** — use one of these:
-   - a Langfuse AI Gateway key from the instructor (`LANGFUSE_GATEWAY_KEY`), or
-   - your own OpenAI key from [platform.openai.com](https://platform.openai.com) → API Keys (`sk-...`).
-2. **Langfuse project keys** — sign up at [langfuse.com](https://langfuse.com) on the **EU region**, create a project, and copy the public + secret keys from **Settings → API Keys**. These are separate from a gateway key. You will paste them into `.env` in Step 3 as well.
+1. **OpenAI** — [platform.openai.com](https://platform.openai.com) → API Keys → create one. Copy the `sk-...` value; you will paste it into `.env` in Step 3.
+   **Optional:** if your instructor gives you a Langfuse AI Gateway key, set `LANGFUSE_GATEWAY_KEY` and you can leave `OPENAI_API_KEY` empty. When both are set, the gateway key is the one the app uses.
+2. **Langfuse** — sign up at [langfuse.com](https://langfuse.com) on the **EU region**, create a project, and copy the public + secret keys from **Settings → API Keys**. These project keys are separate from an optional gateway key. You will paste them into `.env` in Step 3 as well.
 
 ## Step 2 — Install the Langfuse skill and CLI
 
@@ -63,9 +62,9 @@ cp .env.example .env
 Fill in:
 
 ```bash
-# Model calls. Set one. LANGFUSE_GATEWAY_KEY wins when both are set.
-# LANGFUSE_GATEWAY_KEY=
 OPENAI_API_KEY=sk-...
+# Optional. Routes model calls through the Langfuse AI Gateway.
+# LANGFUSE_GATEWAY_KEY=
 LANGFUSE_PUBLIC_KEY=pk-lf-...
 LANGFUSE_SECRET_KEY=sk-lf-...
 LANGFUSE_BASE_URL=https://cloud.langfuse.com
@@ -73,7 +72,7 @@ LANGFUSE_BASE_URL=https://cloud.langfuse.com
 
 Leave the rest of the defaults as they are.
 
-`LANGFUSE_GATEWAY_KEY` sends chat completions to the Langfuse AI Gateway OpenAI route. On EU Cloud that is `https://gateway.cloud.langfuse.com/openai/v1`. Set `LANGFUSE_GATEWAY_HOST` when the key belongs to another region. Leave the gateway key empty and set `OPENAI_API_KEY` to call `https://api.openai.com/v1` directly. The app chooses that URL itself, so `OPENAI_BASE_URL` does not pick the host.
+`LANGFUSE_GATEWAY_KEY` is optional. When it is set, chat completions go to the Langfuse AI Gateway OpenAI route. On EU Cloud that is `https://gateway.cloud.langfuse.com/openai/v1`. Set `LANGFUSE_GATEWAY_HOST` when the key belongs to another region. When it is empty, `OPENAI_API_KEY` calls `https://api.openai.com/v1`. The app chooses that URL itself, so `OPENAI_BASE_URL` does not pick the host.
 
 The workshop app always loads this repository's `.env` file for the server and helper scripts. If you have `LANGFUSE_*`, `OPENAI_*`, or `DATASET_NAME` values exported in your shell from another project, they will not override this file. To change the workshop configuration, edit `.env`.
 
