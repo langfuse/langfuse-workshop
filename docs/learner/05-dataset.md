@@ -5,7 +5,7 @@ description: "Seed a starter dataset for the support agent with realistic inputs
 
 # 05 Dataset
 
-## Why
+## Why build datasets
 
 A dataset is your representation of what the system will face in production — the inputs you expect, and for each, what a good answer looks like. With a clear set of expectations written down, you can rerun the agent against them after every change and know whether you helped or hurt. A good dataset is the foundation for shipping confidently and iterating without regressing.
 

@@ -5,15 +5,6 @@ description: "Tour the TypeScript support agent before instrumentation: chat UI,
 
 # 01 Base App
 
-## Why
-
-Every later chapter instruments, monitors, or evaluates this app. If you do not know what one chat turn does, the traces are just a tree of spans. This chapter is a tour of the untraced agent: Dad is the user, Specs is the agent, two local tools fetch his iPhone context and the help steps, and the system prompt still lives in code. There is nothing to build.
-
-Complementary materials:
-
-- Docs: [Langfuse overview](https://langfuse.com/docs)
-- Academy: [The AI Engineering Loop](https://langfuse.com/academy/ai-engineering-loop)
-
 > You already cloned the repo and checked out the workshop app in `00-setup`. The base app is in that same checkout, so there is nothing to build in this chapter — just orient yourself before tracing starts in `02-tracing`.
 
 ## What the running app does
