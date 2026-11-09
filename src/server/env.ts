@@ -9,7 +9,11 @@ export function resolveLlmProvider(source: {
   llmProvider?: string;
   openaiApiKey?: string;
   anthropicApiKey?: string;
+  langfuseGatewayKey?: string;
 }): LlmProvider {
+  if (source.langfuseGatewayKey?.trim()) {
+    return "openai";
+  }
   const requested = source.llmProvider?.trim().toLowerCase() ?? "";
   if (requested === "openai" || requested === "anthropic") {
     return requested;
@@ -28,7 +32,8 @@ export function resolveLlmProvider(source: {
 const llmProvider = resolveLlmProvider({
   llmProvider: process.env.LLM_PROVIDER,
   openaiApiKey: process.env.OPENAI_API_KEY,
-  anthropicApiKey: process.env.ANTHROPIC_API_KEY
+  anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+  langfuseGatewayKey: process.env.LANGFUSE_GATEWAY_KEY
 });
 
 export const env = {
@@ -36,6 +41,8 @@ export const env = {
   llmProvider,
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
   openaiModel: process.env.OPENAI_MODEL ?? DEFAULT_OPENAI_MODEL,
+  langfuseGatewayKey: process.env.LANGFUSE_GATEWAY_KEY ?? "",
+  langfuseGatewayHost: process.env.LANGFUSE_GATEWAY_HOST ?? "https://gateway.cloud.langfuse.com",
   anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? "",
   anthropicModel: process.env.ANTHROPIC_MODEL ?? DEFAULT_ANTHROPIC_MODEL,
   anthropicWorkspaceId: process.env.ANTHROPIC_WORKSPACE_ID ?? "",
