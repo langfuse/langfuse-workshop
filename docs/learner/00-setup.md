@@ -31,8 +31,10 @@ This checkpoint intentionally contains the same untraced base app as `checkpoint
 
 ## Step 1 — Get the API keys
 
-1. **OpenAI** — [platform.openai.com](https://platform.openai.com) → API Keys → create one. Copy the `sk-...` value; you will paste it into `.env` in Step 3.
-2. **Langfuse** — sign up at [langfuse.com](https://langfuse.com) on the **EU region**, create a project, and copy the public + secret keys from **Settings → API Keys**. You will paste those into `.env` in Step 3 as well.
+1. **A model credential** — set one of these two. When both are set, the Langfuse gateway key is used.
+   - **Langfuse AI Gateway** — a key from the instructor, saved as `LANGFUSE_GATEWAY_KEY`. Calls go to the gateway OpenAI route. On EU Cloud that is `https://gateway.cloud.langfuse.com/openai/v1`. Set `LANGFUSE_GATEWAY_HOST` for another region.
+   - **OpenAI** — [platform.openai.com](https://platform.openai.com) → API Keys → create one. `OPENAI_API_KEY` calls `https://api.openai.com/v1`.
+2. **Langfuse project keys** — sign up at [langfuse.com](https://langfuse.com) on the **EU region**, create a project, and copy the public + secret keys from **Settings → API Keys**. These project keys are separate from the gateway key. You will paste them into `.env` in Step 3 as well.
 
 ## Step 2 — Install the Langfuse skill and CLI
 
@@ -61,6 +63,8 @@ cp .env.example .env
 Fill in:
 
 ```bash
+# Set one. LANGFUSE_GATEWAY_KEY is used when it is set.
+# LANGFUSE_GATEWAY_KEY=
 OPENAI_API_KEY=sk-...
 LANGFUSE_PUBLIC_KEY=pk-lf-...
 LANGFUSE_SECRET_KEY=sk-lf-...
@@ -68,6 +72,8 @@ LANGFUSE_BASE_URL=https://cloud.langfuse.com
 ```
 
 Leave the rest of the defaults as they are.
+
+The app uses whichever model credential is set. `LANGFUSE_GATEWAY_KEY` is preferred when both are present. With only `OPENAI_API_KEY`, calls go to `https://api.openai.com/v1`. The app chooses that URL itself, so `OPENAI_BASE_URL` does not pick the host.
 
 The workshop app always loads this repository's `.env` file for the server and helper scripts. If you have `LANGFUSE_*`, `OPENAI_*`, or `DATASET_NAME` values exported in your shell from another project, they will not override this file. To change the workshop configuration, edit `.env`.
 
