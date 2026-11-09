@@ -42,11 +42,19 @@ The first monitor in this chapter uses an LLM-as-a-judge template. Langfuse runs
 
 If your project already has a default evaluator model, keep it and continue to Step 1.
 
-1. In Langfuse, open Project Settings → LLM Connections.
-2. Click Add LLM Connection.
-3. Choose OpenAI, name the connection, and paste your OpenAI API key into the secret field.
-4. Save the connection.
-5. No extra action after saving the connection — the default evaluation model is set during evaluator creation. When the wizard asks you to pick a model, choose the OpenAI connection and a structured-output-capable model such as `openai / gpt-4.1`.
+Use the same model credential as the app. Set one of these two. When both are set, use the Langfuse gateway key.
+
+- **Langfuse AI Gateway** — **API Key** is `LANGFUSE_GATEWAY_KEY`. Open **Advanced settings** and set **API Base URL** to the gateway OpenAI route. On EU Cloud that is `https://gateway.cloud.langfuse.com/openai/v1`. For another region, use `LANGFUSE_GATEWAY_HOST` plus `/openai/v1`.
+- **OpenAI** — **API Key** is `OPENAI_API_KEY`. Leave **API Base URL** blank so Langfuse uses `https://api.openai.com/v1`.
+
+1. In Langfuse, open **Project Settings → LLM Connections**.
+2. Click **Add LLM Connection**.
+3. Set **LLM adapter** to **OpenAI**.
+4. Set **Provider name** to a name without a colon, such as `langfuse` for the gateway key or `openai` for an OpenAI key.
+5. Paste the chosen key into **API Key**.
+6. Open **Advanced settings**. Set **API Base URL** only for the gateway key, as above. Leave **Use Responses API** off. This workshop uses Chat Completions.
+7. Save the connection.
+8. No extra action after saving the connection — the default evaluation model is set during evaluator creation. When the wizard asks you to pick a model, choose this connection and a structured-output-capable model such as `gpt-4.1`. The picker shows `{provider name} / gpt-4.1`, for example `langfuse / gpt-4.1` or `openai / gpt-4.1`.
 
    ![Choose the project default evaluation model in the Set up evaluator wizard.](../images/monitoring/default-evaluation-model.png)
 
