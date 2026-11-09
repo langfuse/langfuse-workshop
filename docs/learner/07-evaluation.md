@@ -5,7 +5,7 @@ description: "Change one prompt rule, rerun the same dataset, and compare Langfu
 
 # 07 Evaluate a change
 
-## Why
+## Why evaluate changes with experiments
 
 If you change anything about your AI app — a prompt, a model, the context you pass, even the agent architecture — you want to know whether the change actually made the system better. Eyeballing one or two outputs feels good but doesn't generalize. Rerunning the same dataset against the new version and comparing scores against the old run is the closest thing to a measurement.
 
