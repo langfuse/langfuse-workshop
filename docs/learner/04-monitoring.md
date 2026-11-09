@@ -5,6 +5,15 @@ description: "Configure Langfuse evaluators to catch user disagreement and all-c
 
 # 04 Monitoring
 
+## Why
+
+In production, an AI app produces a lot of traces. Most of them are fine. The interesting ones — the answers that drift, the requests the agent shouldn't be handling at all, the patterns that change over time — are what you want to find. Monitoring is how you catch those signals without reading every single trace by hand.
+
+Complementary materials:
+
+- Docs: [Evaluate production traffic](https://langfuse.com/docs/evaluation/get-started/online)
+- Academy: [Monitoring](https://langfuse.com/academy/monitoring)
+
 ## Starting point
 
 ```bash
@@ -18,12 +27,6 @@ If you want to use prompt management but have skipped module 3 run the following
 ```bash
 npm run prompt:publish
 ```
-
-## Why monitor your AI app
-
-In production, an AI app produces a lot of traces. Most of them are fine. The interesting ones — the answers that drift, the requests the agent shouldn't be handling at all, the patterns that change over time — are what you want to find. Monitoring is how you catch those signals without reading every single trace by hand.
-
-For the bigger picture, see the [Langfuse Academy lesson on monitoring](https://langfuse.com/academy/monitoring).
 
 ## Goal
 
