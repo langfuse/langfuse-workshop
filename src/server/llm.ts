@@ -1,39 +1,71 @@
 import OpenAI from "openai";
-import { env } from "./env";
+import { env, type LlmProvider } from "./env";
 
-// One OpenAI SDK client for both providers. Claude is reached through
+// One OpenAI SDK client for the gateway, OpenAI, and Claude. A gateway key
+// uses the Langfuse AI Gateway OpenAI route. Claude is reached through
 // Anthropic's OpenAI-compatible endpoint, so observeOpenAI still traces it.
 const ANTHROPIC_BASE_URL = "https://api.anthropic.com/v1/";
+export const OPENAI_BASE_URL = "https://api.openai.com/v1";
+export const DEFAULT_LANGFUSE_GATEWAY_HOST = "https://gateway.cloud.langfuse.com";
 
-export function assertChatConfigured() {
-  if (env.llmProvider === "anthropic") {
-    if (!env.anthropicApiKey) {
+export type ChatClientSource = {
+  langfuseGatewayKey?: string;
+  langfuseGatewayHost?: string;
+  llmProvider: LlmProvider;
+  openaiApiKey?: string;
+  anthropicApiKey?: string;
+  anthropicWorkspaceId?: string;
+};
+
+export function gatewayOpenAIBaseURL(host?: string) {
+  const trimmed = (host?.trim() || DEFAULT_LANGFUSE_GATEWAY_HOST).replace(/\/+$/, "");
+  if (trimmed.endsWith("/openai/v1")) {
+    return trimmed;
+  }
+  return `${trimmed}/openai/v1`;
+}
+
+export function chatClientOptions(
+  source: ChatClientSource = env
+): ConstructorParameters<typeof OpenAI>[0] {
+  const gatewayKey = source.langfuseGatewayKey?.trim() ?? "";
+  if (gatewayKey) {
+    return {
+      apiKey: gatewayKey,
+      baseURL: gatewayOpenAIBaseURL(source.langfuseGatewayHost)
+    };
+  }
+
+  if (source.llmProvider === "anthropic") {
+    if (!source.anthropicApiKey?.trim()) {
       throw new Error(
         "ANTHROPIC_API_KEY is required when LLM_PROVIDER=anthropic, or when it is the only model key."
       );
     }
-    return;
-  }
-
-  if (!env.openaiApiKey) {
-    throw new Error("Set OPENAI_API_KEY, or set ANTHROPIC_API_KEY to run the agent with Claude.");
-  }
-}
-
-export function chatClientOptions(): ConstructorParameters<typeof OpenAI>[0] {
-  assertChatConfigured();
-
-  if (env.llmProvider === "anthropic") {
     return {
-      apiKey: env.anthropicApiKey,
+      apiKey: source.anthropicApiKey,
       baseURL: ANTHROPIC_BASE_URL,
-      ...(env.anthropicWorkspaceId
-        ? { defaultHeaders: { "anthropic-workspace-id": env.anthropicWorkspaceId } }
+      ...(source.anthropicWorkspaceId?.trim()
+        ? { defaultHeaders: { "anthropic-workspace-id": source.anthropicWorkspaceId.trim() } }
         : {})
     };
   }
 
-  return { apiKey: env.openaiApiKey };
+  const openaiApiKey = source.openaiApiKey?.trim() ?? "";
+  if (!openaiApiKey) {
+    throw new Error(
+      "Set LANGFUSE_GATEWAY_KEY to route model calls through the Langfuse AI Gateway, set OPENAI_API_KEY to call OpenAI directly, or set ANTHROPIC_API_KEY to run the agent with Claude."
+    );
+  }
+
+  return {
+    apiKey: openaiApiKey,
+    baseURL: OPENAI_BASE_URL
+  };
+}
+
+export function assertChatConfigured() {
+  chatClientOptions();
 }
 
 // Anthropic's compatibility layer accepts json_schema with strict: true and
