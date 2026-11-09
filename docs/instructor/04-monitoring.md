@@ -32,10 +32,10 @@ Demo order after the seed:
 
 ### Topics and issues
 
-- Intent is what Dad was trying to do. Issues is the principal mistake, grouped across different asks. Sentiment and outcome can stay in the background.
-- Topics needs the project's LLM connection plus an embedding model. If you will open Topics before capturing signals, set **Project Settings → LLM Connections** first. Capturing signals Step 0 is the same connection.
-- Confirm **Topics** is in the sidebar before the demo. If the project does not have it, explain the intent and issue views from the page and move on. Error analysis and capturing signals do not depend on it.
-- Prefer the first-run flow. The manual path is **Process traces** on `production`, then **Update topics**. Summaries without an update are not a map yet.
+- This is a setup walkthrough, not a concept lecture. Open Topics, click **Set up topics**, keep Intent, Sentiment, Outcome, and Issues checked, keep the recommended models, leave the sample rate at 100%, and click **Start analyzing**.
+- The model dropdowns are the project's LLM connections. If you demo Topics before capturing signals, add the OpenAI connection first or the pickers are empty.
+- The review step says Topics need about 100 traces and that new traces show up about 5 minutes after their last activity. Seed before the demo. If the review says there are no traces in the last 7 days, do not start analyzing on an empty window.
+- After it fills in, click one tile on each tab (Intent, Sentiment, Outcome, Issues) and use **Open in Tracing**. Auto-analyze stays on.
 
 ### Capturing signals
 
@@ -54,7 +54,7 @@ Demo order after the seed:
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
 2. Run `npm run langfuse:seed:otel:no-scores` once. Open **Tracing**, filter to `production`, and show the batch.
 3. Error analysis: create the open-coding and pass/fail configs, queue 10 to 15 production traces, mark pass or fail, write the failures, then cluster and name them in the room.
-4. Topics: set models if needed, run the first-run flow, then open one intent group and one issue group and a trace in each.
+4. Topics: open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab.
 5. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 6. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
 7. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them.
@@ -64,7 +64,8 @@ Demo order after the seed:
 - Re-running the seed. It mints new trace IDs and duplicates the batch.
 - Treating dashboards as a configuration step. The overview only points at them.
 - Skipping the reading in error analysis and jumping straight to evaluator templates.
-- Opening Topics in a project where the nav item is absent, or starting it with no LLM connection and no embedding model.
+- Starting Topics with empty model dropdowns. Those lists are the project's LLM connections.
+- Clicking **Start analyzing** when the review still says there are no traces in the last 7 days.
 - Accidentally choosing **Out-of-Scope Request** instead of **Detect User Disagreement**. Out-of-Scope Request's first variable is `system_prompt`.
 - Selecting a child generation instead of the root agent observation. The evaluator only receives the observation it targets.
 - Mapping `conversation_history` to a single message, or `last_user_message` to every message.

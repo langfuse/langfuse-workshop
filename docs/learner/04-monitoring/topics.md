@@ -1,22 +1,15 @@
 ---
 title: "Workshop: Topics and Issues"
-description: "Look across production traces for the topics Specs is asked about and the issues that keep showing up."
+description: "Set up Topics so production traces are grouped by intent, sentiment, outcome, and issues."
 ---
 
 # Topics and issues
 
 Part of [04 Monitoring](../04-monitoring.md).
 
-## Why look across traces
+If you have not seeded production data yet, go back to [Seed production traffic](../04-monitoring.md#seed-production-traffic) and do that first.
 
-Error analysis reads traces one at a time. Topics is the aggregate view: which requests the application is handling, and which issues show up across those requests.
-
-Langfuse summarizes each trace along a few facets, then groups similar summaries. Two facets matter for this pass:
-
-- **Intent** — what the user was trying to get done, including when the run went badly. For Specs, that is the kind of help Dad asked for.
-- **Issues** — the mistake that did the most damage to the result, in one sentence. Traces with a similar mistake land together, so a problem that is spread across many different questions shows up as one group.
-
-Sentiment and outcome are built-in facets too. This section stays on intent and issues.
+Topics labels every trace by intent, sentiment, outcome, and issues, then groups the ones that belong together. This section is the setup.
 
 ## Starting point
 
@@ -24,44 +17,45 @@ Sentiment and outcome are built-in facets too. This section stays on intent and 
 git checkout checkpoint/04-monitoring
 ```
 
-Use the `production` traces loaded from the [monitoring overview](../04-monitoring.md). If that environment is empty, run the seed command there once before you start.
+Open [Topics](https://cloud.langfuse.com/project/~/topics).
 
-Topics calls a model to summarize traces and to name the groups, and it needs an embedding model so similar traces can be placed together. If the project has no LLM connection yet, add one before you run it:
+The model list comes from the project's LLM connections. If the dropdowns in the next step are empty, add an OpenAI connection first: Project Settings → LLM Connections → Add LLM Connection. The [capturing signals](./capturing-signals.md) section uses that same connection.
 
-1. In Langfuse, open Project Settings → LLM Connections.
-2. Click Add LLM Connection.
-3. Choose OpenAI, name the connection, and paste your OpenAI API key into the secret field.
-4. Save the connection.
+## Set up topics
 
-Keep the API key in the Langfuse secret field only. The [capturing signals](./capturing-signals.md) section uses this same connection for the disagreement judge.
+1. On the empty Topics page, click **Set up topics**.
 
-If **Topics** is not in the project sidebar, the feature is not enabled on this project yet. The rest of the monitoring module does not depend on it. Continue with [error analysis](./error-analysis.md) and [capturing signals](./capturing-signals.md).
+   ![See what your traces are about, then set up topics.](../../images/topics/setup-topics.png)
 
-## Step 1 — Set the models
+2. Under **What to look for**, leave all four checked:
 
-Open **Topics** and set the models. There are three slots: summaries, embeddings, and clustering (the model that names the groups). Use the OpenAI connection. Pick a chat model for summaries and clustering, and an embedding model for embeddings. Saving runs a test call against each slot.
+   - **Intent** — what the run was asked to do.
+   - **Sentiment** — how the end user felt about the interaction.
+   - **Outcome** — where the run ended, and whether that is confirmed.
+   - **Issues** — the main problem in how the run was handled.
 
-## Step 2 — Run it on the production traces
+   Under **Select models for analysis**, keep the models marked **Recommended**: summaries, embeddings (`text-embedding-3-small`), and grouping. Click **Next**.
 
-Use the first-run flow on the Topics page so it processes traces already in the project and builds the groups. That pass is what turns the seeded batch into an intent view and an issue view.
+   ![Choose intent, sentiment, outcome, and issues, and keep the recommended models.](../../images/topics/setup-look-for.png)
 
-If you are running it by hand instead of the first-run flow:
+3. On **Select traces to analyze**, leave the sample rate at **100%**. Trace filters are not available yet. Click **Next**.
 
-1. Choose **Process traces** and select the `production` environment, so the summaries are built from the seeded batch.
-2. Choose **Update topics** so those summaries are grouped and named.
+   ![Analyze new traces at a 100% sample rate.](../../images/topics/setup-traces.png)
 
-Processing writes a summary per trace. Updating topics is the step that groups and names them. Until that second step, the summaries are saved and the topic view is still empty.
+4. On **Review**, check that **Look for** is Intent, Sentiment, Outcome, and Issues, then click **Start analyzing**.
 
-## Step 3 — Read the groups
+   The review tells you how many traces from the last 7 days it can use. Topics need about 100 traces before the groups settle, so a smaller batch can take longer to form. New traces show up about 5 minutes after their last activity. If the review says there are no past traces, the seed is not in that window yet. Go back to [Seed production traffic](../04-monitoring.md#seed-production-traffic) before you start.
 
-Open **Intent**. Each group is a kind of request Dad makes. Open one group and then one trace in it, and check that the traces in the group are actually about the same goal.
+   ![Review what Topics will look for, then start analyzing.](../../images/topics/setup-review.png)
 
-Open **Issues**. Each group is a kind of problem, not a kind of question. Open one group and compare a few traces. The useful outcome is a problem that appears under more than one intent: the same failure, asked in different ways.
+## Read the groups
 
-The page can show the same results as a treemap, a grid, or a cluster map. The groups are the same in each view. The map is a picture of the discovery pass. Traces processed later show up in the trace list for their group.
+When the page fills in, the tabs are **Intent**, **Sentiment**, **Outcome**, and **Issues**. **Visualize as** can stay on **Treemap**. **Auto-analyze** stays on, so later traces are labeled the same way.
 
-## What you should leave with
+Click a tile. The list under it is the traces in that group, each with a one-line summary. **Open in Tracing** shows those same traces in the trace table.
 
-A few intents that describe what Specs is being asked, and at least one issue group you would want a person to read. That issue group is a good input to [error analysis](./error-analysis.md): the aggregate view tells you where the reading time goes.
+![Intent groups for the Dad IT Support Agent, with the traces inside Perform WhatsApp Tasks.](../../images/topics/intent-treemap.png)
+
+Do that once for each tab. Intent is the kind of help Dad asked for. Issues is the problem that showed up, including when the same problem sits under more than one intent. Sentiment and outcome are the other two cuts of the same traces.
 
 [Capturing signals](./capturing-signals.md) is the next section. It attaches scores to new turns so disagreement and all-caps frustration stand out in the trace table.

@@ -29,7 +29,7 @@ In the hands-on lab in [section 4.1](./04-monitoring/error-analysis.md), we run 
 
 ### Topics and issues
 
-Error analysis derives general concepts from individual traces, and a person does that reading. Topics and issue detection is the scalable approach: it clusters incoming traces into intent, issue, and outcome categories. That shows the current state of the system, and how that state changes over time.
+Error analysis derives general concepts from individual traces, and a person does that reading. Topics and issue detection is the scalable approach: it clusters incoming traces into intent, sentiment, outcome, and issue categories. That shows the current state of the system, and how that state changes over time.
 
 [Topics and issues](./04-monitoring/topics.md) is that view for Specs.
 
@@ -56,5 +56,5 @@ npm run langfuse:seed:otel:no-scores
 Open [Tracing](https://cloud.langfuse.com/project/~/traces) and filter to the `production` environment. There is now a full set of traces in the project. The next sections work with this batch:
 
 1. [4.1 Error analysis](./04-monitoring/error-analysis.md) — read a sample and name the failures.
-2. [Topics and issues](./04-monitoring/topics.md) — see the intents and issues across the batch.
+2. [Topics and issues](./04-monitoring/topics.md) — group the batch by intent, sentiment, outcome, and issues.
 3. [Capturing signals](./04-monitoring/capturing-signals.md) — score disagreement and all-caps frustration as they arrive.
