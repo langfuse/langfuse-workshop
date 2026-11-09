@@ -15,8 +15,7 @@ Learner guide: [00 Setup](../learner/00-setup.md)
 - Make learners confirm the UI loads at `127.0.0.1:3333` and that a suggestion-chip chat turn returns a real answer.
 - Tell learners to leave `npm run dev` running: Vite hot-reloads the client, and the API watcher restarts on server or `.env` changes. Stopping and starting between edits is unnecessary.
 - Emphasize the EU Langfuse host value: `LANGFUSE_BASE_URL=https://cloud.langfuse.com`.
-- The Node server and helper scripts load the repository `.env` with override enabled, so stale exported `LANGFUSE_*`, `OPENAI_*`, `ANTHROPIC_*`, `LLM_PROVIDER`, or `DATASET_NAME` values from another local project should not win. Have learners edit `.env` when they need to switch keys or projects.
-- OpenAI is the default model key. A learner who only has Claude can set `ANTHROPIC_API_KEY` and leave `OPENAI_API_KEY` empty. The agent still uses the OpenAI SDK against Anthropic's compatible endpoint, so the `observeOpenAI` lessons do not change. If both keys are set, `LLM_PROVIDER=anthropic` selects Claude.
+- The Node server and helper scripts load the repository `.env` with override enabled, so stale exported `LANGFUSE_*`, `OPENAI_*`, or `DATASET_NAME` values from another local project should not win. Have learners edit `.env` when they need to switch keys or projects.
 - Do not frontload **Project Settings → LLM Connections** here. Learners configure the default evaluator model in `04-monitoring`, when LLM-as-a-judge evaluators first become relevant.
 - Keep key handling explicit: real API keys go only into `.env` or Langfuse secret fields, never into shared transcripts, notes, or chat.
 - After one successful chat turn, have learners switch to `checkpoint/02-tracing` for the first build step.

@@ -5,15 +5,7 @@ description: "Run the support agent across the Langfuse dataset, score every ite
 
 # 06 Experiments
 
-## Starting point
-
-```bash
-git checkout checkpoint/06-experiments
-```
-
-Your dataset is seeded in Langfuse. `scripts/run-dataset.ts` is already in the repo.
-
-## Why experiments
+## Why
 
 A trace tells you about *one* turn. An experiment tells you about behavior *across the dataset*. Every experiment run does the same three things:
 
@@ -21,12 +13,25 @@ A trace tells you about *one* turn. An experiment tells you about behavior *acro
 2. **Runs the item's input through the agent** — same `runSupportConversation(...)` the web app uses, so the trace shape is the same as production.
 3. **Scores the actual output against the expected output** with one or more evaluators.
 
-Different evaluators answer different questions. For a broader tour of evaluator types and when to pick which, see the [Langfuse Academy lesson on evaluate](https://langfuse.com/academy/evaluate). For this workshop we use two that give a quick first read on answer quality:
+Different evaluators answer different questions. For this workshop we use two that give a quick first read on answer quality:
 
 - **`keyword_overlap`** (deterministic) — *did the answer cover the steps we expected?* Fast, cheap, and computed directly in the experiment script.
 - **`correctness`** (LLM-as-a-judge) — *does the answer preserve the material meaning of the ideal answer?* A semantic-equivalence check: paraphrases pass, missing required detail or a contradicted fact fails.
 
 Both scores are **callback evaluators** inside `runExperiment`. They run in your process right after each item finishes, so the console summary and the Langfuse run already include both scores when the script exits. We intentionally avoid Langfuse Platform evaluators in this chapter: configuring one needs existing experiment data to preview and map variables, which creates a chicken-and-egg problem before your first run.
+
+Complementary materials:
+
+- Docs: [Experiments via SDK](https://langfuse.com/docs/evaluation/experiments/experiments-via-sdk)
+- Academy: [Experiments](https://langfuse.com/academy/experiments) and [Evaluate](https://langfuse.com/academy/evaluate)
+
+## Starting point
+
+```bash
+git checkout checkpoint/06-experiments
+```
+
+Your dataset is seeded in Langfuse. `scripts/run-dataset.ts` is already in the repo.
 
 ## Goal
 
@@ -56,7 +61,7 @@ await dataset.runExperiment({
   name: "Dad IT Support Agent experiment",
   runName,           // unique label for this run; shows up in the Experiments tab
   description: "...",
-  metadata: { model: env.chatModel },
+  metadata: { model: env.openaiModel },
   maxConcurrency: 1, // run items one at a time
 
   task: async (item) => {
@@ -99,7 +104,7 @@ Keep in mind that `keyword_overlap` checks literal wording, not behaviour. The o
 
 ## Step 3 — Review the `correctness` LLM-as-a-judge callback
 
-The second callback in `evaluators` calls the same model provider as the agent with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint — paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
+The second callback in `evaluators` calls OpenAI with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint — paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
 
 Why run the judge as a callback instead of a Langfuse Platform evaluator?
 
@@ -107,7 +112,7 @@ Why run the judge as a callback instead of a Langfuse Platform evaluator?
 - The judge prompt and model live next to the experiment runner in git.
 - Both scores appear in the script's printed summary as soon as the run finishes.
 
-The judge uses the same provider and model as the agent (`OPENAI_API_KEY` / `OPENAI_MODEL`, or `ANTHROPIC_API_KEY` / `ANTHROPIC_MODEL` when Claude is selected). You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
+The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env` — the same credentials the agent already uses. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
 
 ## Step 4 — Run the dataset
 
@@ -153,7 +158,7 @@ See the [LLM-as-a-Judge docs](https://langfuse.com/docs/evaluation/evaluation-me
 
 The two scoring approaches give you two angles on the same run: **keyword match** for "did we cover the right steps?" and **correctness** for "is the answer actually right?" Both run as callbacks on `runExperiment`, so the first workshop run is fully scored without platform evaluator setup.
 
-The [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`) knows the recommended evaluator shapes and setup patterns — this walkthrough exists so you see what the skill is doing under the hood. Learn more about experiments in the [Langfuse Academy lesson](https://langfuse.com/academy/experiments).
+The [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`) knows the recommended evaluator shapes and setup patterns — this walkthrough exists so you see what the skill is doing under the hood.
 
 ## End state
 
