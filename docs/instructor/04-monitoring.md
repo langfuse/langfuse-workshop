@@ -7,13 +7,13 @@ description: "Facilitator notes for the monitoring overview, error analysis, top
 
 Learner guide: [04 Monitoring](../learner/04-monitoring.md)
 
-- [Error analysis](../learner/04-monitoring/error-analysis.md)
+- [4.1 Error analysis](../learner/04-monitoring/error-analysis.md)
 - [Topics and issues](../learner/04-monitoring/topics.md)
 - [Capturing signals](../learner/04-monitoring/capturing-signals.md)
 
 ## Instructor notes
 
-The chapter is an overview plus three sections. The overview is short on purpose: what monitoring is for once production traces pile up, then four ways to work with them. Dashboards are a link out, not a build exercise. Error analysis, topics, and capturing signals each have their own page.
+The chapter opens on the overview and goes straight into the four ways to work with production traces. There is no checkout block on that page. Dashboards are a link out, not a build exercise. Error analysis (section 4.1), topics, and capturing signals each have their own page.
 
 Seed once, from the overview, before any of the three sections. `npm run langfuse:seed:otel:no-scores` loads realistic `production` traffic with no pre-baked scores. It is not idempotent. Every rerun creates a duplicate set of traces.
 

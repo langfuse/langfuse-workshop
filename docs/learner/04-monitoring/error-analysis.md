@@ -3,7 +3,7 @@ title: "Workshop: Error Analysis"
 description: "Read a sample of production traces and group what went wrong into failure categories a person can act on."
 ---
 
-# Error analysis
+# 4.1 Error analysis
 
 Part of [04 Monitoring](../04-monitoring.md).
 

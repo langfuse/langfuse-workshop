@@ -7,58 +7,41 @@ description: "Make sense of production traces: aggregate cost, latency, and qual
 
 ## Why we monitor
 
-Tracing gives you a record of every turn. As soon as many traces hit the system in production, that record is too big to read one by one. Monitoring is how you deal with the data: aggregate it, read it on purpose, and pull out the traces that are worth a closer look.
+Tracing gives you a record of every step your agent takes. As soon as the system is in production, the volume grows quickly to a point where reviewing every trace one by one is no longer feasible.
 
-Complementary materials:
-
-- Docs: [Custom dashboards](https://langfuse.com/docs/metrics/features/custom-dashboards)
-- Academy: [Monitoring](https://langfuse.com/academy/monitoring)
-
-## Starting point
-
-```bash
-git checkout checkpoint/04-monitoring
-```
-
-You have a traced app with optional Langfuse-managed prompts. Every chat turn lands in Langfuse as a nested trace.
-
-If you want to use prompt management but have skipped module 3, run the following command to publish the prompt:
-
-```bash
-npm run prompt:publish
-```
-
-You don't need to change any code in this step. The trace shape from `02-tracing` already carries the conversation, the answer, and the model usage these views read.
+Monitoring is how you look at that tracing data at scale. It covers aggregate metrics and trends over time, and it covers signals that pick out individual executions worth a closer look.
 
 ## Ways to work with production traces
 
-A few different things are worth doing once the traces are there.
+There are a few different ways to work with production data at scale.
 
 ### Cost, latency, and quality
 
-You want aggregate cost, latency, and quality over time, so a change in the app shows up as a trend instead of a feeling. [Dashboards](https://langfuse.com/docs/metrics/features/custom-dashboards) are where those aggregates live, including curated views for latency and cost.
+[Dashboards](https://langfuse.com/docs/metrics/features/custom-dashboards) are where cost, latency, and quality show up as aggregates over time.
 
-Those charts can only show what the trace actually stores. Latency and token cost are on the trace because each model call was logged with its usage. Quality shows up once a score is attached to the same trace. That is why the tracing step records the conversation, the answer, and the usage on each observation: the aggregate view has nothing to read otherwise.
+Those aggregates only exist because the information is on the trace. Latency and token cost are recorded with each model call. A quality score has to be written onto the same trace before a dashboard can show it.
 
 ### Error analysis
 
-One approach is error analysis: work through traces and figure out what is actually going wrong. This is a human process. A person reads a sample, writes down the first thing that failed, and groups those notes into failure categories. The categories should come from the traces.
+Error analysis is a structured approach to identify failure modes in your application. The Academy page on [error analysis](https://langfuse.com/academy/monitoring/error-analysis) goes deeper into how to run this approach.
 
-[Error analysis](./04-monitoring/error-analysis.md) goes deeper into how to run it.
+In the hands-on lab in [section 4.1](./04-monitoring/error-analysis.md), we run through error analysis for the Dad IT Support Agent together.
 
 ### Topics and issues
 
-Another approach is an aggregate view of the topics the application is handling and the issues that keep coming up in them. Topics groups traces by what users are trying to do and by the problems in those runs, so you can see the shape of production without opening every row.
+Error analysis derives general concepts from individual traces, and a person does that reading. Topics and issue detection is the scalable approach: it clusters incoming traces into intent, issue, and outcome categories. That shows the current state of the system, and how that state changes over time.
 
-[Topics and issues](./04-monitoring/topics.md) is that view.
+[Topics and issues](./04-monitoring/topics.md) is that view for Specs.
 
 ### Capturing signals
 
-A final approach is capturing signals from production. A signal is something the user does or says that indicates how the turn felt, stored on that trace as a score. It is a judgment from the moment of use, which makes it a way to find traces worth reading once there are too many to open by hand.
+A signal is something the user does or says that indicates how the turn felt, stored on the trace as a score. It is a judgment from the moment of use.
 
-For Specs, two conversation signals are enough to start. Dad disagrees with the steps ("No, that menu isn't there"). Dad writes in all caps ("THIS STILL ISNT WORKING"). Disagreement is a strong sign the last answer failed. All caps is a cheaper, rougher clue that the conversation may need a look.
+Chat agents benefit from capturing signals. Any agent that interacts with a person can attach signals of success, completion, or problems as scores on its traces.
 
-[Capturing signals](./04-monitoring/capturing-signals.md) sets both up on the live app. The Academy page on [capturing signals](https://langfuse.com/academy/monitoring/capturing-signals) is the broader map of explicit ratings, behavioral signals, conversation signals, and outcomes.
+For Specs, we start with two conversation signals. We identify whether Dad disagrees with the steps, and whether Dad is writing in all caps. Both are strong signs that the last answer failed, or at least that the conversation is worth looking into. [Capturing signals](./04-monitoring/capturing-signals.md) sets those two up.
+
+Check out the Academy page on [capturing signals](https://langfuse.com/academy/monitoring/capturing-signals) for the broader map of explicit ratings, behavioral signals, conversation signals, and outcomes.
 
 ## Load production traffic
 
@@ -74,6 +57,6 @@ This replays a snapshot of Dad IT support traffic, plus a handful of synthesized
 
 Open **Tracing** and filter to the `production` environment. There is now a full set of traces in the project. The next sections work with this batch:
 
-1. [Error analysis](./04-monitoring/error-analysis.md) — read a sample and name the failures.
+1. [4.1 Error analysis](./04-monitoring/error-analysis.md) — read a sample and name the failures.
 2. [Topics and issues](./04-monitoring/topics.md) — see the intents and issues across the batch.
 3. [Capturing signals](./04-monitoring/capturing-signals.md) — score disagreement and all-caps frustration as they arrive.
