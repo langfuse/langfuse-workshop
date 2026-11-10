@@ -26,11 +26,17 @@ The seed writes no scores. It is **not idempotent**: running it again adds anoth
 3. For each trace, mark pass or fail.
 4. When it fails, inspect the trace and write the failure in open coding. Describe what went wrong. Leave the notes ungrouped.
 5. Finish the set before you cluster. The notes are the input to the next step.
-6. After the set, ask Halo to cluster the failure modes. Stay on the annotation queue so the current page is in context, open Halo, and ask: "Can you help me cluster my annotations into failure modes?"
+6. After the set, ask Halo to find clusters. Stay on the annotation queue so the current page is in context, open Halo, and ask it to cluster the annotations.
 
    ![Ask Halo to cluster the annotations into failure modes.](../../images/monitoring/halo-cluster-annotations.png)
 
-7. Ask Halo to create categorical scores for the failure modes it found. Do not name the categories for it. Halo should find them from the annotations.
+   The clusters should look roughly like this:
+
+   - Out of scope request that is responded to
+   - Impersonation
+   - Lengthy responses
+
+7. Ask Halo to create categorical scores for the clusters it found.
 
 8. Go through the queue again and assign each failing trace to a category.
 9. Ask Halo to build a dashboard for the frequency of each category.

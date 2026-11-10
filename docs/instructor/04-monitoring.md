@@ -27,8 +27,8 @@ Demo order:
 
 - Section 4.1 seeds its own 20 traces with `npm run langfuse:seed:error-analysis`. Seven are ordinary one-turn answers. The other 13 each have exactly one failure: 5 out-of-scope replies (a recipe, investment advice, or laptop support), 4 replies where the agent speaks as Dad's kid, and 4 long unstructured replies. Longer sessions are two or three turns, and the failure is only on the latest answer. Do not substitute the topics snapshot.
 - The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, tagged `error-analysis-seed`. A queue does not pick up score configs added later.
-- Do not hand them the cluster names before they have written the open-coding notes. After the set, they ask Halo, from the queue page, to cluster the annotations into failure modes.
-- Do not name the categories in the Halo prompt. Ask Halo to create categorical scores for the failure modes it found. Expect out of scope, impersonation, and lengthy responses. If Halo words them differently, map those names to the three decisions before the second pass. They then assign each failing trace.
+- Do not hand them the cluster names before they have written the open-coding notes. After the set, they ask Halo to find clusters. The page shows what those clusters should roughly look like: out of scope, impersonation, and lengthy responses. That list is a check, not the Halo prompt.
+- Ask Halo to create categorical scores for the clusters it found. If Halo words them differently, map those names to the three decisions before the second pass. They then assign each failing trace.
 - Halo builds the frequency dashboard. How that dashboard should look is still a TODO.
 - Close on the three decisions. Out of scope: a friendly decline that points Dad back to iPhone help, plus a production monitor. Impersonation: a system-prompt fix so Specs answers as the support agent. Lengthy responses: a system-prompt fix toward short numbered steps, with an optional production monitor.
 
@@ -55,7 +55,7 @@ Demo order:
 ## Demo rhythm
 
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
-2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to cluster them, ask Halo to create categorical scores for the modes it found, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions: friendly out-of-scope decline plus a production monitor, a system-prompt fix for impersonation, and a system-prompt fix for lengthy replies with an optional production monitor.
+2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to find clusters, compare them with the rough list on the page, ask Halo to create categorical scores for those clusters, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions: friendly out-of-scope decline plus a production monitor, a system-prompt fix for impersonation, and a system-prompt fix for lengthy replies with an optional production monitor.
 3. Topics: run that section's seed once, open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab.
 4. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
