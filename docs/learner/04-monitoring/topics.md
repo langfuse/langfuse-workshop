@@ -17,7 +17,7 @@ git checkout checkpoint/04-monitoring
 
 ## Seed this section
 
-This loads 200 traces spread over the last five days. Most are ordinary iPhone questions, some one turn and some two or three. Two patterns are hidden in the mix for Topics to surface. The seed writes no scores, and every trace is tagged `topics-seed`.
+This loads 200 traces spread over the last five days. Most are ordinary iPhone questions, some one turn and some two or three. Forty are laptop requests in the same short form, such as "laptop printer help" and "laptop wifi". Thirty are follow-ups where Dad says the steps did not work. The seed writes no scores, and every trace is tagged `topics-seed`.
 
 ```bash
 npm run langfuse:seed:topics
@@ -70,9 +70,9 @@ Do that once for each tab. Intent is the kind of help Dad asked for. Issues is t
 
 Look for two things: one gap in what Specs knows, and one way it fails.
 
-- **Laptop questions.** Intent should show a group of laptop requests: Wi-Fi, updates, printing, sound, and so on. Open it. Every answer is "That depends on which laptop you have", because the support context only lists Dad's iPhone. That is in scope, so the fix is not a refusal. Add Dad's laptop to the support context (`DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts`) so Specs can give real steps.
+- **Laptop questions.** The requests use the same short wording, such as "laptop printer help" and "laptop wifi". Intent should show them as one group. Open it. Every answer is "That depends on which laptop you have", because the support context only lists Dad's iPhone. That is in scope, so the fix is not a refusal. Add Dad's laptop to the support context (`DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts`) so Specs can give real steps.
 - **Stuck follow-ups.** Issues and Outcome should show sessions where Dad says the steps did not work ("I did that, but nothing changed", "I can't find that option") and Specs sends the same numbered list again. These are two- and three-turn sessions, so they hide inside ordinary intents like Bluetooth or WhatsApp. The fix belongs in the system prompt: when Dad says a step failed, ask what he sees on screen and offer a different path instead of repeating the list.
 
-Both patterns appear across many intents, which is why grouping beats reading traces one by one here.
+The stuck follow-ups sit inside ordinary intents like Bluetooth or WhatsApp, which is why grouping beats reading traces one by one here.
 
 [Capturing signals](./capturing-signals.md) is the next section. It attaches scores to new turns so disagreement and all-caps frustration stand out in the trace table.

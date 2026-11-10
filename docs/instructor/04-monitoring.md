@@ -35,7 +35,7 @@ Demo order:
 ### Topics and issues
 
 - This is a setup walkthrough, not a concept lecture. Open Topics, click **Set up topics**, keep Intent, Sentiment, Outcome, and Issues checked, keep the recommended models, leave the sample rate at 100%, and click **Start analyzing**.
-- The section seeds 200 traces over the last five days with `npm run langfuse:seed:topics`: 130 ordinary iPhone requests at one to three turns, 40 laptop requests where Specs can only answer "That depends on which laptop you have", and 30 two- or three-turn sessions where Dad says the steps failed and Specs repeats the same list. Each trace carries at most one of those problems.
+- The section seeds 200 traces over the last five days with `npm run langfuse:seed:topics`: 130 ordinary iPhone requests at one to three turns, 40 laptop requests in the same short form ("laptop printer help", "laptop wifi") where Specs can only answer "That depends on which laptop you have", and 30 two- or three-turn sessions where Dad says the steps failed and Specs repeats the same list. Each trace carries at most one of those problems.
 - The two findings to land: the laptop group under Intent is an in-scope gap, fixed by adding the laptop to `DEFAULT_SUPPORT_CONTEXT`; the stuck follow-ups under Issues are a failure mode, fixed with a system-prompt rule to ask what Dad sees and try a different path.
 - The model dropdowns are the project's LLM connections. If you demo Topics before capturing signals, add the OpenAI connection first or the pickers are empty.
 - The review step says Topics need about 100 traces and that new traces show up about 5 minutes after their last activity. Seed before the demo. If the review says there are no traces in the last 7 days, do not start analyzing on an empty window.

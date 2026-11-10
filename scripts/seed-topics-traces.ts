@@ -2,7 +2,8 @@
  * Seed the 200 traces for the Topics section of 04 Monitoring.
  *
  *   - 130 ordinary iPhone requests at one, two, or three turns.
- *   - 40 laptop requests. Specs only knows Dad's iPhone, so every answer is
+ *   - 40 laptop requests, all in the same short form ("laptop printer help",
+ *     "laptop wifi"). Specs only knows Dad's iPhone, so every answer is
  *     "that depends on which laptop you have". This is the in-scope improvement:
  *     add Dad's laptop to the support context.
  *   - 30 stuck follow-ups. Dad says the steps did not work and Specs repeats the
@@ -39,7 +40,6 @@ const STUCK_COUNT = 30;
 type Kind = "ordinary" | "laptop" | "stuck";
 type Scenario = SyntheticTurn & { kind: Kind };
 type Task = { questions: string[]; intro: string; guide: Guide };
-type LaptopTask = { questions: string[]; hint: string };
 
 const TASKS: Task[] = [
   task(["How do I turn Bluetooth on?", "Where do I switch on Bluetooth?", "My earbuds won't connect, how do I turn on Bluetooth?"],
@@ -104,28 +104,11 @@ const TASKS: Task[] = [
       "Open Settings.", "Tap General.", "Tap Software Update.", "If an update shows, tap Update Now."])
 ];
 
-const LAPTOP_TASKS: LaptopTask[] = [
-  { questions: ["How do I connect my laptop to the Wi-Fi?", "My laptop won't get on the internet."],
-    hint: "On a Windows laptop this is usually the Wi-Fi symbol in the bottom-right corner, and on a Mac it is the Wi-Fi symbol at the top of the screen." },
-  { questions: ["Why is my laptop so slow?", "My laptop takes forever to start."],
-    hint: "Windows and Mac laptops show what is slowing them down in different places." },
-  { questions: ["How do I update my laptop?", "My laptop says it needs an update, what do I do?"],
-    hint: "Windows laptops update from Windows Update, and Macs update from Software Update in System Settings." },
-  { questions: ["How do I make my laptop screen brighter?", "My laptop screen is too dark."],
-    hint: "Most laptops have brightness keys on the keyboard, but which keys depends on the model." },
-  { questions: ["How do I print from my laptop?", "How do I get my laptop to use the printer?"],
-    hint: "Printing works differently on Windows and on a Mac, and it also depends on the printer." },
-  { questions: ["How do I turn on the camera on my laptop for a video call?", "The camera on my laptop doesn't work for calls."],
-    hint: "Camera permissions are in different settings on Windows and on a Mac." },
-  { questions: ["How do I make my laptop battery last longer?", "My laptop battery runs out quickly."],
-    hint: "Windows has a battery saver and Macs have Low Power Mode, and they are in different places." },
-  { questions: ["How do I connect a mouse to my laptop?", "My new mouse won't work with the laptop."],
-    hint: "A wireless mouse pairs through Bluetooth settings, which look different on Windows and on a Mac." },
-  { questions: ["Why is there no sound on my laptop?", "I can't hear anything from my laptop."],
-    hint: "The sound settings depend on whether it is a Windows laptop or a Mac." },
-  { questions: ["How do I take a screenshot on my laptop?", "How do I save a picture of my laptop screen?"],
-    hint: "Windows and Mac laptops use different key combinations for screenshots." }
-];
+// One short shape so Topics groups these as laptop help instead of with the
+// iPhone requests about Wi-Fi, printing, and the rest.
+const LAPTOP_TOPICS = ["wifi", "printer", "update", "screen", "camera", "battery", "mouse", "sound", "screenshot", "startup"];
+const LAPTOP_ANSWER =
+  "That depends on which laptop you have. I only know about your iPhone here, so I can't tell whether it's a Windows laptop or a Mac. If you tell me which laptop you have, I can give you the exact steps.";
 
 const BRIDGES = ["Thanks, that worked. ", "Great, done. ", "Okay, got it. ", ""];
 const STUCK_FIRST = [
@@ -143,10 +126,6 @@ function task(questions: string[], intro: string, title: string, steps: string[]
 
 function answerFor(entry: Task) {
   return stepsAnswer(entry.intro, entry.guide.steps);
-}
-
-function laptopAnswer(entry: LaptopTask) {
-  return `That depends on which laptop you have. I only know about your iPhone here, so I can't tell whether it's a Windows laptop or a Mac. ${entry.hint} If you tell me which laptop you have, I can give you the exact steps.`;
 }
 
 function ordinary(index: number): Scenario {
@@ -171,18 +150,15 @@ function ordinary(index: number): Scenario {
 }
 
 function laptop(index: number): Scenario {
-  const entry = LAPTOP_TASKS[index % LAPTOP_TASKS.length];
-  const question = entry.questions[Math.floor(index / LAPTOP_TASKS.length) % entry.questions.length];
-  const turns: ChatTurn[] = [];
-  if (index % 4 === 3) {
-    const before = TASKS[index % TASKS.length];
-    turns.push({ role: "user", content: before.questions[0] });
-    turns.push({ role: "assistant", content: answerFor(before) });
-    turns.push({ role: "user", content: `${BRIDGES[index % BRIDGES.length]}${question}` });
-  } else {
-    turns.push({ role: "user", content: question });
-  }
-  return { kind: "laptop", turns, finalAnswer: laptopAnswer(entry), searchQuestion: question, guide: null };
+  const topic = LAPTOP_TOPICS[index % LAPTOP_TOPICS.length];
+  const question = index < LAPTOP_COUNT / 2 ? `laptop ${topic} help` : `laptop ${topic}`;
+  return {
+    kind: "laptop",
+    turns: [{ role: "user", content: question }],
+    finalAnswer: LAPTOP_ANSWER,
+    searchQuestion: `laptop ${topic} help`,
+    guide: null
+  };
 }
 
 function stuck(index: number): Scenario {
@@ -247,8 +223,8 @@ export function assertTopicsSnapshot(snapshot: Awaited<ReturnType<typeof buildTo
       }
     }
     if (scenario.kind === "laptop") {
-      if (!/laptop/i.test(lastUser) || !scenario.finalAnswer.startsWith("That depends on which laptop")) {
-        throw new Error(`Laptop trace ${index} does not ask about the laptop.`);
+      if (scenario.turns.length !== 1 || !/^laptop [a-z]+( help)?$/.test(lastUser) || scenario.finalAnswer !== LAPTOP_ANSWER) {
+        throw new Error(`Laptop trace ${index} is not the shared laptop-help wording.`);
       }
     }
     if (scenario.kind === "stuck") {
