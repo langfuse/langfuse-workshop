@@ -30,11 +30,7 @@ The seed writes no scores. It is **not idempotent**: running it again adds anoth
 
    ![Ask Halo to cluster the annotations into failure modes.](../../images/monitoring/halo-cluster-annotations.png)
 
-7. Ask Halo to create these categories as categorical scores:
-
-   - Out of scope request that is responded to
-   - Impersonation
-   - Lengthy responses
+7. Ask Halo to create categorical scores for the failure modes it found. Do not name the categories for it. Halo should find them from the annotations.
 
 8. Go through the queue again and assign each failing trace to a category.
 9. Ask Halo to build a dashboard for the frequency of each category.
