@@ -41,8 +41,10 @@ The seed writes no scores. It is **not idempotent**: running it again adds anoth
 
    > **TODO:** Add how that dashboard should look.
 
-10. For each category, decide whether to fix it or turn it into an evaluator.
+10. Decide what to do with each category.
 
-    > **TODO:** Add the results of that decision.
+    - **Out of scope request that is responded to.** Fix the behavior so Specs declines an out-of-scope request in a friendly way and points Dad back to iPhone help. Also monitor this on production traffic, so a later reply that answers a recipe, an investment question, or a laptop problem still shows up.
+    - **Impersonation.** Fix it in the system prompt, so Specs answers as the support agent.
+    - **Lengthy responses.** Fix it in the system prompt, so answers stay short and in numbered steps. Optionally monitor long replies in production as well.
 
 The full version of this targets on the order of 100 traces. This lab uses 20. The [annotation queue docs](https://langfuse.com/docs/evaluation/evaluation-methods/annotation-queues) cover the queue controls, and the Academy page on [error analysis](https://langfuse.com/academy/monitoring/error-analysis) is the longer method.

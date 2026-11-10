@@ -29,7 +29,8 @@ Demo order:
 - The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, tagged `error-analysis-seed`. A queue does not pick up score configs added later.
 - Do not hand them the cluster names before they have written the open-coding notes. After the set, they ask Halo, from the queue page, to cluster the annotations into failure modes.
 - Halo then creates three categorical scores: out of scope request that is responded to, impersonation, and lengthy responses. They go through the queue a second time and assign the categories.
-- Halo builds the frequency dashboard. How that dashboard should look, and the fix-or-evaluator result for each category, are still TODOs. Do not invent either in the room.
+- Halo builds the frequency dashboard. How that dashboard should look is still a TODO.
+- Close on the three decisions. Out of scope: a friendly decline that points Dad back to iPhone help, plus a production monitor. Impersonation: a system-prompt fix so Specs answers as the support agent. Lengthy responses: a system-prompt fix toward short numbered steps, with an optional production monitor.
 
 ### Topics and issues
 
@@ -54,7 +55,7 @@ Demo order:
 ## Demo rhythm
 
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
-2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to cluster them, ask Halo to create the three category scores, assign them on a second pass, then ask Halo for the frequency dashboard.
+2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to cluster them, ask Halo to create the three category scores, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions: friendly out-of-scope decline plus a production monitor, a system-prompt fix for impersonation, and a system-prompt fix for lengthy replies with an optional production monitor.
 3. Topics: run that section's seed once, open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab.
 4. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
