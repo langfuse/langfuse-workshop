@@ -8,7 +8,10 @@
  *     the laptop and then offers a Windows way and an Apple way. The in-scope
  *     improvement is to add Dad's laptop to the support context.
  *   - 30 stuck follow-ups. Dad says the steps did not work and Specs repeats the
- *     same steps. This is the failure mode. They are two- or three-turn sessions.
+ *     same steps. These are frustrated: the problem is still unresolved.
+ *     At least 40% of the whole batch has Dad sounding frustrated, mostly on
+ *     traces that do not get resolved. A few of those lines are all caps or
+ *     push back on the steps, which is the bridge to conversation signals.
  *
  * Each trace has at most one of those problems. Traces are spread over about five
  * days, so they land inside the Topics seven-day window. No scores are written.
@@ -40,7 +43,7 @@ const STUCK_COUNT = 30;
 
 type Kind = "ordinary" | "laptop" | "stuck";
 type LaptopCluster = "printer" | "wifi";
-type Scenario = SyntheticTurn & { kind: Kind; laptopCluster?: LaptopCluster };
+type Scenario = SyntheticTurn & { kind: Kind; laptopCluster?: LaptopCluster; frustrated?: boolean };
 type LaptopCase = { cluster: LaptopCluster; question: string; answer: string };
 type Task = { questions: string[]; intro: string; guide: Guide };
 
@@ -354,13 +357,21 @@ const LAPTOP_CASES: LaptopCase[] = [
 
 const BRIDGES = ["Thanks, that worked. ", "Great, done. ", "Okay, got it. ", ""];
 const STUCK_FIRST = [
-  "I did that, but nothing changed.",
-  "I tried those steps and it is still the same.",
-  "I can't find that option. It isn't there.",
-  "That didn't work.",
-  "I followed every step and it still doesn't work."
+  "I did that, but nothing changed. I am really frustrated.",
+  "I tried those steps and it is still the same. This is driving me mad.",
+  "I can't find that option. It isn't there, and I am fed up.",
+  "That didn't work. THIS STILL ISNT WORKING.",
+  "I followed every step and it still doesn't work. I am so annoyed.",
+  "No, that menu isn't there. I already looked and I am frustrated.",
+  "I did exactly that and nothing changed. This is ridiculous.",
+  "Those steps did not work. I am sick of seeing the same list."
 ];
-const STUCK_SECOND = ["It still isn't working.", "Same thing again, nothing happened.", "I already did that."];
+const STUCK_SECOND = [
+  "It still isn't working. I am even more frustrated now.",
+  "Same thing again, nothing happened. THIS STILL ISNT WORKING.",
+  "I already did that. Stop repeating it, I am fed up.",
+  "Nothing changed. No, that menu isn't there and this is a waste of time."
+];
 
 function task(questions: string[], intro: string, title: string, steps: string[]): Task {
   return { questions, intro, guide: { title, summary: intro, steps } };
@@ -370,20 +381,41 @@ function answerFor(entry: Task) {
   return stepsAnswer(entry.intro, entry.guide.steps);
 }
 
+function isFrustrated(text: string) {
+  return /frustrat|ridiculous|fed up|driving me mad|annoyed|sick of|waste of time|THIS STILL ISNT WORKING|THIS IS HOPELESS|No, that menu isn't there/i.test(text);
+}
+
+function frustrate(text: string, index: number) {
+  const wraps = [
+    `I am really frustrated. ${text}`,
+    `${text} This is driving me mad.`,
+    `${text} I am fed up with this.`,
+    `THIS IS HOPELESS. ${text}`,
+    `${text} I am so annoyed.`,
+    `I have been at this for ages and I am frustrated. ${text}`,
+    `${text} This is a waste of time and I am sick of it.`,
+    `${text} For heaven's sake, I am frustrated.`
+  ];
+  return wraps[index % wraps.length];
+}
+
 function ordinary(index: number): Scenario {
   const first = TASKS[index % TASKS.length];
   const question = first.questions[Math.floor(index / TASKS.length) % first.questions.length];
   const length = index % 6 < 3 ? 1 : index % 6 < 5 ? 2 : 3;
+  const frustrated = index % 5 === 0;
   const chain = [first, TASKS[(index + 7) % TASKS.length], TASKS[(index + 13) % TASKS.length]].slice(0, length);
   const turns: ChatTurn[] = [];
   chain.forEach((entry, position) => {
     const ask = position === 0 ? question : `${BRIDGES[(index + position) % BRIDGES.length]}${entry.questions[0]}`;
-    turns.push({ role: "user", content: ask });
-    if (position < chain.length - 1) turns.push({ role: "assistant", content: answerFor(entry) });
+    const isLast = position === chain.length - 1;
+    turns.push({ role: "user", content: frustrated && isLast ? frustrate(ask, index) : ask });
+    if (!isLast) turns.push({ role: "assistant", content: answerFor(entry) });
   });
   const last = chain[chain.length - 1];
   return {
     kind: "ordinary",
+    frustrated,
     turns,
     finalAnswer: answerFor(last),
     searchQuestion: last.guide.title,
@@ -393,10 +425,13 @@ function ordinary(index: number): Scenario {
 
 function laptop(index: number): Scenario {
   const entry = LAPTOP_CASES[index];
+  const frustrated = index % 5 !== 4;
+  const question = frustrated ? frustrate(entry.question, index + 3) : entry.question;
   return {
     kind: "laptop",
     laptopCluster: entry.cluster,
-    turns: [{ role: "user", content: entry.question }],
+    frustrated,
+    turns: [{ role: "user", content: question }],
     finalAnswer: entry.answer,
     searchQuestion: entry.question,
     guide: null
@@ -415,7 +450,7 @@ function stuck(index: number): Scenario {
     turns.push({ role: "assistant", content: repeated });
     turns.push({ role: "user", content: STUCK_SECOND[index % STUCK_SECOND.length] });
   }
-  return { kind: "stuck", turns, finalAnswer: repeated, searchQuestion: entry.guide.title, guide: entry.guide };
+  return { kind: "stuck", frustrated: true, turns, finalAnswer: repeated, searchQuestion: entry.guide.title, guide: entry.guide };
 }
 
 // Deterministic shuffle so the three kinds are spread across the whole time window.
@@ -454,13 +489,21 @@ export function assertTopicsSnapshot(snapshot: Awaited<ReturnType<typeof buildTo
   const lengths = new Set<number>();
   const laptopQuestions = new Set<string>();
   const laptopAnswers = new Set<string>();
+  let frustratedCount = 0;
   SCENARIOS.forEach((scenario, index) => {
     counts[scenario.kind] += 1;
     lengths.add(userTurnCount(scenario.turns));
     const text = JSON.stringify(scenario.turns) + scenario.finalAnswer;
     const mentionsLaptop = /laptop/i.test(text);
     const lastUser = [...scenario.turns].reverse().find((turn) => turn.role === "user")?.content ?? "";
+    const userText = scenario.turns.filter((turn) => turn.role === "user").map((turn) => turn.content).join("\n");
     const previousAnswer = [...scenario.turns].reverse().find((turn) => turn.role === "assistant")?.content;
+    if (scenario.frustrated) {
+      frustratedCount += 1;
+      if (!isFrustrated(userText)) throw new Error(`Trace ${index} is marked frustrated without frustrated wording.`);
+    } else if (isFrustrated(userText)) {
+      throw new Error(`Trace ${index} sounds frustrated but is not counted.`);
+    }
 
     if (scenario.kind === "ordinary") {
       if (mentionsLaptop || !/\n1\. /.test(scenario.finalAnswer) || previousAnswer === scenario.finalAnswer) {
@@ -490,8 +533,8 @@ export function assertTopicsSnapshot(snapshot: Awaited<ReturnType<typeof buildTo
       if (mentionsLaptop || userTurnCount(scenario.turns) < 2 || previousAnswer !== scenario.finalAnswer) {
         throw new Error(`Stuck trace ${index} does not repeat the earlier steps.`);
       }
-      if (![...STUCK_FIRST, ...STUCK_SECOND].includes(lastUser)) {
-        throw new Error(`Stuck trace ${index} does not end with Dad saying it failed.`);
+      if (!isFrustrated(lastUser) || !/(nothing changed|still the same|isn't there|didn't work|doesn't work|did not work|still isn't working|nothing happened|already did that|same list)/i.test(lastUser)) {
+        throw new Error(`Stuck trace ${index} does not end with Dad frustrated that it failed.`);
       }
     }
   });
@@ -504,6 +547,9 @@ export function assertTopicsSnapshot(snapshot: Awaited<ReturnType<typeof buildTo
   if (laptopQuestions.size !== LAPTOP_COUNT || laptopAnswers.size !== LAPTOP_COUNT) {
     throw new Error("Laptop questions and answers must each be worded differently.");
   }
+  if (frustratedCount < Math.ceil(SCENARIOS.length * 0.4)) {
+    throw new Error(`Expected at least 40% frustrated traces, got ${frustratedCount} of ${SCENARIOS.length}.`);
+  }
   if (![1, 2, 3].every((length) => lengths.has(length))) {
     throw new Error(`Expected one-, two-, and three-turn sessions, got ${[...lengths].join(", ")}.`);
   }
@@ -513,8 +559,9 @@ async function main() {
   const snapshot = await buildTopicsSnapshot();
   assertTopicsSnapshot(snapshot);
   if (hasFlag("--check")) {
+    const frustratedCount = SCENARIOS.filter((scenario) => scenario.frustrated).length;
     console.log(
-      `Topics seed OK: ${ORDINARY_COUNT} ordinary, ${LAPTOP_COUNT} laptop, ${STUCK_COUNT} stuck follow-ups.`
+      `Topics seed OK: ${ORDINARY_COUNT} ordinary, ${LAPTOP_COUNT} laptop, ${STUCK_COUNT} stuck follow-ups, ${frustratedCount} frustrated.`
     );
     return;
   }

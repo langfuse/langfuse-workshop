@@ -19,7 +19,7 @@ git checkout checkpoint/04-monitoring
 npm run langfuse:seed:topics
 ```
 
-This loads 200 traces spread over the last five days. Most are ordinary iPhone questions, some one turn and some two or three. Forty are laptop requests in two loose groups: the printer and its paper, and the laptop's Wi-Fi. The wording varies inside each group. Thirty are follow-ups where Dad says the steps did not work. The seed writes no scores, and every trace is tagged `topics-seed`.
+This loads 200 traces spread over the last five days. Most are ordinary iPhone questions, some one turn and some two or three. Forty are laptop requests in two loose groups: the printer and its paper, and the laptop's Wi-Fi. The wording varies inside each group. Thirty are follow-ups where Dad says the steps did not work. At least 40% of the traces have Dad sounding frustrated, mostly where the problem is still unresolved. A few of those lines are in all caps, and a few push back on the steps. The seed writes no scores, and every trace is tagged `topics-seed`.
 
 > ⚠️ The seed is **not idempotent**. OpenTelemetry mints fresh trace IDs on every run, so re-running doubles the data. Run it once. If you need a clean slate, delete the prior seed traces in Langfuse before seeding again.
 
@@ -67,6 +67,12 @@ Click a tile. The list under it is the traces in that group, each with a one-lin
 Start by walking the tabs, before looking for something to fix. Intent is the kinds of help Dad asked for. Sentiment is how the conversation felt. Outcome is where it ended. Issues is what went wrong in the handling, including when the same problem sits under more than one intent.
 
 That first pass is the point of Topics. A few hundred traces become a handful of classes you can name. Some of what you see is the product working: iPhone tasks grouping together, ordinary requests landing cleanly. You are learning the shape of the system, not only hunting failures.
+
+### Sentiment shows the frustration
+
+On **Sentiment**, a large group is frustrated. At least two in five traces have Dad sounding that way, and it clusters where the problem did not get resolved: the laptop answers that still depend on which machine, and the follow-ups where the steps failed. A few messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there").
+
+Sentiment is the feeling. It does not yet give you a score you can filter on. [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
 
 ### Laptop help is a chance to widen what Specs supports
 
