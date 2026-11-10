@@ -25,10 +25,10 @@ Demo order:
 
 ### Error analysis
 
-- Section 4.1 seeds 20 traces of its own. The contents of that batch are not chosen yet, and there is no seed command. Do not substitute `npm run langfuse:seed:otel:no-scores` and call those the 20.
-- The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, which are the ones just seeded. A queue does not pick up score configs added later.
+- Section 4.1 seeds its own 20 traces with `npm run langfuse:seed:error-analysis`. Seven are ordinary one-turn answers. The other 13 each have exactly one failure: 5 out-of-scope replies (a recipe, investment advice, or laptop support), 4 replies where the agent speaks as Dad's kid, and 4 long unstructured replies. Longer sessions are two or three turns, and the failure is only on the latest answer. Do not substitute the topics snapshot.
+- The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, tagged `error-analysis-seed`. A queue does not pick up score configs added later.
 - Do not hand them the cluster names before they have written the open-coding notes. After the set, they ask Halo, from the queue page, to cluster the annotations into failure modes.
-- Halo then creates those categories as categorical scores. The rough category list is still a TODO. They go through the queue a second time and assign the categories.
+- Halo then creates three categorical scores: out of scope request that is responded to, impersonation, and lengthy responses. They go through the queue a second time and assign the categories.
 - Halo builds the frequency dashboard. How that dashboard should look, and the fix-or-evaluator result for each category, are still TODOs. Do not invent either in the room.
 
 ### Topics and issues
@@ -54,7 +54,7 @@ Demo order:
 ## Demo rhythm
 
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
-2. Error analysis: seed its 20 traces once that batch exists, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to cluster them, ask Halo to create the category scores, assign them on a second pass, then ask Halo for the frequency dashboard.
+2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to cluster them, ask Halo to create the three category scores, assign them on a second pass, then ask Halo for the frequency dashboard.
 3. Topics: run that section's seed once, open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab.
 4. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.

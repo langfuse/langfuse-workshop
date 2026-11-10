@@ -11,11 +11,13 @@ Error analysis finds failure modes by open-coding traces, then clustering those 
 
 ## Seed the traces
 
-> **TODO:** Decide which 20 traces this seed includes.
+This lab seeds its own 20 traces. Seven are ordinary one-turn iPhone questions. The other 13 each contain one problem. Some of those are a single turn, and some are a longer session of two or three turns.
 
-Seed 20 traces for this lab. They need to be the newest traces in the project, because the next step selects the last 20.
+```bash
+npm run langfuse:seed:error-analysis
+```
 
-The seed is **not idempotent**. Running it again adds another 20 traces. Run it once.
+The seed writes no scores. It is **not idempotent**: running it again adds another 20 traces. Run it once. The new traces are tagged `error-analysis-seed`, and they are the newest traces in the project.
 
 ## Annotate
 
@@ -28,9 +30,11 @@ The seed is **not idempotent**. Running it again adds another 20 traces. Run it 
 
    ![Ask Halo to cluster the annotations into failure modes.](../../images/monitoring/halo-cluster-annotations.png)
 
-7. Ask Halo to create these categories as categorical scores.
+7. Ask Halo to create these categories as categorical scores:
 
-   > **TODO:** Add the rough categories Halo should create.
+   - Out of scope request that is responded to
+   - Impersonation
+   - Lengthy responses
 
 8. Go through the queue again and assign each failing trace to a category.
 9. Ask Halo to build a dashboard for the frequency of each category.

@@ -16,7 +16,8 @@
     "dataset:seed": "tsx scripts/seed-dataset.ts",
     "dataset:run": "tsx scripts/run-dataset.ts",
     "langfuse:seed:otel": "tsx scripts/import-trace-seed-otel.ts --input data/seed-traffic-followups-traces.json",
-    "langfuse:seed:otel:no-scores": "tsx scripts/import-trace-seed-otel.ts --input data/seed-traffic-followups-traces.json --no-scores"
+    "langfuse:seed:otel:no-scores": "tsx scripts/import-trace-seed-otel.ts --input data/seed-traffic-followups-traces.json --no-scores",
+    "langfuse:seed:error-analysis": "tsx scripts/seed-error-analysis-traces.ts"
   },
   "dependencies": {
     "@langfuse/client": "latest",
