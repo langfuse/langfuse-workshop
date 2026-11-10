@@ -1,9 +1,9 @@
 /**
  * Seed the 200 traces for the Topics section of 04 Monitoring.
  *
- *   - 90 ordinary iPhone requests at one, two, or three turns.
- *   - 80 laptop requests in two loose clusters: the printer and its paper, and
- *     the laptop's Wi-Fi. Forty in each. The wording varies inside each cluster. Specs does
+ *   - 110 ordinary iPhone requests at one, two, or three turns.
+ *   - 60 laptop requests in two loose clusters: the printer and its paper, and
+ *     the laptop's Wi-Fi. Thirty in each. The wording varies inside each cluster. Specs does
  *     not know which laptop Dad has, so each answer says the steps depend on
  *     the laptop and then offers a Windows way and an Apple way. The in-scope
  *     improvement is to add Dad's laptop to the support context.
@@ -37,8 +37,8 @@ import {
 } from "./synthetic-trace-seed";
 
 const SEED_TAG = "topics-seed";
-const ORDINARY_COUNT = 90;
-const LAPTOP_COUNT = 80;
+const ORDINARY_COUNT = 110;
+const LAPTOP_COUNT = 60;
 const STUCK_COUNT = 30;
 
 type Kind = "ordinary" | "laptop" | "stuck";
@@ -414,66 +414,6 @@ const LAPTOP_CASES: LaptopCase[] = [
       "An extra blank sheet depends on a setting the laptop is sending. On Windows, in the print window, turn off any separator page. On an Apple laptop, look in the print details for a cover page and set it to None. Then print the letter once more."
   },
   {
-    cluster: "printer",
-    question: "The laptop will not let me choose a printer. The list is empty.",
-    answer:
-      "An empty printer list depends on which laptop this is. On Windows, open Printers & scanners and choose Add device while the printer is on. On a Mac, open Printers & Scanners and choose Add Printer. Wait until a name appears, then select it."
-  },
-  {
-    cluster: "printer",
-    question: "How do I print the attachment in this email from the laptop?",
-    answer:
-      "Opening the attachment first depends on the laptop. On Windows, open the email, open the attachment, then choose Print. On an Apple laptop, open the attachment and press Command and P. Pick the printer in that window."
-  },
-  {
-    cluster: "printer",
-    question: "The printer pulled two sheets at once, and the laptop still says the job is printing.",
-    answer:
-      "Two sheets stuck together will stall the job, and stopping the retry depends on the laptop. On Windows, cancel the job in the queue. On an Apple laptop, cancel it in the queue under Printers & Scanners. Fan the paper, reload a smaller stack, and send the page again."
-  },
-  {
-    cluster: "printer",
-    question: "The laptop printed the boarding pass from the printer so faint I cannot read it.",
-    answer:
-      "A faint page depends on ink and on a quality setting that differs by laptop. On Windows, print again and raise the quality in the print window. On a Mac, set Quality higher in the print details. If it is still faint, the cartridge is the next thing to check."
-  },
-  {
-    cluster: "printer",
-    question: "Where do I tell the laptop to use the paper that is already in the printer?",
-    answer:
-      "Matching the tray depends on the laptop. On Windows, set the paper size and source in the print window to what is loaded. On an Apple laptop, set Paper Size to that same sheet. The preview should fit the paper you can see in the tray."
-  },
-  {
-    cluster: "printer",
-    question: "The laptop shows a red cross on the printer icon.",
-    answer:
-      "The red mark depends on the laptop's printer status. On Windows, open Printers & scanners and read the line under the name. On an Apple laptop, read the line under the printer in Printers & Scanners. Paper, ink, or offline will be named there."
-  },
-  {
-    cluster: "printer",
-    question: "How do I stop the laptop printing a header line on every page from the printer?",
-    answer:
-      "Headers are a page setting, and the menu depends on the laptop. On Windows, open the print window and turn headers off if the app offers it. On a Mac, look in the print details for headers and footers and clear them. Then print one test page."
-  },
-  {
-    cluster: "printer",
-    question: "The printer beeps three times and the laptop says there is a paper problem.",
-    answer:
-      "Three beeps usually mean the paper path, and the laptop message depends on the system. On Windows, read the exact status in Printers & scanners. On an Apple laptop, read it in Printers & Scanners. Open the tray, reseat the paper against the guide, and close it until it clicks."
-  },
-  {
-    cluster: "printer",
-    question: "Can I print this photo from the laptop onto a smaller sheet?",
-    answer:
-      "Scaling onto smaller paper depends on the laptop. On Windows, choose the smaller paper size and Fit to page. On a Mac, choose that paper size and leave Scale near 100 only if the preview fits. Look at the preview before you print."
-  },
-  {
-    cluster: "printer",
-    question: "The laptop sent five copies to the printer, and I only wanted one page.",
-    answer:
-      "The copy count depends on the laptop's print window. On Windows, cancel the job, then print again with Copies set to 1. On an Apple laptop, cancel the queue and set Copies to 1 before you send it. The queue will show how many are still waiting."
-  },
-  {
     cluster: "wifi",
     question: "The laptop joins the hotel Wi-Fi and then asks me to sign in on a web page.",
     answer:
@@ -511,12 +451,6 @@ const LAPTOP_CASES: LaptopCase[] = [
   },
   {
     cluster: "wifi",
-    question: "The Wi-Fi icon on the laptop has a small star next to it. What does that mean?",
-    answer:
-      "The extra mark depends on which laptop drew the icon. On Windows, a star or asterisk often means connected with a warning, so click the icon and read the line under the name. On a Mac, the menu bar icon is plainer, and the detail is in the Wi-Fi menu. Rejoin the network if it says no internet."
-  },
-  {
-    cluster: "wifi",
     question: "How do I stop the laptop reconnecting to the airport Wi-Fi?",
     answer:
       "Stopping that automatic join depends on the laptop. On Windows, forget the airport network in Manage known networks. On a Mac, open that network in Wi-Fi settings and turn off Auto-Join, or forget it. The laptop will then wait for you to pick a network."
@@ -529,69 +463,15 @@ const LAPTOP_CASES: LaptopCase[] = [
   },
   {
     cluster: "wifi",
-    question: "Can you help me type the Wi-Fi password on the laptop? The letters look tiny.",
-    answer:
-      "Typing the password depends on the laptop, and the letters can be enlarged after you are on. On Windows, select the network from the icon near the clock and type the password, watching capitals. On an Apple laptop, select it from the menu bar and type the same password. Zoom can wait until the laptop is online."
-  },
-  {
-    cluster: "wifi",
-    question: "The laptop says Wi-Fi is off, and I cannot find a switch in the corner.",
-    answer:
-      "The missing switch depends on the laptop. On Windows, click the network icon near the clock and turn Wi-Fi on from there. On an Apple laptop, use the Wi-Fi menu in the menu bar, or System Settings if the icon is hidden. There may also be a sliding switch on the side of an older machine."
-  },
-  {
-    cluster: "wifi",
     question: "The home Wi-Fi changed its name, and the laptop is still searching for the old one.",
     answer:
       "An old saved name depends on the laptop forgetting it. On Windows, forget the old name in Manage known networks, then join the new one. On a Mac, forget the old name in Wi-Fi settings and join the new name from the menu. Use the password that belongs to the new name."
   },
   {
     cluster: "wifi",
-    question: "How do I see the Wi-Fi password this laptop has already saved?",
-    answer:
-      "Showing a saved password depends on the laptop, and both will ask you to prove it is you. On Windows, open the network's properties and choose show password. On an Apple laptop, open the network details in Wi-Fi settings and choose the password, then use the Mac login. Write it down before you close the window."
-  },
-  {
-    cluster: "wifi",
-    question: "The laptop joins the Wi-Fi and then says no internet, secured.",
-    answer:
-      "Secured with no internet means the password worked and the connection did not, and the retry depends on the laptop. On Windows, disconnect and connect again from the Wi-Fi icon. On a Mac, turn Wi-Fi off and on. If the words stay, restart the router and give the laptop a minute."
-  },
-  {
-    cluster: "wifi",
-    question: "Two Wi-Fi names on the laptop look almost the same. Which should I pick?",
-    answer:
-      "Choosing between similar names depends on the laptop only in where the list sits. On Windows, the list is on the network icon near the clock. On an Apple laptop, it is in the Wi-Fi menu. Pick the name written on the router sticker, not the one with a longer or shorter ending."
-  },
-  {
-    cluster: "wifi",
-    question: "I moved the router, and now the laptop cannot see the Wi-Fi at all.",
-    answer:
-      "After a router moves, finding the name again depends on the laptop being close enough. On Windows, turn Wi-Fi off and on from the network icon, then look for the name. On a Mac, do that from the Wi-Fi menu while the laptop is next to the router. Walk nearer before you decide the network is gone."
-  },
-  {
-    cluster: "wifi",
     question: "The laptop keeps hopping between two Wi-Fi networks on its own.",
     answer:
       "Hopping between networks depends on the laptop having both saved. On Windows, forget the one you do not want in Manage known networks. On a Mac, turn off Auto-Join for that network in its Wi-Fi details. The laptop should then stay on the one you pick."
-  },
-  {
-    cluster: "wifi",
-    question: "How do I make the laptop prefer our Wi-Fi instead of the guest one?",
-    answer:
-      "Preferring one network depends on the laptop. On Windows, forget the guest network so only yours is saved. On an Apple laptop, turn off Auto-Join for the guest network and leave it on for yours. Next time, the laptop should join the home name by itself."
-  },
-  {
-    cluster: "wifi",
-    question: "The laptop shows full Wi-Fi bars and still will not load the weather page.",
-    answer:
-      "Full bars with no page still depends on the laptop. On Windows, click the Wi-Fi icon, disconnect, and connect again. On a Mac, turn Wi-Fi off from the menu bar and turn it back on. If the bars stay full and the page stays blank, restart the router."
-  },
-  {
-    cluster: "wifi",
-    question: "How do I join the Wi-Fi that asks the laptop for both a name and a password?",
-    answer:
-      "A network that asks for a name and a password depends on the laptop only for where you type them. On Windows, select it from the icon near the clock and fill both fields. On an Apple laptop, select it from the Wi-Fi menu and fill both fields. The name is usually the one on the card they gave you, and the password is the longer line."
   }
 ];
 
