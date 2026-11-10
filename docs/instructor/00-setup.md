@@ -10,6 +10,7 @@ Learner guide: [00 Setup](../learner/00-setup.md)
 ## Instructor notes
 
 - Recommend **Langfuse Cloud**, not self-hosted. Supporting self-hosted setups would mean maintaining the workshop against too many Langfuse versions. This workshop is also not about learning how to self-host Langfuse; it is about current features in their most up-to-date form.
+- Confirm **AI Features** are on for each learner's organization: **Organization Settings → General → AI Features**. That is what shows Halo. Only an owner or admin can change it, so someone on a company organization may need that person to turn it on before the session.
 - Use `checkpoint/00-setup` as the stable base-app checkout. It should be equivalent to `checkpoint/01-base-app`, not the complete reference app.
 - `main` contains the complete reference implementation, but learners should use the checkpoint so setup and base-app orientation share the same starting state.
 - Make learners confirm the UI loads at `127.0.0.1:3333` and that a suggestion-chip chat turn returns a real answer.
@@ -27,5 +28,6 @@ Learner guide: [00 Setup](../learner/00-setup.md)
 - Learners editing shell exports instead of `.env`. The workshop intentionally treats `.env` as the Node-side source of truth.
 - People expecting evaluator setup during initial setup. The app can run and trace correctly before the Langfuse-side LLM connection exists.
 - People wanting to use a company or local self-hosted Langfuse instance. Push them to Cloud so the UI and features match the lessons.
+- Halo missing, or Ask AI missing from filters, because AI Features is still off for the organization.
 - People expecting traces on `checkpoint/00-setup` or `checkpoint/01-base-app`. Both are intentionally untraced; tracing starts only after the `02-tracing` edits.
 - People staying on `main` for tracing. `main` is already the finished reference implementation.

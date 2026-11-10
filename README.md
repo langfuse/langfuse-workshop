@@ -9,6 +9,8 @@ The workshop is the hands-on version of many concepts explained in the [Langfuse
 You can complete the workshop on your own from the learner lessons, or use the instructor notes to teach the same material to a group.
 
 > ⚠️ Use **Langfuse Cloud** so you have the latest features this workshop describes. Self-hosted instances may be on an older version and will not match the lessons.
+>
+> Enable **AI Features** for your organization (**Organization Settings → General → AI Features**). That turns on **Halo**. An organization owner or admin has to do this. It is off by default.
 
 ## For learners
 

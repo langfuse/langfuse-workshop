@@ -18,6 +18,7 @@ This is a high-level guide on how to give the Langfuse workshop to your own audi
 ## Preparation
 
 - Use **Langfuse Cloud**. Supporting self-hosted setups would mean maintaining the workshop against too many Langfuse versions, and this workshop is not about learning how to self-host Langfuse. It is about current features in their most up-to-date form. If participants ask about a company or local self-hosted instance, steer them to Cloud.
+- Ask participants to enable **AI Features** before the session (**Organization Settings → General → AI Features**). That turns on Halo. They need to be an organization owner or admin. It is off by default.
 - Update slides with training info. Ideally, copy them first.
 - Go through the workshop yourself.
 - Optional but generally recommended: prep an OpenAI API key for participants to use. Make sure to limit spend and delete it afterwards.
