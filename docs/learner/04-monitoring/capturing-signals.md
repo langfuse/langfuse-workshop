@@ -128,6 +128,17 @@ The all-caps signal is a rougher clue that the conversation might be going sidew
 
 The seeded `production` batch is the volume these monitors are for. Open a few of those traces and compare them with the two turns you just scored. As further production turns arrive, the same evaluators score them.
 
+## Bonus — Conversation signals with decision models
+
+A [decision model](https://langfuse.com/docs/evaluation/evaluation-methods/decision-models) returns a typed answer for each question instead of free-form text, so it is the cheaper evaluator when you do not need written reasoning.
+
+Using this, we can capture a variety of signals at once.
+
+1. Go to the evaluator library.
+2. Select **Detect conversation signals**.
+3. Test it on one or two examples.
+4. Save.
+
 ## Wrap-up
 
 The scores answer which traces to open. [Error analysis](./error-analysis.md) is how you decide which further signals are worth adding, by reading what actually goes wrong and naming it. [Dashboards](https://langfuse.com/docs/metrics/features/custom-dashboards) are where a score becomes a trend over time.

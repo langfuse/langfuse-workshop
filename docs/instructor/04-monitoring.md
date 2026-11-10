@@ -48,6 +48,7 @@ Demo order after the seed:
 - After **Create evaluator**, review filters, estimated weekly volume and cost, and sampling rate, then click **Execute**.
 - Execute scores observations that arrive afterwards. The seeded batch is the mapping sample, not an automatic backfill. The two chat turns in Verify are what should light up. Historical scoring is batch evaluation, and re-running the seed is the wrong way to get scores.
 - The ALL-CAPS template is there to show a deterministic signal that needs no model call.
+- The bonus is optional. In the evaluator library, **Detect conversation signals** is a decision-model template: one call scores several conversation signals at once. Have them test one or two examples and save. Do not replace the disagreement judge or the all-caps evaluator with it.
 
 ## Demo rhythm
 
@@ -58,6 +59,7 @@ Demo order after the seed:
 5. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 6. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
 7. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them.
+8. If time remains, open the bonus: evaluator library → **Detect conversation signals**, test on one or two examples, save.
 
 ## Watch for
 
