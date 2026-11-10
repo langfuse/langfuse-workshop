@@ -1,27 +1,27 @@
 ---
 title: "Workshop: 4.1 Error Analysis"
-description: "Seed 22 traces, annotate them in a queue, and use Halo to cluster failure modes, create category scores, and chart how often each one appears."
+description: "Seed 20 traces, annotate them in a queue, and use Halo to cluster failure modes, create category scores, and chart how often each one appears."
 ---
 
 # 4.1 Error analysis
 
 Part of [04 Monitoring](../04-monitoring.md).
 
-Error analysis finds failure modes by open-coding traces, then clustering those notes. This lab uses its own batch of 22 traces.
+Error analysis finds failure modes by open-coding traces, then clustering those notes. This lab uses its own batch of 20 traces.
 
 ## Seed the traces
 
-This lab seeds its own 22 traces. Seven are ordinary one-turn iPhone questions. The other 15 each contain one problem. Some of those are a single turn, and some are a longer session of two or three turns.
+This lab seeds its own 20 traces. Seven are ordinary one-turn iPhone questions. The other 13 each contain one problem. Some of those are a single turn, and some are a longer session of two or three turns.
 
 ```bash
 npm run langfuse:seed:error-analysis
 ```
 
-The seed writes no scores. It is **not idempotent**: running it again adds another 22 traces. Run it once. The new traces are tagged `error-analysis-seed`, and they are the newest traces in the project.
+The seed writes no scores. It is **not idempotent**: running it again adds another 20 traces. Run it once. The new traces are tagged `error-analysis-seed`, and they are the newest traces in the project.
 
 ## Annotate
 
-1. In [Tracing](https://cloud.langfuse.com/project/~/traces), select the last 22 traces and add them to an annotation queue. The queue has two score configs: **open coding** (Text) and **pass/fail** (Categorical, with the categories pass and fail). Create the queue with those configs, then add the traces. A queue keeps the score configs it was created with.
+1. In [Tracing](https://cloud.langfuse.com/project/~/traces), select the last 20 traces and add them to an annotation queue. The queue has two score configs: **open coding** (Text) and **pass/fail** (Categorical, with the categories pass and fail). Create the queue with those configs, then add the traces. A queue keeps the score configs it was created with.
 2. Open the queue and choose **Process queue**.
 3. For each trace, mark pass or fail.
 4. When it fails, inspect the trace and write the failure in open coding. Describe what went wrong. Leave the notes ungrouped.

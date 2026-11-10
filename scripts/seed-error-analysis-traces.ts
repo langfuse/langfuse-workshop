@@ -1,10 +1,10 @@
 /**
- * Seed the 22 traces for section 4.1 Error analysis.
+ * Seed the 20 traces for section 4.1 Error analysis.
  *
- * Seven traces are ordinary one-turn iPhone answers. The other fifteen each
+ * Seven traces are ordinary one-turn iPhone answers. The other thirteen each
  * contain exactly one failure mode:
  *   - 5 out-of-scope requests that the agent answers (recipes, investment advice, laptop support)
- *   - 4 impersonation replies, where the agent speaks as someone who knows Dad.
+ *   - 2 impersonation replies, where the agent speaks as someone who knows Dad.
  *     The steps stay right. The voice does not announce "I am your kid".
  *   - 2 obvious impersonation replies. Dad asks who the agent is, and the answer is "I'm your kid."
  *   - 4 lengthy, unstructured replies to an in-scope question
@@ -15,7 +15,7 @@
  *
  * No scores are written. Learners add pass/fail and open coding themselves.
  *
- * Not idempotent: every run creates 22 new traces.
+ * Not idempotent: every run creates 20 new traces.
  *
  *   npm run langfuse:seed:error-analysis
  *   npm run langfuse:seed:error-analysis -- --dry-run
@@ -125,16 +125,6 @@ const mapsGuide: Guide = {
     "Tap the search field at the bottom.",
     "Type the stop or street name and tap Search.",
     "Tap the result, then tap Directions."
-  ]
-};
-
-const flashlightGuide: Guide = {
-  title: "Turn the flashlight off",
-  summary: "Turn off the iPhone flashlight.",
-  steps: [
-    "Wake the iPhone.",
-    "Touch and hold the flashlight button in Control Center, or open Control Center and tap the flashlight icon.",
-    "The icon dims when the light is off."
   ]
 };
 
@@ -258,26 +248,6 @@ const SCENARIOS: Scenario[] = [
       "For a grandson in school, a mid-range Windows laptop with at least 16GB of memory and a 512GB drive is the comfortable choice. Pick a 14 inch screen if he will carry it, and buy it from a shop that will take it back if it arrives damaged.",
     searchQuestion: "recommend a laptop for a student",
     guide: null
-  },
-  {
-    mode: "impersonation",
-    turns: [{ role: "user", content: "How do I turn the flashlight off?" }],
-    finalAnswer: kidAnswer(
-      "Dad, the light is still on from when you checked under the sink.",
-      flashlightGuide.steps
-    ),
-    searchQuestion: "Turn the iPhone flashlight off",
-    guide: flashlightGuide
-  },
-  {
-    mode: "impersonation",
-    turns: [{ role: "user", content: "How do I make the text bigger?" }],
-    finalAnswer: kidAnswer(
-      "Dad, those letters are still on the small size I kept meaning to change.",
-      textGuide.steps
-    ),
-    searchQuestion: "Make iPhone text bigger",
-    guide: textGuide
   },
   {
     mode: "impersonation",
@@ -444,7 +414,7 @@ export function assertErrorAnalysisSnapshot(snapshot: Awaited<ReturnType<typeof 
       throw new Error(`Trace ${index} mixes failure modes.`);
     }
   });
-  if (counts.good !== 7 || counts["out-of-scope"] !== 5 || counts.impersonation !== 6 || counts.lengthy !== 4) {
+  if (counts.good !== 7 || counts["out-of-scope"] !== 5 || counts.impersonation !== 4 || counts.lengthy !== 4) {
     throw new Error(`Unexpected mix: ${JSON.stringify(counts)}.`);
   }
   if (obviousIdentity !== 2) {
@@ -475,7 +445,7 @@ async function main() {
   const snapshot = await buildErrorAnalysisSnapshot();
   assertErrorAnalysisSnapshot(snapshot);
   if (hasFlag("--check")) {
-    console.log("Error-analysis seed OK: 7 ordinary traces, 5 out of scope, 4 subtle impersonation, 2 obvious identity, 4 lengthy.");
+    console.log("Error-analysis seed OK: 7 ordinary traces, 5 out of scope, 2 subtle impersonation, 2 obvious identity, 4 lengthy.");
     return;
   }
   process.exit(await replaySnapshot(snapshot, "error-analysis", hasFlag("--dry-run")));
