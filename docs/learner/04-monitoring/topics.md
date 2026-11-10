@@ -7,9 +7,7 @@ description: "Set up Topics so production traces are grouped by intent, sentimen
 
 Part of [04 Monitoring](../04-monitoring.md).
 
-If you have not seeded production data yet, go back to [Seed production traffic](../04-monitoring.md#seed-production-traffic) and do that first.
-
-Topics labels every trace by intent, sentiment, outcome, and issues, then groups the ones that belong together. This section is the setup.
+Topics labels every trace by intent, sentiment, outcome, and issues, then groups the ones that belong together. This section seeds its own traces, then sets that up.
 
 ## Starting point
 
@@ -17,7 +15,17 @@ Topics labels every trace by intent, sentiment, outcome, and issues, then groups
 git checkout checkpoint/04-monitoring
 ```
 
-Open [Topics](https://cloud.langfuse.com/project/~/topics).
+## Seed this section
+
+> **TODO:** Replace this with a topics-only batch. Until then, this section loads the traffic snapshot.
+
+```bash
+npm run langfuse:seed:otel:no-scores
+```
+
+> ⚠️ The seed is **not idempotent**. OpenTelemetry mints fresh trace IDs on every run, so re-running doubles the data. Run it once. If you need a clean slate, delete the prior seed traces in Langfuse before seeding again.
+
+Open [Tracing](https://cloud.langfuse.com/project/~/traces) and filter to the `production` environment. Then open [Topics](https://cloud.langfuse.com/project/~/topics).
 
 The model list comes from the project's LLM connections. If the dropdowns in the next step are empty, add an OpenAI connection first: Project Settings → LLM Connections → Add LLM Connection. The [capturing signals](./capturing-signals.md) section uses that same connection.
 
@@ -44,7 +52,7 @@ The model list comes from the project's LLM connections. If the dropdowns in the
 
 4. On **Review**, check that **Look for** is Intent, Sentiment, Outcome, and Issues, then click **Start analyzing**.
 
-   The review tells you how many traces from the last 7 days it can use. Topics need about 100 traces before the groups settle, so a smaller batch can take longer to form. New traces show up about 5 minutes after their last activity. If the review says there are no past traces, the seed is not in that window yet. Go back to [Seed production traffic](../04-monitoring.md#seed-production-traffic) before you start.
+   The review tells you how many traces from the last 7 days it can use. Topics need about 100 traces before the groups settle, so a smaller batch can take longer to form. New traces show up about 5 minutes after their last activity. If the review says there are no past traces, the seed in this section has not landed in that window yet.
 
    ![Review what Topics will look for, then start analyzing.](../../images/topics/setup-review.png)
 

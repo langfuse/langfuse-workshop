@@ -15,20 +15,21 @@ Learner guide: [04 Monitoring](../learner/04-monitoring.md)
 
 The chapter opens on the overview and goes straight into the four ways to work with production traces. There is no checkout block on that page. Dashboards are a link out, not a build exercise. Error analysis (section 4.1), topics, and capturing signals each have their own page.
 
-Seed once, from the overview, before any of the three sections. `npm run langfuse:seed:otel:no-scores` loads realistic `production` traffic with no pre-baked scores. It is not idempotent. Every rerun creates a duplicate set of traces.
+Each section seeds its own traces. Do not seed once on the overview for all three.
 
-Demo order after the seed:
+Demo order:
 
-1. Error analysis, while the traces are still unscored and the room has to read them.
-2. Topics, for the aggregate view of intents and issues on that same batch.
+1. Error analysis, on its own 20 traces, while the room still has to read them.
+2. Topics, on the traffic snapshot that section seeds.
 3. Capturing signals, so the two evaluators are the last thing they turn on.
 
 ### Error analysis
 
-- Section 4.1 is the annotation-queue pass: open coding and pass/fail on 10 to 15 `production` traces, then cluster, name the groups, label frequencies, and decide whether to fix each category or turn it into an evaluator.
-- Create the score configs before the queue. A queue does not pick up score configs added later. The category label is a new categorical config after the clusters have names.
-- The sample problem is still open. The seeded batch is mostly successful turns, so a random 10 to 15 can contain no failures. Do not pretend there is a selection method until there is one. Until then, steer the room toward the seeded edge cases (all caps, disagreement, out of scope) when the random slice is too clean.
-- Do not hand them the cluster names before they have written the open-coding notes. After the notes exist, have them ask Halo to cluster the failure modes, then check those groups against the notes before they name them.
+- Section 4.1 seeds 20 traces of its own. The contents of that batch are not chosen yet, and there is no seed command. Do not substitute `npm run langfuse:seed:otel:no-scores` and call those the 20.
+- The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, which are the ones just seeded. A queue does not pick up score configs added later.
+- Do not hand them the cluster names before they have written the open-coding notes. After the set, they ask Halo, from the queue page, to cluster the annotations into failure modes.
+- Halo then creates those categories as categorical scores. The rough category list is still a TODO. They go through the queue a second time and assign the categories.
+- Halo builds the frequency dashboard. How that dashboard should look, and the fix-or-evaluator result for each category, are still TODOs. Do not invent either in the room.
 
 ### Topics and issues
 
@@ -46,24 +47,23 @@ Demo order after the seed:
 - Have learners use the right-side sample panel, filtered to `production`. In **Map variables to data**, bind variables with **Use** on the observation tree: `conversation_history` on **Input → messages**, `last_user_message` on **Input → messages → last**. Do not have them type a JSONPath. Test before saving.
 - `{{system_prompt}}` belongs to **Detect Out-of-Scope Request**. This section maps `conversation_history` on **Detect User Disagreement**.
 - After **Create evaluator**, review filters, estimated weekly volume and cost, and sampling rate, then click **Execute**.
-- Execute scores observations that arrive afterwards. The seeded batch is the mapping sample, not an automatic backfill. The two chat turns in Verify are what should light up. Historical scoring is batch evaluation, and re-running the seed is the wrong way to get scores.
+- Execute scores observations that arrive afterwards. Traces already in the project are the mapping sample, not an automatic backfill. The two chat turns in Verify are what should light up. Historical scoring is batch evaluation, and re-running a seed is the wrong way to get scores.
 - The ALL-CAPS template is there to show a deterministic signal that needs no model call.
 - The bonus is optional. In the evaluator library, **Detect conversation signals** is a decision-model template: one call scores several conversation signals at once. Have them test one or two examples and save. Do not replace the disagreement judge or the all-caps evaluator with it.
 
 ## Demo rhythm
 
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
-2. Run `npm run langfuse:seed:otel:no-scores` once. Open **Tracing**, filter to `production`, and show the batch.
-3. Error analysis: create the open-coding and pass/fail configs, queue 10 to 15 production traces, mark pass or fail, write the failures, ask Halo to cluster the failure modes, then name them in the room.
-4. Topics: open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab.
-5. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
-6. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
-7. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them.
-8. If time remains, open the bonus: evaluator library → **Detect conversation signals**, test on one or two examples, save.
+2. Error analysis: seed its 20 traces once that batch exists, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to cluster them, ask Halo to create the category scores, assign them on a second pass, then ask Halo for the frequency dashboard.
+3. Topics: run that section's seed once, open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab.
+4. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
+5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
+6. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them.
+7. If time remains, open the bonus: evaluator library → **Detect conversation signals**, test on one or two examples, save.
 
 ## Watch for
 
-- Re-running the seed. It mints new trace IDs and duplicates the batch.
+- Re-running a section's seed, or running the topics snapshot again to fill error analysis or capturing signals. Each run mints new trace IDs.
 - Treating dashboards as a configuration step. The overview only points at them.
 - Skipping the reading in error analysis and jumping straight to evaluator templates.
 - Starting Topics with empty model dropdowns. Those lists are the project's LLM connections.

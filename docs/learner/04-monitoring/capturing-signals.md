@@ -29,7 +29,9 @@ Complementary materials:
 git checkout checkpoint/04-monitoring
 ```
 
-You have a traced app. The `production` traces from the [monitoring overview](../04-monitoring.md) are the sample you will map these evaluators against. If that environment is empty, run the seed command there once. Do not run it again if the traces are already there.
+You have a traced app. This section seeds its own sample for mapping the evaluators.
+
+> **TODO:** Choose the traces this section seeds. Until then, map the evaluators against `production` traces already in the project. Do not re-run another section's seed to fill this one. The two turns in Verify are new traces you send after both evaluators are executing.
 
 You don't need to change any code. The agent observation has the full conversation and final answer, and each OpenAI generation has the system prompt plus the same message array.
 
@@ -126,7 +128,7 @@ User disagreement is a high-signal event. When a user pushes back on an answer t
 
 The all-caps signal is a rougher clue that the conversation might be going sideways. Paired with the disagreement judge, it is a good "review these first" monitor.
 
-The seeded `production` batch is the volume these monitors are for. Open a few of those traces and compare them with the two turns you just scored. As further production turns arrive, the same evaluators score them.
+Open a few traces already in the project and compare them with the two turns you just scored. As further production turns arrive, the same evaluators score them.
 
 ## Bonus — Conversation signals with decision models
 

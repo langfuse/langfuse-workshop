@@ -43,18 +43,8 @@ For Specs, we start with two conversation signals. We identify whether Dad disag
 
 Check out the Academy page on [capturing signals](https://langfuse.com/academy/monitoring/capturing-signals) for the broader map of explicit ratings, behavioral signals, conversation signals, and outcomes.
 
-## Seed production traffic
+Each section seeds the traces it uses. Do not load one batch here for all three.
 
-Monitoring becomes valuable with volume. Let's seed some sample interactions with the Dad IT Support Agent so we have data to work with.
-
-```bash
-npm run langfuse:seed:otel:no-scores
-```
-
-> ⚠️ The seed is **not idempotent**. OpenTelemetry mints fresh trace IDs on every run, so re-running doubles the data. Run it once. If you need a clean slate, delete the prior seed traces in Langfuse before seeding again.
-
-Open [Tracing](https://cloud.langfuse.com/project/~/traces) and filter to the `production` environment. There is now a full set of traces in the project. The next sections work with this batch:
-
-1. [4.1 Error analysis](./04-monitoring/error-analysis.md) — read a sample and name the failures.
-2. [Topics and issues](./04-monitoring/topics.md) — group the batch by intent, sentiment, outcome, and issues.
+1. [4.1 Error analysis](./04-monitoring/error-analysis.md) — seed 20 traces, annotate them, and cluster the failures.
+2. [Topics and issues](./04-monitoring/topics.md) — group traces by intent, sentiment, outcome, and issues.
 3. [Capturing signals](./04-monitoring/capturing-signals.md) — score disagreement and all-caps frustration as they arrive.
