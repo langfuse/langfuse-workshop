@@ -4,7 +4,8 @@
  * Seven traces are ordinary one-turn iPhone answers. The other thirteen each
  * contain exactly one failure mode:
  *   - 5 out-of-scope requests that the agent answers (recipes, investment advice, laptop support)
- *   - 4 impersonation replies, where the agent speaks as Dad's kid
+ *   - 4 impersonation replies, where the agent speaks as someone who knows Dad.
+ *     The steps stay right. The voice does not announce "I am your kid".
  *   - 4 lengthy, unstructured replies to an in-scope question
  *
  * Failure traces are a mix of one-turn questions and longer sessions of two or
@@ -136,11 +137,8 @@ const flashlightGuide: Guide = {
   ]
 };
 
-function kidAnswer(steps: string[]): string {
-  return stepsAnswer(
-    "Dad, it's me, your kid. I'm not a support agent, so you can ignore that part. Here's what to tap.",
-    steps
-  );
+function kidAnswer(note: string, steps: string[]): string {
+  return stepsAnswer(note, steps);
 }
 
 const lengthyWifi = `So the network name not being in the list is one of those things that sounds small and then it sort of spreads out into a whole little project, because the phone is still doing a lot of quiet work in the background even when the screen looks empty. What I would do is stay on that Wi-Fi page for a moment and just let it sit there, because sometimes the list is still filling in and the name you want is going to pop in a second or two later if you do not jump away. If it still is not there, glance at the switch at the top and make sure Wi-Fi itself is actually on, then turn it off, count slowly to five, and turn it back on so the phone goes looking again. While that is happening, it helps to walk a few steps closer to the router, since a weak signal can hide the name even though other phones in the house can see it fine. Also look at the router lights, just to be sure it is awake, and if someone recently changed the network name or the password then the old name will not come back no matter how many times you refresh. When the name does show up, tap it once, type the password carefully because a single swapped character makes it look like the network is refusing you, and then tap Join. You should get a little checkmark next to the name and the Wi-Fi symbol at the top of the screen. If the name never appears after that, the next thing worth trying is forgetting any old version of the same network that might still be remembered, then repeating the same wander-closer-and-wait routine, and tell me what the list shows after that so we can keep going from whatever is actually on the screen.`;
@@ -263,14 +261,20 @@ const SCENARIOS: Scenario[] = [
   {
     mode: "impersonation",
     turns: [{ role: "user", content: "How do I turn the flashlight off?" }],
-    finalAnswer: kidAnswer(flashlightGuide.steps),
+    finalAnswer: kidAnswer(
+      "Dad, the light is still on from when you checked under the sink.",
+      flashlightGuide.steps
+    ),
     searchQuestion: "Turn the iPhone flashlight off",
     guide: flashlightGuide
   },
   {
     mode: "impersonation",
     turns: [{ role: "user", content: "How do I make the text bigger?" }],
-    finalAnswer: kidAnswer(textGuide.steps),
+    finalAnswer: kidAnswer(
+      "Dad, those letters are still on the small size I kept meaning to change.",
+      textGuide.steps
+    ),
     searchQuestion: "Make iPhone text bigger",
     guide: textGuide
   },
@@ -284,7 +288,7 @@ const SCENARIOS: Scenario[] = [
       },
       { role: "user", content: "Where is the moon icon?" }
     ],
-    finalAnswer: kidAnswer([
+    finalAnswer: kidAnswer("Dad, the moon is in that panel I showed you, not in Settings.", [
       "Open Control Center by sliding down from the top-right corner of the screen.",
       "Look for the moon icon.",
       "Tap the moon so it is highlighted. That is Do Not Disturb."
@@ -314,7 +318,10 @@ const SCENARIOS: Scenario[] = [
       },
       { role: "user", content: "How do I save that photo into Photos?" }
     ],
-    finalAnswer: kidAnswer(savePhotoGuide.steps),
+    finalAnswer: kidAnswer("Dad, don't lose that picture. The garden ones went in the same way.", [
+      ...savePhotoGuide.steps.slice(0, 3),
+      "Open Photos. It should be in Recents, next to the ones from the garden."
+    ]),
     searchQuestion: "Save a WhatsApp photo into Photos",
     guide: savePhotoGuide
   },
@@ -394,7 +401,7 @@ export function assertErrorAnalysisSnapshot(snapshot: Awaited<ReturnType<typeof 
     const answer = scenario.finalAnswer;
     if (
       scenario.mode === "good" &&
-      (userTurnCount(scenario.turns) !== 1 || answer.includes("your kid") || !/\n1\. /.test(answer) || answer.length > 800)
+      (userTurnCount(scenario.turns) !== 1 || isFamilyVoice(answer) || !/\n1\. /.test(answer) || answer.length > 800)
     ) {
       throw new Error(`Good trace ${index} is not an ordinary one-turn answer.`);
     }
@@ -407,8 +414,12 @@ export function assertErrorAnalysisSnapshot(snapshot: Awaited<ReturnType<typeof 
   }
 }
 
+function isFamilyVoice(answer: string) {
+  return answer.startsWith("Dad,") && !/your kid|support agent/i.test(answer);
+}
+
 function answerIncludesOtherMode(mode: FailureMode, answer: string) {
-  const kid = answer.includes("your kid");
+  const kid = isFamilyVoice(answer);
   const numbered = /\n1\. /.test(answer);
   const long = answer.length > 800;
   if (mode === "out-of-scope") return kid || numbered;

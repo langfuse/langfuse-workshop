@@ -25,7 +25,7 @@ Demo order:
 
 ### Error analysis
 
-- Section 4.1 seeds its own 20 traces with `npm run langfuse:seed:error-analysis`. Seven are ordinary one-turn answers. The other 13 each have exactly one failure: 5 out-of-scope replies (a recipe, investment advice, or laptop support), 4 replies where the agent speaks as Dad's kid, and 4 long unstructured replies. Longer sessions are two or three turns, and the failure is only on the latest answer. Do not substitute the topics snapshot.
+- Section 4.1 seeds its own 20 traces with `npm run langfuse:seed:error-analysis`. Seven are ordinary one-turn answers. The other 13 each have exactly one failure: 5 out-of-scope replies (a recipe, investment advice, or laptop support), 4 replies in a family voice, and 4 long unstructured replies. The family voice still gives the right steps. It never says "I am your kid." The tell is personal knowledge, such as having used this phone before. Longer sessions are two or three turns, and the failure is only on the latest answer. Do not substitute the topics snapshot.
 - The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, tagged `error-analysis-seed`. A queue does not pick up score configs added later.
 - Do not hand them the cluster names before they have written the open-coding notes. After the set, they ask Halo to find clusters. The page shows what those clusters should roughly look like: out of scope, impersonation, and lengthy responses. That list is a check, not the Halo prompt.
 - Ask Halo to create categorical scores for the clusters it found. If Halo words them differently, map those names to the three decisions before the second pass. They then assign each failing trace.
