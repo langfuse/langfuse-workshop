@@ -29,9 +29,10 @@ Failure modes:
 ### **Topics:**
 
 - We seed 200 sample traces with all kinds of lengths and requests
-- Goal is to find one improvement potential in scope and one failure mode
+- First pass is exploration: intent, sentiment, outcome, and issues show the classes of requests and how they landed, including where the product is working
+- Goal is then one scope extension and one failure mode
 
 Potentials:
 
-- there should be a significant set of traces where dad tries to get advice on his laptop as well, in two loose clusters: the printer and its paper, and the laptop Wi-Fi. Wording varies inside each cluster. Since we do not know which laptop he has, the answer says it depends on the laptop and then gives a Windows way and an Apple way. could be solved by adding the laptop as available context for the agent
-- other than that what else?
+- Intent shows laptop clusters (printer and paper, laptop Wi-Fi). The answer always hedges Windows versus Apple. Add the laptop next to the iPhone in the support context so Specs can answer for that machine. This is a chance to widen the product, not a refusal. The same hedge shows up under Issues as generic guidance that never asks which device it is.
+- Issues also shows repeated troubleshooting: Dad says the steps failed and Specs sends the same list again. Fix in the system prompt: ask what he sees and try a different path.
