@@ -20,7 +20,7 @@ Each section seeds its own traces. Do not seed once on the overview for all thre
 Demo order:
 
 1. Error analysis, on its own 20 traces, while the room still has to read them.
-2. Topics, on the traffic snapshot that section seeds.
+2. Topics, on the 200 traces that section seeds.
 3. Capturing signals, so the two evaluators are the last thing they turn on.
 
 ### Error analysis
@@ -35,6 +35,8 @@ Demo order:
 ### Topics and issues
 
 - This is a setup walkthrough, not a concept lecture. Open Topics, click **Set up topics**, keep Intent, Sentiment, Outcome, and Issues checked, keep the recommended models, leave the sample rate at 100%, and click **Start analyzing**.
+- The section seeds 200 traces over the last five days with `npm run langfuse:seed:topics`: 130 ordinary iPhone requests at one to three turns, 40 laptop requests where Specs can only answer "That depends on which laptop you have", and 30 two- or three-turn sessions where Dad says the steps failed and Specs repeats the same list. Each trace carries at most one of those problems.
+- The two findings to land: the laptop group under Intent is an in-scope gap, fixed by adding the laptop to `DEFAULT_SUPPORT_CONTEXT`; the stuck follow-ups under Issues are a failure mode, fixed with a system-prompt rule to ask what Dad sees and try a different path.
 - The model dropdowns are the project's LLM connections. If you demo Topics before capturing signals, add the OpenAI connection first or the pickers are empty.
 - The review step says Topics need about 100 traces and that new traces show up about 5 minutes after their last activity. Seed before the demo. If the review says there are no traces in the last 7 days, do not start analyzing on an empty window.
 - After it fills in, click one tile on each tab (Intent, Sentiment, Outcome, Issues) and use **Open in Tracing**. Auto-analyze stays on.
@@ -56,7 +58,7 @@ Demo order:
 
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
 2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to find clusters, compare them with the rough list on the page, ask Halo to create categorical scores for those clusters, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions: friendly out-of-scope decline plus a production monitor, a system-prompt fix for impersonation, and a system-prompt fix for lengthy replies with an optional production monitor.
-3. Topics: run that section's seed once, open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab.
+3. Topics: run that section's seed once, open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab. Finish on the laptop intent and the stuck follow-up issue.
 4. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
 6. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them.
@@ -64,7 +66,7 @@ Demo order:
 
 ## Watch for
 
-- Re-running a section's seed, or running the topics snapshot again to fill error analysis or capturing signals. Each run mints new trace IDs.
+- Re-running a section's seed, or running the topics seed again to fill error analysis or capturing signals. Each run mints new trace IDs.
 - Treating dashboards as a configuration step. The overview only points at them.
 - Skipping the reading in error analysis and jumping straight to evaluator templates.
 - Starting Topics with empty model dropdowns. Those lists are the project's LLM connections.
