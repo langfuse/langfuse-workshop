@@ -19,35 +19,25 @@
  *   npm run langfuse:seed:error-analysis -- --dry-run
  *   npx tsx scripts/seed-error-analysis-traces.ts --check
  */
-import { spawnSync } from "node:child_process";
-import { mkdtemp, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { hasFlag } from "./langfuse-trace-seed-lib";
 import {
-  hasFlag,
-  readTraceSeedSnapshot,
-  resolveFromScript,
-  type TraceSeedSnapshot,
-  type TraceSeedTraceBundle
-} from "./langfuse-trace-seed-lib";
+  assertBundlesMatch,
+  buildSyntheticSnapshot,
+  replaySnapshot,
+  stepsAnswer,
+  userTurnCount,
+  type ChatTurn,
+  type Guide,
+  type SyntheticTurn
+} from "./synthetic-trace-seed";
 
-const SINGLE_TURN_TEMPLATE_ID = "b63ac42cd5e2207efd6b3b54e7d8aa8b";
-const FOLLOW_UP_TEMPLATE_ID = "ec538daf8f726dc969e901a85bda329b";
 const SEED_TAG = "error-analysis-seed";
-const TEMPLATE_FILE = resolveFromScript(import.meta.url, "../data/seed-traffic-followups-traces.json");
 
-type ChatTurn = { role: "user" | "assistant"; content: string };
 type FailureMode = "good" | "out-of-scope" | "impersonation" | "lengthy";
-type Guide = { title: string; summary: string; steps: string[] };
 
-type Scenario = {
-  mode: FailureMode;
-  turns: ChatTurn[];
-  finalAnswer: string;
-  searchQuestion: string;
-  guide: Guide | null;
-};
+type Scenario = SyntheticTurn & { mode: FailureMode };
 
 const bluetoothGuide: Guide = {
   title: "Turn Bluetooth on",
@@ -145,11 +135,6 @@ const flashlightGuide: Guide = {
     "The icon dims when the light is off."
   ]
 };
-
-function stepsAnswer(intro: string, steps: string[]): string {
-  const lines = steps.map((step, index) => `${index + 1}. ${step}`);
-  return `${intro}\n\n${lines.join("\n")}`;
-}
 
 function kidAnswer(steps: string[]): string {
   return stepsAnswer(
@@ -390,238 +375,26 @@ const SCENARIOS: Scenario[] = [
   }
 ];
 
-type MessageRecord = Record<string, unknown> & {
-  role?: string;
-  content?: unknown;
-  tool_calls?: Array<{ function?: { name?: string; arguments?: string } }>;
+const SEED_OPTIONS = {
+  tag: SEED_TAG,
+  seedSource: "error-analysis",
+  sessionPrefix: "ea",
+  spacingMs: 45_000
 };
 
-export async function buildErrorAnalysisSnapshot(): Promise<TraceSeedSnapshot> {
-  const templateSnapshot = await readTraceSeedSnapshot(TEMPLATE_FILE);
-  const single = requireTemplate(templateSnapshot, SINGLE_TURN_TEMPLATE_ID);
-  const followUp = requireTemplate(templateSnapshot, FOLLOW_UP_TEMPLATE_ID);
-  const traces = SCENARIOS.map((scenario, index) =>
-    buildBundle(scenario, index, scenario.turns.filter((turn) => turn.role === "user").length === 1 ? single : followUp)
-  );
-  const exportedObservations = traces.reduce((sum, bundle) => sum + bundle.observations.length, 0);
-
-  return {
-    schemaVersion: 1,
-    exportedAt: new Date().toISOString(),
-    filters: {
-      traceName: "dad-it-support-chat-turn",
-      includeSynthetic: true,
-      exclusionRules: ["built by scripts/seed-error-analysis-traces.ts"]
-    },
-    summary: {
-      requestedLimit: traces.length,
-      exportedTraces: traces.length,
-      exportedObservations,
-      exportedScores: 0,
-      excludedSyntheticTraces: 0,
-      excludedByReason: {}
-    },
-    traces
-  };
+export function buildErrorAnalysisSnapshot() {
+  return buildSyntheticSnapshot(SCENARIOS, SEED_OPTIONS);
 }
 
-function requireTemplate(snapshot: TraceSeedSnapshot, id: string) {
-  const bundle = snapshot.traces.find((entry) => entry.trace.id === id);
-  if (!bundle) {
-    throw new Error(`Template trace ${id} was not found in ${TEMPLATE_FILE}.`);
-  }
-  return bundle;
-}
-
-function buildBundle(scenario: Scenario, index: number, template: TraceSeedTraceBundle): TraceSeedTraceBundle {
-  const bundle = JSON.parse(JSON.stringify(template)) as TraceSeedTraceBundle;
-  const targetTimestamp = Date.parse("2026-06-19T12:00:00.000Z") + index * 45_000;
-  shiftTimestamps(bundle, targetTimestamp - Date.parse(bundle.trace.timestamp));
-
-  const messages = conversationMessages(scenario.turns, targetTimestamp);
-  bundle.trace.input = {
-    ...(asRecord(bundle.trace.input) ?? {}),
-    messages,
-    sessionId: `seed-session-ea-${String(index + 1).padStart(2, "0")}`,
-    userId: "seed-user-dad"
-  };
-  bundle.trace.output = {
-    ...(asRecord(bundle.trace.output) ?? {}),
-    answer: scenario.finalAnswer
-  };
-  bundle.trace.sessionId = `seed-session-ea-${String(index + 1).padStart(2, "0")}`;
-  bundle.trace.userId = "seed-user-dad";
-  bundle.trace.tags = [...new Set([...(bundle.trace.tags ?? []), "dad-it-support", "langfuse-workshop", SEED_TAG])];
-  bundle.trace.metadata = {
-    ...(asRecord(bundle.trace.metadata) ?? {}),
-    seedSource: "error-analysis"
-  };
-  bundle.scores = [];
-
-  const searchOutput = scenario.guide
-    ? {
-        ok: true,
-        results: [
-          {
-            id: "error-analysis-guide",
-            title: scenario.guide.title,
-            summary: scenario.guide.summary,
-            steps: scenario.guide.steps,
-            caution: null
-          }
-        ]
-      }
-    : { ok: true, results: [] };
-
-  for (const observation of bundle.observations) {
-    if (observation.type === "AGENT") {
-      observation.input = {
-        ...(asRecord(observation.input) ?? {}),
-        messages,
-        sessionId: bundle.trace.sessionId,
-        userId: bundle.trace.userId
-      };
-      observation.output = {
-        ...(asRecord(observation.output) ?? {}),
-        answer: scenario.finalAnswer
-      };
-    }
-
-    if (observation.type === "GENERATION") {
-      const input = asRecord(observation.input);
-      if (input && Array.isArray(input.messages)) {
-        input.messages = replaceConversationPrefix(input.messages as MessageRecord[], scenario.turns);
-        syncSearchToolMessages(input.messages as MessageRecord[], scenario.searchQuestion, searchOutput);
-      }
-      const output = asRecord(observation.output);
-      if (output && typeof output.content === "string" && !Array.isArray(output.tool_calls)) {
-        output.content = scenario.finalAnswer;
-      }
-    }
-
-    if (observation.name === "search_help_library") {
-      observation.input = { question: scenario.searchQuestion };
-      observation.output = searchOutput;
-    }
-  }
-
-  return bundle;
-}
-
-function conversationMessages(turns: ChatTurn[], endMs: number) {
-  return turns.map((turn, index) => ({
-    role: turn.role,
-    content: turn.content,
-    id: `ea-${index}`,
-    timestamp: new Date(endMs - (turns.length - index) * 20_000).toISOString()
-  }));
-}
-
-function replaceConversationPrefix(messages: MessageRecord[], turns: ChatTurn[]) {
-  const hasSystem = messages[0]?.role === "system";
-  const start = hasSystem ? 1 : 0;
-  let end = start;
-  while (end < messages.length && !isToolLoopMessage(messages[end])) end += 1;
-  const conversation = turns.map((turn) => ({ role: turn.role, content: turn.content }));
-  return [...(hasSystem ? [messages[0]] : []), ...conversation, ...messages.slice(end)];
-}
-
-function isToolLoopMessage(message: MessageRecord) {
-  return message.role === "tool" || (message.role === "assistant" && Array.isArray(message.tool_calls));
-}
-
-function syncSearchToolMessages(messages: MessageRecord[], question: string, output: unknown) {
-  for (let index = 0; index < messages.length; index += 1) {
-    const calls = messages[index].tool_calls;
-    if (!Array.isArray(calls)) continue;
-    const searches = calls.some((call) => call.function?.name === "search_help_library");
-    if (!searches) continue;
-    for (const call of calls) {
-      if (call.function?.name === "search_help_library") {
-        call.function.arguments = JSON.stringify({ question });
-      }
-    }
-    const next = messages[index + 1];
-    if (next?.role === "tool") {
-      next.content = JSON.stringify(output);
-    }
-  }
-}
-
-function shiftTimestamps(value: unknown, deltaMs: number) {
-  if (Array.isArray(value)) {
-    value.forEach((entry) => shiftTimestamps(entry, deltaMs));
-    return;
-  }
-  if (!value || typeof value !== "object") return;
-  for (const [key, entry] of Object.entries(value)) {
-    if (typeof entry === "string" && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z$/.test(entry)) {
-      (value as Record<string, unknown>)[key] = new Date(Date.parse(entry) + deltaMs).toISOString();
-    } else {
-      shiftTimestamps(entry, deltaMs);
-    }
-  }
-}
-
-function asRecord(value: unknown): Record<string, unknown> | null {
-  return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : null;
-}
-
-export function assertErrorAnalysisSnapshot(snapshot: TraceSeedSnapshot) {
-  if (snapshot.traces.length !== 20) {
-    throw new Error(`Expected 20 traces, got ${snapshot.traces.length}.`);
-  }
+export function assertErrorAnalysisSnapshot(snapshot: Awaited<ReturnType<typeof buildErrorAnalysisSnapshot>>) {
+  assertBundlesMatch(snapshot, SCENARIOS, SEED_TAG);
   const counts: Record<FailureMode, number> = { good: 0, "out-of-scope": 0, impersonation: 0, lengthy: 0 };
-  snapshot.traces.forEach((bundle, index) => {
-    const scenario = SCENARIOS[index];
+  SCENARIOS.forEach((scenario, index) => {
     counts[scenario.mode] += 1;
-    if (bundle.scores.length !== 0) {
-      throw new Error(`Trace ${index} still has scores.`);
-    }
-    if (!bundle.trace.tags.includes(SEED_TAG)) {
-      throw new Error(`Trace ${index} is missing ${SEED_TAG}.`);
-    }
-    const metadata = asRecord(bundle.trace.metadata);
-    if (metadata && "failureMode" in metadata) {
-      throw new Error(`Trace ${index} labels its failure mode.`);
-    }
-    const messages = (asRecord(bundle.trace.input)?.messages ?? []) as ChatTurn[];
-    if (messages.length !== scenario.turns.length) {
-      throw new Error(`Trace ${index} has ${messages.length} messages, expected ${scenario.turns.length}.`);
-    }
-    const answer = String(asRecord(bundle.trace.output)?.answer ?? "");
-    if (answer !== scenario.finalAnswer) {
-      throw new Error(`Trace ${index} answer was not applied.`);
-    }
-    const agent = bundle.observations.find((observation) => observation.type === "AGENT");
-    const agentMessages = (asRecord(agent?.input)?.messages ?? []) as ChatTurn[];
-    if (agentMessages.length !== scenario.turns.length) {
-      throw new Error(`Trace ${index} agent input was not rewritten.`);
-    }
-    const search = bundle.observations.find((observation) => observation.name === "search_help_library");
-    if (asRecord(search?.input)?.question !== scenario.searchQuestion) {
-      throw new Error(`Trace ${index} searched for the template question.`);
-    }
-    const lastUser = [...scenario.turns].reverse().find((turn) => turn.role === "user");
-    const lastGeneration = [...bundle.observations].reverse().find((observation) => observation.type === "GENERATION");
-    if (!lastUser || !JSON.stringify(lastGeneration?.input ?? {}).includes(lastUser.content)) {
-      throw new Error(`Trace ${index} generation is missing the latest user message.`);
-    }
-    const leakedTemplateQuestion = bundle.observations.some((observation) => {
-      const input = asRecord(observation.input);
-      const serialized = JSON.stringify(input ?? {});
-      return (
-        serialized.includes("How do I set up a second email account") ||
-        serialized.includes("How do I get there from the start?")
-      );
-    });
-    if (leakedTemplateQuestion) {
-      throw new Error(`Trace ${index} still contains the follow-up template conversation.`);
-    }
-    const userTurns = messages.filter((message) => message.role === "user").length;
+    const answer = scenario.finalAnswer;
     if (
       scenario.mode === "good" &&
-      (userTurns !== 1 || answer.includes("your kid") || !/\n1\. /.test(answer) || answer.length > 800)
+      (userTurnCount(scenario.turns) !== 1 || answer.includes("your kid") || !/\n1\. /.test(answer) || answer.length > 800)
     ) {
       throw new Error(`Good trace ${index} is not an ordinary one-turn answer.`);
     }
@@ -651,18 +424,7 @@ async function main() {
     console.log("Error-analysis seed OK: 7 ordinary traces, 5 out of scope, 4 impersonation, 4 lengthy.");
     return;
   }
-
-  const directory = await mkdtemp(path.join(tmpdir(), "error-analysis-seed-"));
-  const file = path.join(directory, "traces.json");
-  await writeFile(file, JSON.stringify(snapshot));
-  const args = ["scripts/import-trace-seed-otel.ts", "--input", file, "--no-scores", "--no-edge-cases"];
-  if (hasFlag("--dry-run")) args.push("--dry-run");
-  const tsxBin = resolveFromScript(import.meta.url, "../node_modules/.bin/tsx");
-  const result = spawnSync(tsxBin, args, {
-    cwd: resolveFromScript(import.meta.url, ".."),
-    stdio: "inherit"
-  });
-  process.exit(result.status ?? 1);
+  process.exit(await replaySnapshot(snapshot, "error-analysis", hasFlag("--dry-run")));
 }
 
 const isDirectRun = Boolean(process.argv[1]) && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
