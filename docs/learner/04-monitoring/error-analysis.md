@@ -18,7 +18,7 @@ Error analysis finds failure modes by open-coding traces, then clustering those 
 3. Open the queue and choose **Process queue**.
 4. For each trace, mark pass or fail.
 5. When it fails, inspect the trace and write the failure in open coding. Describe what went wrong. Leave the notes ungrouped.
-6. After the set, read the notes and identify clusters of failures.
+6. After the set, open Halo and ask it to cluster the failure modes from the open-coding notes.
 7. Name those groups, then assign each failing trace to a group. Create a categorical score config with those names and set it on the traces.
 8. Look at how often each category appears.
 9. For each category, fix it or turn it into an evaluator.

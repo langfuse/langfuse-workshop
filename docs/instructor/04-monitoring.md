@@ -28,7 +28,7 @@ Demo order after the seed:
 - Section 4.1 is the annotation-queue pass: open coding and pass/fail on 10 to 15 `production` traces, then cluster, name the groups, label frequencies, and decide whether to fix each category or turn it into an evaluator.
 - Create the score configs before the queue. A queue does not pick up score configs added later. The category label is a new categorical config after the clusters have names.
 - The sample problem is still open. The seeded batch is mostly successful turns, so a random 10 to 15 can contain no failures. Do not pretend there is a selection method until there is one. Until then, steer the room toward the seeded edge cases (all caps, disagreement, out of scope) when the random slice is too clean.
-- Do not hand them the cluster names before they have written the open-coding notes.
+- Do not hand them the cluster names before they have written the open-coding notes. After the notes exist, have them ask Halo to cluster the failure modes, then check those groups against the notes before they name them.
 
 ### Topics and issues
 
@@ -54,7 +54,7 @@ Demo order after the seed:
 
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
 2. Run `npm run langfuse:seed:otel:no-scores` once. Open **Tracing**, filter to `production`, and show the batch.
-3. Error analysis: create the open-coding and pass/fail configs, queue 10 to 15 production traces, mark pass or fail, write the failures, then cluster and name them in the room.
+3. Error analysis: create the open-coding and pass/fail configs, queue 10 to 15 production traces, mark pass or fail, write the failures, ask Halo to cluster the failure modes, then name them in the room.
 4. Topics: open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab.
 5. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 6. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
