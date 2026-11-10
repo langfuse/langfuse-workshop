@@ -2,10 +2,11 @@
  * Seed the 200 traces for the Topics section of 04 Monitoring.
  *
  *   - 130 ordinary iPhone requests at one, two, or three turns.
- *   - 40 laptop requests, all in the same short form ("laptop printer help",
- *     "laptop wifi"). Specs only knows Dad's iPhone, so every answer is
- *     "that depends on which laptop you have". This is the in-scope improvement:
- *     add Dad's laptop to the support context.
+ *   - 40 laptop requests in two loose clusters: the printer and its paper, and
+ *     the laptop's Wi-Fi. The wording varies inside each cluster. Specs does
+ *     not know which laptop Dad has, so each answer says the steps depend on
+ *     the laptop and then offers a Windows way and an Apple way. The in-scope
+ *     improvement is to add Dad's laptop to the support context.
  *   - 30 stuck follow-ups. Dad says the steps did not work and Specs repeats the
  *     same steps. This is the failure mode. They are two- or three-turn sessions.
  *
@@ -38,7 +39,9 @@ const LAPTOP_COUNT = 40;
 const STUCK_COUNT = 30;
 
 type Kind = "ordinary" | "laptop" | "stuck";
-type Scenario = SyntheticTurn & { kind: Kind };
+type LaptopCluster = "printer" | "wifi";
+type Scenario = SyntheticTurn & { kind: Kind; laptopCluster?: LaptopCluster };
+type LaptopCase = { cluster: LaptopCluster; question: string; answer: string };
 type Task = { questions: string[]; intro: string; guide: Guide };
 
 const TASKS: Task[] = [
@@ -104,11 +107,250 @@ const TASKS: Task[] = [
       "Open Settings.", "Tap General.", "Tap Software Update.", "If an update shows, tap Update Now."])
 ];
 
-// One short shape so Topics groups these as laptop help instead of with the
-// iPhone requests about Wi-Fi, printing, and the rest.
-const LAPTOP_TOPICS = ["wifi", "printer", "update", "screen", "camera", "battery", "mouse", "sound", "screenshot", "startup"];
-const LAPTOP_ANSWER =
-  "That depends on which laptop you have. I only know about your iPhone here, so I can't tell whether it's a Windows laptop or a Mac. If you tell me which laptop you have, I can give you the exact steps.";
+// Two loose clusters. Questions stay near printer/paper or laptop Wi-Fi, without
+// sharing one sentence frame. Answers vary, and each one still splits Windows from Apple.
+const LAPTOP_CASES: LaptopCase[] = [
+  {
+    cluster: "printer",
+    question: "The printer hooked up to my laptop says it is out of paper. How do I put more in?",
+    answer:
+      "Filling the tray depends on which laptop sent the job, because the status note is in a different place. On Windows, open Settings, then Bluetooth & devices, then Printers & scanners, and read the line under this printer before you add paper. On a Mac, that note is in System Settings under Printers & Scanners. Slide a short stack in until it meets the guide."
+  },
+  {
+    cluster: "printer",
+    question: "A page is stuck halfway in the printer, and my laptop shows a paper jam.",
+    answer:
+      "The jam itself is in the printer, and where the laptop reports it depends on the laptop. On Windows the notice is under Printers & scanners. On an Apple laptop it is under System Settings, Printers & Scanners. Open the printer door, pull the sheet out in the direction it was going, and close the door."
+  },
+  {
+    cluster: "printer",
+    question: "I loaded paper and the laptop still will not print my letter.",
+    answer:
+      "Whether that letter goes through depends on the laptop that sent it. On Windows, open the print queue from the printer icon near the clock and choose Resume if the job is paused. On a Mac, open the printer from System Settings and click Resume. Then send the letter once more."
+  },
+  {
+    cluster: "printer",
+    question: "My laptop says the printer is offline.",
+    answer:
+      "What offline means depends on which laptop this is. On Windows, open Printers & scanners, select the printer, and clear \"Use printer offline\" if you see it. On an Apple laptop, remove the printer in System Settings and add it again while the printer is switched on."
+  },
+  {
+    cluster: "printer",
+    question: "How do I print a boarding pass from this laptop?",
+    answer:
+      "The print command depends on the laptop. On Windows, open the pass and press Ctrl and P, then pick the printer. On a Mac, open the pass and press Command and P. Choose the printer in that window before you send it."
+  },
+  {
+    cluster: "printer",
+    question: "Pages from the laptop come out blank, even though the printer has paper.",
+    answer:
+      "Blank pages depend on which laptop is sending them. On Windows, print a test page from Printers & scanners and see whether the test has ink. On an Apple laptop, print the test page from the printer's page in System Settings. A blank test means the ink or toner is the next thing to check."
+  },
+  {
+    cluster: "printer",
+    question: "Where do I see the list of jobs my laptop is waiting to print?",
+    answer:
+      "The waiting list depends on the laptop. Windows keeps it in Settings under Printers & scanners, then Open print queue. A Mac keeps it in System Settings under Printers & Scanners, then Open Print Queue."
+  },
+  {
+    cluster: "printer",
+    question: "The printer only put the top half of the sheet on the page. I sent it from the laptop.",
+    answer:
+      "Half a page usually means the paper size does not match, and that menu depends on the laptop. On Windows, print again and set the paper to A4 or Letter in the print window. On a Mac, set the same size under Paper Size, then print once more."
+  },
+  {
+    cluster: "printer",
+    question: "How do I stop a document the laptop already sent to the printer?",
+    answer:
+      "Cancelling depends on which laptop sent the document. On Windows, open the print queue and choose Cancel on that row. On an Apple laptop, open the queue from Printers & Scanners and click the x beside the job."
+  },
+  {
+    cluster: "printer",
+    question: "The laptop keeps asking me to load letter paper, and the tray already has paper in it.",
+    answer:
+      "That request depends on the paper size the laptop is asking for. On Windows, change Paper size in the print window to the paper that is actually in the tray. On a Mac, change Paper Size in the same kind of window, then print."
+  },
+  {
+    cluster: "printer",
+    question: "Can I print this email from the laptop onto one sheet?",
+    answer:
+      "Yes, and the path depends on the laptop. On Windows, open the email, choose Print, and limit it to the page you want. On a Mac, press Command and P and set the pages there. Either laptop can keep it to a single sheet."
+  },
+  {
+    cluster: "printer",
+    question: "The paper came out crooked when I printed from the laptop.",
+    answer:
+      "Crooked paper is the tray, and confirming the job depends on the laptop. On Windows, the printer status in Settings says whether it finished. On an Apple laptop, the queue in System Settings says the same. Take the paper out, square the stack, and put it back against the guide."
+  },
+  {
+    cluster: "printer",
+    question: "How do I print on both sides of the paper from my laptop?",
+    answer:
+      "Two-sided printing depends on the laptop and on the printer. On Windows, look in the print window for Print on both sides. On a Mac, open the details in the print window and look for Two-Sided. If the choice is missing, this printer cannot flip the paper."
+  },
+  {
+    cluster: "printer",
+    question: "The laptop says no printer is installed, but the printer is switched on.",
+    answer:
+      "Adding it depends on which laptop this is. On Windows, go to Settings, Bluetooth & devices, Printers & scanners, and choose Add device. On an Apple laptop, go to System Settings, Printers & Scanners, and choose Add Printer. Select the name once it appears."
+  },
+  {
+    cluster: "printer",
+    question: "I want the laptop to use the colour printer, not the black-and-white one.",
+    answer:
+      "Picking the printer depends on the laptop. On Windows, open Print and choose the colour printer in the destination list. On a Mac, choose it in the Printer menu of the print window. The name is usually on a sticker on the printer."
+  },
+  {
+    cluster: "printer",
+    question: "A sheet went through and then the laptop said the printer was out of paper again.",
+    answer:
+      "A second out-of-paper warning depends a little on the laptop and mostly on two sheets sticking together. On Windows, look in the queue for another waiting job. On an Apple laptop, check the queue in Printers & Scanners. Fan the paper, then reload a smaller stack."
+  },
+  {
+    cluster: "printer",
+    question: "How do I print a photo from the laptop without cutting the edges off?",
+    answer:
+      "The fit setting depends on the laptop. On Windows, choose Fit to page in the print window, or the photo size you actually want. On a Mac, set Scale near 100 and pick a paper size that matches the photo. Check the preview before you print."
+  },
+  {
+    cluster: "printer",
+    question: "The printer made a grinding noise and the paper never came out. I sent the page from the laptop.",
+    answer:
+      "Stop sending more until the sheet is free, and cancelling the retry depends on the laptop. On Windows, cancel the job in the print queue. On an Apple laptop, cancel it in the queue under Printers & Scanners. Then pull the paper out along its path, not backwards."
+  },
+  {
+    cluster: "printer",
+    question: "The printer put my letter very small in the corner of a large sheet. I sent it from the laptop.",
+    answer:
+      "The scale depends on the laptop's print window. On Windows, set the scale to 100 and the paper size to the sheet you loaded. On a Mac, set Scale to 100 and Paper Size to that same sheet. The preview should fill the page before you try again."
+  },
+  {
+    cluster: "printer",
+    question: "There is a flashing light on the printer and the laptop will not send the page.",
+    answer:
+      "The light usually means paper or ink, and the laptop's explanation depends on the system. On Windows, read the status under the printer in Printers & scanners. On an Apple laptop, read the line under the printer in Printers & Scanners. Paper means open the tray. Ink or toner means that cartridge needs replacing."
+  },
+  {
+    cluster: "wifi",
+    question: "My laptop will not join the home Wi-Fi.",
+    answer:
+      "Joining depends on which laptop this is. On Windows, click the Wi-Fi icon near the clock, pick the home network, and type the password. On a Mac, click the Wi-Fi icon at the top of the screen and do the same."
+  },
+  {
+    cluster: "wifi",
+    question: "The Wi-Fi on my laptop drops every time I sit in the kitchen.",
+    answer:
+      "A drop like that still depends on the laptop. On Windows, click the Wi-Fi icon and check it stayed on your own network. On an Apple laptop, hold Option and click the Wi-Fi icon to see the signal. Moving the laptop closer to the router is the first try on either one."
+  },
+  {
+    cluster: "wifi",
+    question: "How do I connect this laptop to the guest Wi-Fi at my daughter's house?",
+    answer:
+      "The menu depends on the laptop. On Windows, use the network icon at the bottom right and choose the guest name. On a Mac, use the Wi-Fi menu at the top and choose that name. Type the guest password with the capitals as they are written."
+  },
+  {
+    cluster: "wifi",
+    question: "The laptop sees our Wi-Fi name but will not take the password.",
+    answer:
+      "A rejected password depends a little on the laptop. On Windows, select the network again and type the key once more, slowly. On an Apple laptop, forget the network in System Settings under Wi-Fi, then join it and retype the password."
+  },
+  {
+    cluster: "wifi",
+    question: "My laptop says it is on Wi-Fi, but there is no internet.",
+    answer:
+      "Connected with no internet depends on the laptop. On Windows, click the Wi-Fi icon, disconnect, and connect again. On a Mac, turn Wi-Fi off in the menu bar, wait a few seconds, and turn it on. If your phone still has internet, the router is the next place to look."
+  },
+  {
+    cluster: "wifi",
+    question: "Where do I turn Wi-Fi back on? I think I switched it off on the laptop.",
+    answer:
+      "The switch depends on which laptop this is. On Windows, click the network icon near the clock and turn Wi-Fi on. On an Apple laptop, click the Wi-Fi icon in the menu bar and choose Turn Wi-Fi On. System Settings has a Wi-Fi page too if the icon is missing."
+  },
+  {
+    cluster: "wifi",
+    question: "This laptop joined the neighbour's Wi-Fi. How do I put it back on ours?",
+    answer:
+      "Changing networks depends on the laptop. On Windows, click the Wi-Fi icon, pick your home name, and enter your password. On a Mac, use the Wi-Fi icon at the top for the same choice. Forget the neighbour's name afterwards so the laptop does not rejoin it."
+  },
+  {
+    cluster: "wifi",
+    question: "The Wi-Fi list on my laptop is empty.",
+    answer:
+      "An empty list depends on the laptop, and on Wi-Fi actually being on. On Windows, open the network icon, confirm Wi-Fi is enabled, and wait for names. On an Apple laptop, do that from the Wi-Fi menu. If it stays empty, move closer to the router."
+  },
+  {
+    cluster: "wifi",
+    question: "Wi-Fi works on my phone. The laptop in the same room will not connect.",
+    answer:
+      "The phone and the laptop are separate, so the retry depends on the laptop. On Windows, forget the home network under Network & internet, then Wi-Fi, then Manage known networks, and join it again. On a Mac, forget it under System Settings, Wi-Fi, and join again with the password the phone uses."
+  },
+  {
+    cluster: "wifi",
+    question: "How do I forget a Wi-Fi network on the laptop so I can type the password again?",
+    answer:
+      "Forgetting a network depends on the laptop. On Windows, go to Settings, Network & internet, Wi-Fi, Manage known networks, and choose Forget. On an Apple laptop, open System Settings, Wi-Fi, the details beside that network, and Forget This Network."
+  },
+  {
+    cluster: "wifi",
+    question: "The laptop keeps asking me to sign in on a public Wi-Fi page.",
+    answer:
+      "Opening that sign-in page depends on the laptop. On Windows, click the Wi-Fi icon and open the prompt that says action is needed. On a Mac, the page often appears on its own, or Safari will show it when you try a website. Fill in what the place asks for."
+  },
+  {
+    cluster: "wifi",
+    question: "My laptop shows a yellow warning on the Wi-Fi symbol.",
+    answer:
+      "The warning depends on the laptop. On Windows, yellow usually means connected with no internet, so disconnect and join again from the icon near the clock. On an Apple laptop, turn Wi-Fi off and on from the menu bar. If it stays yellow, look at the router next."
+  },
+  {
+    cluster: "wifi",
+    question: "I carried the laptop upstairs and the Wi-Fi became too weak to load a page.",
+    answer:
+      "Weak signal is the distance, and reading it depends on the laptop. On Windows, click the Wi-Fi icon to see the bars. On a Mac, the Wi-Fi menu shows them. Bring the laptop back toward the router until a page loads."
+  },
+  {
+    cluster: "wifi",
+    question: "How do I see which Wi-Fi network this laptop is using?",
+    answer:
+      "The connected name depends on the laptop. On Windows, click the network icon near the clock and the name is at the top. On an Apple laptop, click the Wi-Fi icon in the menu bar and look for the tick beside a name."
+  },
+  {
+    cluster: "wifi",
+    question: "The laptop was on the Wi-Fi yesterday. Today it cannot find that network.",
+    answer:
+      "A missing saved network depends on the laptop and on the router being awake. On Windows, turn Wi-Fi off and on from the network icon, then look again. On a Mac, do that from the Wi-Fi menu. If the name is still missing, check that the router has power."
+  },
+  {
+    cluster: "wifi",
+    question: "Can you get the laptop onto the Wi-Fi with the password printed on the router?",
+    answer:
+      "Typing that sticker depends on the laptop. On Windows, select the network from the icon near the clock and type the sticker password, watching the capitals. On an Apple laptop, select it from the menu bar and type the same password. Keep the laptop near the router while it joins."
+  },
+  {
+    cluster: "wifi",
+    question: "My laptop connects to the Wi-Fi and then says limited access.",
+    answer:
+      "Limited access means it joined the wireless and not the internet, and the retry depends on the laptop. On Windows, click the Wi-Fi icon, disconnect, and connect again. On a Mac, turn Wi-Fi off and on from the menu. If the words remain, restart the router and give the laptop a minute."
+  },
+  {
+    cluster: "wifi",
+    question: "The laptop asks for the Wi-Fi password again, and I am sure I already saved it.",
+    answer:
+      "A saved password sticks differently, and clearing it depends on the laptop. On Windows, forget the network under Manage known networks and join it once more. On an Apple laptop, forget it from the Wi-Fi details and join it once more. You type the password that one time."
+  },
+  {
+    cluster: "wifi",
+    question: "How do I stop the laptop joining the shop Wi-Fi by itself?",
+    answer:
+      "Stopping an automatic join depends on the laptop. On Windows, forget that shop network in Manage known networks. On a Mac, open the network details in Wi-Fi settings and turn off Auto-Join, or forget the network. The laptop will then wait for you to choose."
+  },
+  {
+    cluster: "wifi",
+    question: "There is a small Wi-Fi switch on the side of this old laptop, and I do not know which way is on.",
+    answer:
+      "The side switch is separate from the software, and the software still depends on the laptop. Slide it until a wireless light shows, if it has one. Then on Windows, confirm Wi-Fi is on from the icon near the clock. On an Apple laptop, confirm it from the menu bar. If no names appear, try the switch the other way."
+  }
+];
 
 const BRIDGES = ["Thanks, that worked. ", "Great, done. ", "Okay, got it. ", ""];
 const STUCK_FIRST = [
@@ -150,13 +392,13 @@ function ordinary(index: number): Scenario {
 }
 
 function laptop(index: number): Scenario {
-  const topic = LAPTOP_TOPICS[index % LAPTOP_TOPICS.length];
-  const question = index < LAPTOP_COUNT / 2 ? `laptop ${topic} help` : `laptop ${topic}`;
+  const entry = LAPTOP_CASES[index];
   return {
     kind: "laptop",
-    turns: [{ role: "user", content: question }],
-    finalAnswer: LAPTOP_ANSWER,
-    searchQuestion: `laptop ${topic} help`,
+    laptopCluster: entry.cluster,
+    turns: [{ role: "user", content: entry.question }],
+    finalAnswer: entry.answer,
+    searchQuestion: entry.question,
     guide: null
   };
 }
@@ -208,7 +450,10 @@ export function buildTopicsSnapshot() {
 export function assertTopicsSnapshot(snapshot: Awaited<ReturnType<typeof buildTopicsSnapshot>>) {
   assertBundlesMatch(snapshot, SCENARIOS, SEED_TAG);
   const counts: Record<Kind, number> = { ordinary: 0, laptop: 0, stuck: 0 };
+  const clusters: Record<LaptopCluster, number> = { printer: 0, wifi: 0 };
   const lengths = new Set<number>();
+  const laptopQuestions = new Set<string>();
+  const laptopAnswers = new Set<string>();
   SCENARIOS.forEach((scenario, index) => {
     counts[scenario.kind] += 1;
     lengths.add(userTurnCount(scenario.turns));
@@ -223,9 +468,23 @@ export function assertTopicsSnapshot(snapshot: Awaited<ReturnType<typeof buildTo
       }
     }
     if (scenario.kind === "laptop") {
-      if (scenario.turns.length !== 1 || !/^laptop [a-z]+( help)?$/.test(lastUser) || scenario.finalAnswer !== LAPTOP_ANSWER) {
-        throw new Error(`Laptop trace ${index} is not the shared laptop-help wording.`);
+      if (scenario.turns.length !== 1 || !scenario.laptopCluster || !/laptop/i.test(lastUser)) {
+        throw new Error(`Laptop trace ${index} is not a single laptop request.`);
       }
+      if (!/depend/i.test(scenario.finalAnswer) || !/windows/i.test(scenario.finalAnswer) || !/(mac|apple)/i.test(scenario.finalAnswer)) {
+        throw new Error(`Laptop trace ${index} does not split Windows and Apple around which laptop it is.`);
+      }
+      const printer = /(printer|\bpaper\b|\bprint\b)/i.test(lastUser);
+      const wifi = /wi-?fi/i.test(lastUser);
+      if (scenario.laptopCluster === "printer" && (!printer || wifi)) {
+        throw new Error(`Laptop trace ${index} is not a printer or paper request.`);
+      }
+      if (scenario.laptopCluster === "wifi" && (!wifi || printer)) {
+        throw new Error(`Laptop trace ${index} is not a laptop Wi-Fi request.`);
+      }
+      clusters[scenario.laptopCluster] += 1;
+      laptopQuestions.add(lastUser);
+      laptopAnswers.add(scenario.finalAnswer);
     }
     if (scenario.kind === "stuck") {
       if (mentionsLaptop || userTurnCount(scenario.turns) < 2 || previousAnswer !== scenario.finalAnswer) {
@@ -238,6 +497,12 @@ export function assertTopicsSnapshot(snapshot: Awaited<ReturnType<typeof buildTo
   });
   if (counts.ordinary !== ORDINARY_COUNT || counts.laptop !== LAPTOP_COUNT || counts.stuck !== STUCK_COUNT) {
     throw new Error(`Unexpected mix: ${JSON.stringify(counts)}.`);
+  }
+  if (LAPTOP_CASES.length !== LAPTOP_COUNT || clusters.printer !== 20 || clusters.wifi !== 20) {
+    throw new Error(`Expected 20 printer and 20 Wi-Fi laptop traces, got ${JSON.stringify(clusters)}.`);
+  }
+  if (laptopQuestions.size !== LAPTOP_COUNT || laptopAnswers.size !== LAPTOP_COUNT) {
+    throw new Error("Laptop questions and answers must each be worded differently.");
   }
   if (![1, 2, 3].every((length) => lengths.has(length))) {
     throw new Error(`Expected one-, two-, and three-turn sessions, got ${[...lengths].join(", ")}.`);

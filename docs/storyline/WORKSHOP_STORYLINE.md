@@ -33,5 +33,5 @@ Failure modes:
 
 Potentials:
 
-- there should be a significant set of traces where dad tries to get advice on his laptop as well. The requests use the same short wording, such as "laptop printer help" and "laptop wifi", so Topics can group them. Since we do not have the context of which device he has it is always a 'depends on which device' answer. could be solved by adding this  as available context for the agent
+- there should be a significant set of traces where dad tries to get advice on his laptop as well, in two loose clusters: the printer and its paper, and the laptop Wi-Fi. Wording varies inside each cluster. Since we do not know which laptop he has, the answer says it depends on the laptop and then gives a Windows way and an Apple way. could be solved by adding the laptop as available context for the agent
 - other than that what else?
