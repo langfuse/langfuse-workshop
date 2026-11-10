@@ -45,6 +45,6 @@ Check out the Academy page on [capturing signals](https://langfuse.com/academy/m
 
 Each section seeds the traces it uses. Do not load one batch here for all three.
 
-1. [4.1 Error analysis](./04-monitoring/error-analysis.md) — seed 20 traces, annotate them, and cluster the failures.
+1. [4.1 Error analysis](./04-monitoring/error-analysis.md) — seed 22 traces, annotate them, and cluster the failures.
 2. [Topics and issues](./04-monitoring/topics.md) — group traces by intent, sentiment, outcome, and issues.
 3. [Capturing signals](./04-monitoring/capturing-signals.md) — score disagreement and all-caps frustration as they arrive.

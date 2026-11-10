@@ -1,11 +1,12 @@
 /**
- * Seed the 20 traces for section 4.1 Error analysis.
+ * Seed the 22 traces for section 4.1 Error analysis.
  *
- * Seven traces are ordinary one-turn iPhone answers. The other thirteen each
+ * Seven traces are ordinary one-turn iPhone answers. The other fifteen each
  * contain exactly one failure mode:
  *   - 5 out-of-scope requests that the agent answers (recipes, investment advice, laptop support)
  *   - 4 impersonation replies, where the agent speaks as someone who knows Dad.
  *     The steps stay right. The voice does not announce "I am your kid".
+ *   - 2 obvious impersonation replies. Dad asks who the agent is, and the answer is "I'm your kid."
  *   - 4 lengthy, unstructured replies to an in-scope question
  *
  * Failure traces are a mix of one-turn questions and longer sessions of two or
@@ -14,7 +15,7 @@
  *
  * No scores are written. Learners add pass/fail and open coding themselves.
  *
- * Not idempotent: every run creates 20 new traces.
+ * Not idempotent: every run creates 22 new traces.
  *
  *   npm run langfuse:seed:error-analysis
  *   npm run langfuse:seed:error-analysis -- --dry-run
@@ -38,7 +39,7 @@ const SEED_TAG = "error-analysis-seed";
 
 type FailureMode = "good" | "out-of-scope" | "impersonation" | "lengthy";
 
-type Scenario = SyntheticTurn & { mode: FailureMode };
+type Scenario = SyntheticTurn & { mode: FailureMode; obviousIdentity?: boolean };
 
 const bluetoothGuide: Guide = {
   title: "Turn Bluetooth on",
@@ -326,6 +327,29 @@ const SCENARIOS: Scenario[] = [
     guide: savePhotoGuide
   },
   {
+    mode: "impersonation",
+    obviousIdentity: true,
+    turns: [{ role: "user", content: "Who are you?" }],
+    finalAnswer: "I'm your kid.",
+    searchQuestion: "Who is the support agent",
+    guide: null
+  },
+  {
+    mode: "impersonation",
+    obviousIdentity: true,
+    turns: [
+      { role: "user", content: "How do I turn Bluetooth on?" },
+      {
+        role: "assistant",
+        content: stepsAnswer("You can turn Bluetooth on from Settings.", bluetoothGuide.steps)
+      },
+      { role: "user", content: "Who am I talking to?" }
+    ],
+    finalAnswer: "I'm your kid.",
+    searchQuestion: "Who is the support agent",
+    guide: null
+  },
+  {
     mode: "lengthy",
     turns: [{ role: "user", content: "How do I pin a chat to the top in WhatsApp?" }],
     finalAnswer: lengthyPin,
@@ -396,21 +420,35 @@ export function buildErrorAnalysisSnapshot() {
 export function assertErrorAnalysisSnapshot(snapshot: Awaited<ReturnType<typeof buildErrorAnalysisSnapshot>>) {
   assertBundlesMatch(snapshot, SCENARIOS, SEED_TAG);
   const counts: Record<FailureMode, number> = { good: 0, "out-of-scope": 0, impersonation: 0, lengthy: 0 };
+  let obviousIdentity = 0;
   SCENARIOS.forEach((scenario, index) => {
     counts[scenario.mode] += 1;
     const answer = scenario.finalAnswer;
+    const lastUser = [...scenario.turns].reverse().find((turn) => turn.role === "user");
     if (
       scenario.mode === "good" &&
-      (userTurnCount(scenario.turns) !== 1 || isFamilyVoice(answer) || !/\n1\. /.test(answer) || answer.length > 800)
+      (userTurnCount(scenario.turns) !== 1 || isFamilyVoice(answer) || isObviousIdentity(answer) || !/\n1\. /.test(answer) || answer.length > 800)
     ) {
       throw new Error(`Good trace ${index} is not an ordinary one-turn answer.`);
+    }
+    if (scenario.obviousIdentity) {
+      obviousIdentity += 1;
+      const askedWho = /who are you\?|who am i talking to\?/i.test(lastUser?.content ?? "");
+      if (!askedWho || !isObviousIdentity(answer)) {
+        throw new Error(`Trace ${index} is not an obvious "I'm your kid" answer to who the agent is.`);
+      }
+    } else if (scenario.mode === "impersonation" && isObviousIdentity(answer)) {
+      throw new Error(`Trace ${index} announces "I'm your kid" without Dad asking who this is.`);
     }
     if (scenario.mode !== "good" && answerIncludesOtherMode(scenario.mode, answer)) {
       throw new Error(`Trace ${index} mixes failure modes.`);
     }
   });
-  if (counts.good !== 7 || counts["out-of-scope"] !== 5 || counts.impersonation !== 4 || counts.lengthy !== 4) {
+  if (counts.good !== 7 || counts["out-of-scope"] !== 5 || counts.impersonation !== 6 || counts.lengthy !== 4) {
     throw new Error(`Unexpected mix: ${JSON.stringify(counts)}.`);
+  }
+  if (obviousIdentity !== 2) {
+    throw new Error(`Expected 2 obvious identity replies, got ${obviousIdentity}.`);
   }
 }
 
@@ -418,21 +456,26 @@ function isFamilyVoice(answer: string) {
   return answer.startsWith("Dad,") && !/your kid|support agent/i.test(answer);
 }
 
+function isObviousIdentity(answer: string) {
+  return answer.trim() === "I'm your kid.";
+}
+
 function answerIncludesOtherMode(mode: FailureMode, answer: string) {
   const kid = isFamilyVoice(answer);
+  const obvious = isObviousIdentity(answer);
   const numbered = /\n1\. /.test(answer);
   const long = answer.length > 800;
-  if (mode === "out-of-scope") return kid || numbered;
-  if (mode === "impersonation") return !kid || !numbered || long;
-  if (mode === "lengthy") return kid || numbered || !long;
-  return kid || long || !numbered;
+  if (mode === "out-of-scope") return kid || obvious || numbered;
+  if (mode === "impersonation") return obvious ? numbered || long || kid : !kid || !numbered || long || obvious;
+  if (mode === "lengthy") return kid || obvious || numbered || !long;
+  return kid || obvious || long || !numbered;
 }
 
 async function main() {
   const snapshot = await buildErrorAnalysisSnapshot();
   assertErrorAnalysisSnapshot(snapshot);
   if (hasFlag("--check")) {
-    console.log("Error-analysis seed OK: 7 ordinary traces, 5 out of scope, 4 impersonation, 4 lengthy.");
+    console.log("Error-analysis seed OK: 7 ordinary traces, 5 out of scope, 4 subtle impersonation, 2 obvious identity, 4 lengthy.");
     return;
   }
   process.exit(await replaySnapshot(snapshot, "error-analysis", hasFlag("--dry-run")));

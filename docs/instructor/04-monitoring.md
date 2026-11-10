@@ -19,14 +19,14 @@ Each section seeds its own traces. Do not seed once on the overview for all thre
 
 Demo order:
 
-1. Error analysis, on its own 20 traces, while the room still has to read them.
+1. Error analysis, on its own 22 traces, while the room still has to read them.
 2. Topics, on the 200 traces that section seeds.
 3. Capturing signals, so the two evaluators are the last thing they turn on.
 
 ### Error analysis
 
-- Section 4.1 seeds its own 20 traces with `npm run langfuse:seed:error-analysis`. Seven are ordinary one-turn answers. The other 13 each have exactly one failure: 5 out-of-scope replies (a recipe, investment advice, or laptop support), 4 replies in a family voice, and 4 long unstructured replies. The family voice still gives the right steps. It never says "I am your kid." The tell is personal knowledge, such as having used this phone before. Longer sessions are two or three turns, and the failure is only on the latest answer. Do not substitute the topics snapshot.
-- The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, tagged `error-analysis-seed`. A queue does not pick up score configs added later.
+- Section 4.1 seeds its own 22 traces with `npm run langfuse:seed:error-analysis`. Seven are ordinary one-turn answers. The other 15 each have exactly one failure: 5 out-of-scope replies (a recipe, investment advice, or laptop support), 4 replies in a family voice, 2 replies where Dad asks who this is and the agent says "I'm your kid.", and 4 long unstructured replies. The family voice still gives the right steps. It never says "I am your kid." The tell is personal knowledge, such as having used this phone before. The two identity replies are the obvious version of that same failure. Longer sessions are two or three turns, and the failure is only on the latest answer. Do not substitute the topics snapshot.
+- The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 22 traces, tagged `error-analysis-seed`. A queue does not pick up score configs added later.
 - Do not hand them the cluster names before they have written the open-coding notes. After the set, they ask Halo to find clusters. The page shows what those clusters should roughly look like: out of scope, impersonation, and lengthy responses. That list is a check, not the Halo prompt.
 - Ask Halo to create categorical scores for the clusters it found. If Halo words them differently, map those names to the three decisions before the second pass. They then assign each failing trace.
 - Halo builds the frequency dashboard. How that dashboard should look is still a TODO.
@@ -57,7 +57,7 @@ Demo order:
 ## Demo rhythm
 
 1. Walk the overview: volume, dashboards, error analysis, topics, signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
-2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to find clusters, compare them with the rough list on the page, ask Halo to create categorical scores for those clusters, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions: friendly out-of-scope decline plus a production monitor, a system-prompt fix for impersonation, and a system-prompt fix for lengthy replies with an optional production monitor.
+2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 22 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to find clusters, compare them with the rough list on the page, ask Halo to create categorical scores for those clusters, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions: friendly out-of-scope decline plus a production monitor, a system-prompt fix for impersonation, and a system-prompt fix for lengthy replies with an optional production monitor.
 3. Topics: run that section's seed once, open Topics, run **Set up topics** with all four labels and the recommended models, then open one tile on each tab. Finish on the laptop intent and the stuck follow-up issue.
 4. Capturing signals: configure the LLM connection if it is not done, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
