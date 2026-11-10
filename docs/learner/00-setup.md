@@ -17,7 +17,7 @@ Have the workshop app running locally with both OpenAI and Langfuse credentials 
 
 An older version fails in a way that is easy to misread. Vite's platform-specific binary is an optional dependency, so npm skips it **without reporting an error**: `npm install` looks like it succeeded, and the problem only appears later when `npm run dev` cannot start Vite. If you upgrade Node after installing, re-run `npm ci` so the skipped binary is fetched.
 
-**Langfuse AI Features, which turns on Halo.** These are off until an organization owner or admin enables them. In Langfuse, open **Organization Settings → General → AI Features** and turn them on. That enables [Halo](https://langfuse.com/docs/api-and-data-platform/features/halo), the assistant in the Langfuse UI, and the other AI features this workshop uses, such as Ask AI in filters.
+**Langfuse AI Features, which include Halo.** New organizations usually have these on unless someone opted out. If [Halo](https://langfuse.com/docs/api-and-data-platform/features/halo) is missing from the project, an organization owner or admin turns AI Features back on under **Organization Settings → General → AI Features**. The workshop also uses the other features this setting covers, such as Ask AI in filters.
 
 ## Starting point
 
@@ -35,7 +35,7 @@ This checkpoint intentionally contains the same untraced base app as `checkpoint
 
 1. **OpenAI** — [platform.openai.com](https://platform.openai.com) → API Keys → create one. Copy the `sk-...` value; you will paste it into `.env` in Step 3.
 2. **Langfuse** — sign up at [langfuse.com](https://langfuse.com) on the **EU region**, create a project, and copy the public + secret keys from **Settings → API Keys**. You will paste those into `.env` in Step 3 as well.
-3. **AI Features** — in that organization, open **Organization Settings → General → AI Features** and enable them. You need to be an owner or admin. This turns on Halo. Confirm Halo is visible in the project before you continue.
+3. **AI Features** — confirm Halo is visible in the project. New organizations usually have this on unless someone opted out. If Halo is missing, an owner or admin enables **Organization Settings → General → AI Features**.
 
 ## Step 2 — Install the Langfuse skill and CLI
 

@@ -54,7 +54,7 @@ The workshop needs two things at once:
 
 Canonical progression:
 
-- `00-setup`: setup, keys, Langfuse Cloud EU, organization AI Features (which turns on Halo), Langfuse CLI, Langfuse skill, and workshop framing on the same untraced app state as `01-base-app`.
+- `00-setup`: setup, keys, Langfuse Cloud EU, organization AI Features and Halo (usually on for new orgs unless someone opted out), Langfuse CLI, Langfuse skill, and workshop framing on the same untraced app state as `01-base-app`.
 - `01-base-app`: working Dad IT Support Agent on the official OpenAI SDK, with one fixed Dad context, two local tools, and no Langfuse tracing yet.
 - `02-tracing`: learners add Langfuse tracing on top of the base app with OpenTelemetry setup, `observeOpenAI(new OpenAI())`, `observe(...)` wrappers around app/tool functions, and optional `propagateAttributes(...)` for user/session metadata.
 - `03-prompt-management`: learners replace the code-only prompt path with a Langfuse-managed prompt plus local fallback.
