@@ -88,4 +88,10 @@ On **Issues**, one of the larger groups is answers that give guidance without co
 
 The fix belongs in the system prompt: when Dad says a step failed, ask what he sees on screen and try a different path instead of repeating the list.
 
+### A search that looks wrong, and an answer that still works
+
+**Issues** also has a group for searches that do not match the question. The name may be close to "Off-target search queries". Open a few traces. The help-library query or result is unrelated, and the final answer still covers what Dad asked. The summaries say the mismatch was an extra step, not the thing that decided the turn.
+
+That is not a failure to patch in this session. It raises a question about the library. How often does `search_help_library` actually help, and which requests does it have nothing useful for? That is worth a closer look at the guides in `src/server/support-data.ts` before treating the tile as a broken answer.
+
 [Capturing signals](./capturing-signals.md) is the next section. It attaches scores to new turns so disagreement and all-caps frustration stand out in the trace table.
