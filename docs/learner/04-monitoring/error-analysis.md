@@ -5,8 +5,6 @@ description: "Seed 20 traces, annotate them in a queue, and use Halo to cluster 
 
 # 4.1 Error analysis
 
-Part of [04 Monitoring](../04-monitoring.md).
-
 Error analysis is a structured approach to find failure modes by open-coding traces, then clustering those notes, and checking the number of occurrences. In this lab we will do error analysis on 20 example traces of the sample application. Usually 50–100 traces are recommended as a starting point. The process should be repeated over and over again as system usage and failure modes can shift.
 
 ```bash

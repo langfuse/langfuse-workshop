@@ -5,8 +5,6 @@ description: "Detect topics and issues in 200 sample traces, grouped by intent, 
 
 # Detect topics and issues
 
-Part of [04 Monitoring](../04-monitoring.md).
-
 Topics and issue detection is an approach that analyzes trace data at scale by intent, sentiment, outcome, and issues, then groups the ones that belong together.
 
 In this lab we will detect topics and issues in 200 sample traces.

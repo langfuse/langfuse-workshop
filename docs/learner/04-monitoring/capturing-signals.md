@@ -5,8 +5,6 @@ description: "Score user disagreement and all-caps frustration on production tra
 
 # Capturing signals
 
-Part of [04 Monitoring](../04-monitoring.md).
-
 ## Why capture signals
 
 Once traces are coming in, you want a judgment on them that does not require opening each one. A production signal is something the user does or says that indicates whether the turn felt good or bad: a correction, a retry, a request for a human, a thank-you. Stored as a score on that trace, it is a way to find the rows worth reading.
