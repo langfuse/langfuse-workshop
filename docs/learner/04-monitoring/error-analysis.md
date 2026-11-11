@@ -22,6 +22,8 @@ The seed writes no scores. It is **not idempotent**: running it again adds anoth
 ## Annotate
 
 1. In [Tracing](https://cloud.langfuse.com/project/~/traces), select the last 20 traces and add them to an annotation queue. The queue has two score configs: **open coding** (Text) and **pass/fail** (Categorical, with the categories pass and fail). Create the queue with those configs, then add the traces. A queue keeps the score configs it was created with.
+
+   ![Select the traces, then add them to an annotation queue.](../../images/monitoring/add-to-annotation-queue.png)
 2. Open the queue and choose **Process queue**.
 3. For each trace, mark pass or fail.
 4. When it fails, inspect the trace and write the failure in open coding. Describe what went wrong. Leave the notes ungrouped.
