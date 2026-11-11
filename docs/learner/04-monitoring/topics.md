@@ -79,16 +79,6 @@ A few hundred traces become a handful of classes you can name. Some of what you 
 
 Every generation of topics is non-deterministic, because the clustering is done by an LLM. Below is a walkthrough of the topics and issues we found on one run of this data.
 
-### Sentiment shows the frustration
-
-On **Sentiment**, the largest tile is still calm. The name is close to "Neutral, Unemotional Tone". Frustration does not land as one block. It splits into a few tiles, with names close to "Frustration with Task Difficulties", "Frustration with connectivity difficulties", "Frustration With Ineffective Guidance", and "Frustration and Annoyance".
-
-Click the connectivity one. It is about 25 traces. The summaries say Dad was frustrated that the laptop would not reconnect to Wi-Fi, or that the Wi-Fi troubleshooting did not work.
-
-![Sentiment groups, with Frustration with connectivity difficulties open.](../../images/topics/sentiment-frustration.png)
-
-A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
-
 ### Laptop help is a chance to widen what Specs supports
 
 On **Intent**, look for two of the larger groups that are not iPhone tasks: one about the laptop's Wi-Fi, and one about printing from the laptop, including paper jams and paper in the tray. The iPhone is the device Specs is built for. These requests sit outside that, and Specs answers them anyway.
@@ -102,6 +92,16 @@ Open a few of those traces. The answer does not ask which laptop Dad has. It hed
 The agent is trying to be helpful, while it is missing the context it needs to answer the question. This is a context problem, and we can provide that context through the `get_support_context` tool. `DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts` already lists Dad's iPhone under `devices`, and that is what the tool returns. Add the laptop there, next to the phone. Specs can then give the steps for that machine instead of both.
 
 A tile summary may describe these replies as unsupported and suggest sending Dad back to iPhone help. Read the traces before you take that suggestion. Specs is already trying to help. Telling it which laptop Dad uses makes those answers specific.
+
+### Sentiment shows the frustration
+
+On **Sentiment**, the largest tile is still calm. The name is close to "Neutral, Unemotional Tone". Frustration does not land as one block. It splits into a few tiles, with names close to "Frustration with Task Difficulties", "Frustration with connectivity difficulties", "Frustration With Ineffective Guidance", and "Frustration and Annoyance".
+
+Click the connectivity one. It is about 25 traces. The summaries say Dad was frustrated that the laptop would not reconnect to Wi-Fi, or that the Wi-Fi troubleshooting did not work.
+
+![Sentiment groups, with Frustration with connectivity difficulties open.](../../images/topics/sentiment-frustration.png)
+
+A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
 
 ### Repeated steps after Dad says it failed
 

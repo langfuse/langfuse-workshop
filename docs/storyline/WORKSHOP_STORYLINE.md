@@ -29,11 +29,12 @@ Failure modes:
 ### **Topics:**
 
 - We seed 200 sample traces with all kinds of lengths and requests
-- First pass is exploration: intent, sentiment, outcome, and issues show the classes of requests and how they landed, including where the product is working. Sentiment keeps a large neutral tile and splits frustration across a few smaller ones. Open "Frustration with connectivity difficulties": Dad is frustrated that the laptop would not reconnect to Wi-Fi. That hands off to conversation signals (disagreement and all-caps).
+- First pass is exploration: intent, sentiment, outcome, and issues show the classes of requests and how they landed, including where the product is working.
 - Goal is then one scope extension and one failure mode. The page closes with a general takeaway: Topics is a map of what the agent handles, how users feel, and where it fails. The facets are a starting point for expansion, for changes that a failure tile is pointing at, and for which evaluators to set up.
 
 Potentials:
 
 - Intent shows laptop help outside the iPhone the agent is built for: laptop Wi-Fi, and printing from the laptop. In one run the printing tile is "Laptop Printing Assistance" (29 traces). The answer always hedges Windows versus Apple. Specs is trying to help and is missing context. Provide it through `get_support_context` by adding the laptop next to the iPhone. A tile summary may call these replies unsupported. Read the traces first.
+- Sentiment keeps a large neutral tile and splits frustration across a few smaller ones. Open "Frustration with connectivity difficulties": Dad is frustrated that the laptop would not reconnect to Wi-Fi. That hands off to conversation signals (disagreement and all-caps).
 - Issues also shows repeated troubleshooting. In one run the tile is "Repeated Failed Troubleshooting" (30 traces): Dad says the steps failed and Specs sends the same list again. The fix could live in the system prompt: ask what he sees and try a different path.
 - Issues can also flag mismatched help-library searches. In that same run the tile is "Mismatched Help Search Queries" (39 traces), shown on the page. Open them: the final answer is often still right. The follow-up is how useful the search library is, and which requests it has nothing for. Not a fix in the session.
