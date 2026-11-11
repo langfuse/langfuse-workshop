@@ -79,7 +79,7 @@ A few hundred traces become a handful of classes you can name. Some of what you 
 
 Every generation of topics is non-deterministic, because the clustering is done by an LLM. Below is a walkthrough of the topics and issues we found on one run of this data.
 
-### Laptop help is a chance to widen what Specs supports
+### Insight 1: Laptop help is a chance to widen what Specs supports
 
 On **Intent**, look for two of the larger groups that are not iPhone tasks: one about the laptop's Wi-Fi, and one about printing from the laptop, including paper jams and paper in the tray. The iPhone is the device Specs is built for. These requests sit outside that, and Specs answers them anyway.
 
@@ -93,7 +93,7 @@ The agent is trying to be helpful, while it is missing the context it needs to a
 
 A tile summary may describe these replies as unsupported and suggest sending Dad back to iPhone help. Read the traces before you take that suggestion. Specs is already trying to help. Telling it which laptop Dad uses makes those answers specific.
 
-### Sentiment shows the frustration
+### Insight 2: Sentiment shows the frustration
 
 On **Sentiment**, the largest tile is still calm. The name is close to "Neutral, Unemotional Tone". Frustration does not land as one block. It splits into a few tiles, with names close to "Frustration with Task Difficulties", "Frustration with connectivity difficulties", "Frustration With Ineffective Guidance", and "Frustration and Annoyance".
 
@@ -103,7 +103,7 @@ Click the connectivity one. It is about 25 traces. The summaries say Dad was fru
 
 A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
 
-### Repeated steps after Dad says it failed
+### Insight 3: Repeated steps after Dad says it failed
 
 On **Issues**, one tile in this run is **Repeated Failed Troubleshooting**, 30 traces. The tile says the response repeats prior instructions instead of adapting to the reported problem or investigating why they did not work.
 
@@ -113,7 +113,7 @@ These are the two- and three-turn sessions where Dad says the steps did not work
 
 The fix could live in the system prompt: when Dad says a step failed, ask what he sees on screen and try a different path instead of repeating the list.
 
-### A search that looks wrong, and an answer that still works
+### Insight 4: A search that looks wrong, and an answer that still works
 
 On **Issues**, one tile in this run is **Mismatched Help Search Queries**, 39 traces. The tile says most of these traces used an unrelated or mismatched search query during the help lookup, and often still recovered with relevant instructions.
 
