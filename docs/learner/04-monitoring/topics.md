@@ -125,4 +125,11 @@ Open a few traces. The help-library query or result is unrelated, and the final 
 
 That is not a failure to patch in this session. It raises a question about the library. How often does `search_help_library` actually help, and which requests does it have nothing useful for? That is worth a closer look at the guides in `src/server/support-data.ts` before treating the tile as a broken answer.
 
-[Capturing signals](./capturing-signals.md) is the next section. It attaches scores to new turns so disagreement and all-caps frustration stand out in the trace table.
+## Takeaway
+
+Topics turns a few hundred traces into a handful of groups you can act on. The tile names will differ on the next run. The decisions from this one are:
+
+- **Frustration is a feeling, not a fix yet.** The connectivity tile is Dad stuck on laptop Wi-Fi. A few of those lines are in all caps, and a few push back on the steps. [Capturing signals](./capturing-signals.md) is the next section. It turns those two reactions into scores you can filter on.
+- **Laptop help is missing context, not a refusal.** Specs already answers the printer and Wi-Fi requests, and every answer hedges Windows against Mac. Add the laptop next to the iPhone in `DEFAULT_SUPPORT_CONTEXT`, which `get_support_context` returns.
+- **Repeated steps are a prompt problem.** When Dad says the steps failed, Specs sends the same list again. The system prompt can tell it to ask what is on screen and try a different path.
+- **A bad search is not automatically a bad answer.** The mismatched queries still landed on the right steps. The open question is how often `search_help_library` helps, and which requests the guides in `src/server/support-data.ts` have nothing for.

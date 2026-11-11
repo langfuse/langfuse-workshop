@@ -30,7 +30,7 @@ Failure modes:
 
 - We seed 200 sample traces with all kinds of lengths and requests
 - First pass is exploration: intent, sentiment, outcome, and issues show the classes of requests and how they landed, including where the product is working. Sentiment keeps a large neutral tile and splits frustration across a few smaller ones. Open "Frustration with connectivity difficulties": Dad is frustrated that the laptop would not reconnect to Wi-Fi. That hands off to conversation signals (disagreement and all-caps).
-- Goal is then one scope extension and one failure mode
+- Goal is then one scope extension and one failure mode. The page closes with a takeaway: frustration hands off to signals, laptop help is missing context, repeated steps are a prompt fix, and a mismatched search is a question about the library.
 
 Potentials:
 
