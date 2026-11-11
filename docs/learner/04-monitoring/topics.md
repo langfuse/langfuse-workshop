@@ -125,9 +125,12 @@ That is not a failure to patch in this session. It raises a question about the l
 
 ## Takeaway
 
-Topics turns a few hundred traces into a handful of groups you can act on. The tile names will differ on the next run. The decisions from this one are:
+Topics gives you a map of what your agent is handling in production, how users are feeling about the system, and where it fails.
 
-- **Frustration is a feeling, not a fix yet.** The connectivity tile is Dad stuck on laptop Wi-Fi. A few of those lines are in all caps, and a few push back on the steps. [Capturing signals](./capturing-signals.md) is the next section. It turns those two reactions into scores you can filter on.
-- **Laptop help is missing context, not a refusal.** Specs already answers the printer and Wi-Fi requests, and every answer hedges Windows against Mac. Add the laptop next to the iPhone in `DEFAULT_SUPPORT_CONTEXT`, which `get_support_context` returns.
-- **Repeated steps are a prompt problem.** When Dad says the steps failed, Specs sends the same list again. The system prompt can tell it to ask what is on screen and try a different path.
-- **A bad search is not automatically a bad answer.** The mismatched queries still landed on the right steps. The open question is how often `search_help_library` helps, and which requests the guides in `src/server/support-data.ts` have nothing for.
+The facets give you a starting point to dig deeper and explore.
+
+- There might be insights on expansion opportunities for your system.
+- Some things might show up as failures but are actually an indication that you could change your system.
+- They can give you inspiration for what kind of evaluators to set up.
+
+[Capturing signals](./capturing-signals.md) is the next section. It is one of those evaluators: a score for disagreement, and a score for all-caps frustration.
