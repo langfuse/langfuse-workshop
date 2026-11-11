@@ -8,12 +8,12 @@ description: "Facilitator notes for the monitoring overview, error analysis, top
 Learner guide: [04 Monitoring](../learner/04-monitoring.md)
 
 - [4.1 Error analysis](../learner/04-monitoring/error-analysis.md)
-- [Detect topics and issues](../learner/04-monitoring/topics.md)
-- [Capturing signals](../learner/04-monitoring/capturing-signals.md)
+- [4.2 Detect topics and issues](../learner/04-monitoring/topics.md)
+- [4.3 Capturing signals](../learner/04-monitoring/capturing-signals.md)
 
 ## Instructor notes
 
-The chapter opens on the overview and goes straight into the four ways to work with production traces. There is no checkout block on that page. Dashboards are a link out, not a build exercise. Error analysis (section 4.1), topics, and capturing signals each have their own page.
+The chapter opens on the overview and goes straight into the four ways to work with production traces. There is no checkout block on that page. Dashboards are a link out, not a build exercise. Sections 4.1 Error analysis, 4.2 Detect topics and issues, and 4.3 Capturing signals each have their own page.
 
 Each section seeds its own traces. Do not seed once on the overview for all three.
 
@@ -23,7 +23,7 @@ Demo order:
 2. Topics, on the 200 traces that section seeds.
 3. Capturing signals, so the two evaluators are the last thing they turn on.
 
-### Error analysis
+### 4.1 Error analysis
 
 - Section 4.1 seeds its own 20 traces with `npm run langfuse:seed:error-analysis`. Seven are ordinary one-turn answers. The other 13 each have exactly one failure: 5 out-of-scope replies (a recipe, investment advice, or laptop support), 2 replies in a family voice, 2 replies where Dad asks who this is and the agent says "I'm your kid.", and 4 long unstructured replies. The family voice still gives the right steps. It never says "I am your kid." The tell is personal knowledge, such as having used this phone before. The two identity replies are the obvious version of that same failure. Longer sessions are two or three turns, and the failure is only on the latest answer. Do not substitute the topics snapshot.
 - The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, tagged `error-analysis-seed`. A queue does not pick up score configs added later.
@@ -33,7 +33,7 @@ Demo order:
 - Open with why the lab is worth doing: concrete failures from real cases, an underspecified system prompt, a count you can prioritize, and a shared picture for engineers, domain experts, and PMs.
 - Close on the three decisions. First ask whether the fix belongs in the system prompt or in production monitoring. Out of scope: a friendly decline that points Dad back to iPhone help, plus a production monitor. Impersonation: a system-prompt fix so Specs answers as the support agent, with optional monitoring because it should be avoided. Lengthy responses: a system-prompt fix toward short numbered steps, with an optional production monitor. Then one line into topics.
 
-### Detect topics and issues
+### 4.2 Detect topics and issues
 
 - This is a setup walkthrough, not a concept lecture. Open Topics, click **Set up topics**, keep Intent, Sentiment, Outcome, and Issues checked, keep the recommended models, leave the sample rate at 100%, and click **Start analyzing**.
 - The section seeds 200 traces over the last five days with `npm run langfuse:seed:topics`: 110 ordinary iPhone requests at one to three turns, 60 laptop requests split evenly between a printer-and-paper cluster and a laptop Wi-Fi cluster, and 30 two- or three-turn sessions where Dad says the steps failed and Specs repeats the same list. The laptop wording varies. Each laptop answer says the steps depend on which laptop it is, then gives a Windows way and an Apple way. At least 40% of the traces have Dad sounding frustrated, mostly on the unresolved ones. A few are all caps, and a few disagree with the steps. Each trace carries at most one of those problems.
@@ -43,7 +43,7 @@ Demo order:
 - After it fills in, click one tile on each tab (Intent, Sentiment, Outcome, Issues) and use **Open in Tracing**. Auto-analyze stays on.
 - The page opens with why: Topics is a map of what the agent handles in production, how users feel, and where it fails. The facets are a starting point: expansion opportunities, things that look like failures but point at a change to the system, and inspiration for which evaluators to set up. After the four insights, hand off to capturing signals.
 
-### Capturing signals
+### 4.3 Capturing signals
 
 - Two signals: **Detect User Disagreement** uses LLM-as-a-judge, and **Detect User Frustration (ALL CAPS)** uses deterministic TypeScript.
 - The API keys in `.env` do not configure the judge model inside Langfuse. The disagreement evaluator needs the LLM connection.

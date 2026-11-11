@@ -1,9 +1,9 @@
 ---
-title: "Workshop: Detect topics and issues"
+title: "Workshop: 4.2 Detect topics and issues"
 description: "Detect topics and issues in 200 sample traces, grouped by intent, sentiment, outcome, and issues."
 ---
 
-# Detect topics and issues
+# 4.2 Detect topics and issues
 
 ## Why topics and issue detection
 
@@ -35,7 +35,7 @@ Open [Tracing](https://cloud.langfuse.com/project/~/traces) if you want to inspe
 
 ## Add the model connection
 
-The model list in the next step comes from the project's LLM connections. Add an OpenAI connection now. [Capturing signals](./capturing-signals.md) uses this same connection.
+The model list in the next step comes from the project's LLM connections. Add an OpenAI connection now. [Section 4.3 Capturing signals](./capturing-signals.md) uses this same connection.
 
 1. In Langfuse, open **Project Settings → LLM Connections**.
 2. Click **Add LLM Connection**.
@@ -111,7 +111,7 @@ Click the connectivity one. It is about 25 traces. The summaries say Dad was fru
 
 ![Sentiment groups, with Frustration with connectivity difficulties open.](../../images/topics/sentiment-frustration.png)
 
-A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
+A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Section 4.3 Capturing signals](./capturing-signals.md) is next, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
 
 ### Insight 3: Repeated steps after Dad says it failed
 
@@ -133,4 +133,4 @@ Open a few traces. The help-library query or result is unrelated, and the final 
 
 That is not a failure to patch in this session. It raises a question about the library. How often does `search_help_library` actually help, and which requests does it have nothing useful for? That is worth a closer look at the guides in `src/server/support-data.ts` before treating the tile as a broken answer.
 
-[Capturing signals](./capturing-signals.md) is the next section. It is one of those evaluators: a score for disagreement, and a score for all-caps frustration.
+[Section 4.3 Capturing signals](./capturing-signals.md) is next. It is one of those evaluators: a score for disagreement, and a score for all-caps frustration.
