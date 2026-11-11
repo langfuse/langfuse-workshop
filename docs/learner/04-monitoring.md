@@ -29,7 +29,7 @@ In the hands-on lab in [section 4.1](./04-monitoring/error-analysis.md), we run 
 
 Error analysis derives general concepts from individual traces, and a person does that reading. [Topics](./04-monitoring/topics.md) and issue detection is the scaled and automated approach: it clusters incoming traces into intent, sentiment, outcome, and issue categories. That shows the current state of the system, and how that state changes over time.
 
-[Detect topics and issues](./04-monitoring/topics.md) is that view for Specs.
+In the hands-on lab in [Detect topics and issues](./04-monitoring/topics.md), we run through topics and issue detection for the Dad IT Support Agent together.
 
 ### Capture signals from users
 
@@ -37,6 +37,8 @@ A signal is something the user does or says that indicates how the turn felt, st
 
 Chat agents benefit from capturing signals. Any agent that interacts with a person can attach signals of success, completion, or problems as scores on its traces.
 
-For Specs, we start with two conversation signals. We identify whether Dad disagrees with the steps, and whether Dad is writing in all caps. Both are strong signs that the last answer failed, or at least that the conversation is worth looking into. [Capturing signals](./04-monitoring/capturing-signals.md) sets those two up.
+For Specs, we start with two conversation signals. We identify whether Dad disagrees with the steps, and whether Dad is writing in all caps. Both are strong signs that the last answer failed, or at least that the conversation is worth looking into.
+
+In the hands-on lab in [Capturing signals](./04-monitoring/capturing-signals.md), we run through capturing signals for the Dad IT Support Agent together.
 
 Check out the Academy page on [capturing signals](https://langfuse.com/academy/monitoring/capturing-signals) for the broader map of explicit ratings, behavioral signals, conversation signals, and outcomes.
