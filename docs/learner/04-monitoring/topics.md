@@ -70,9 +70,13 @@ That first pass is the point of Topics. A few hundred traces become a handful of
 
 ### Sentiment shows the frustration
 
-On **Sentiment**, a large group is frustrated. At least two in five traces have Dad sounding that way, and it clusters where the problem did not get resolved: the laptop answers that still depend on which machine, and the follow-ups where the steps failed. A few messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there").
+On **Sentiment**, the largest tile is still calm. The name is close to "Neutral, Unemotional Tone". Frustration does not land as one block. It splits into a few tiles, with names close to "Frustration with Task Difficulties", "Frustration with connectivity difficulties", "Frustration With Ineffective Guidance", and "Frustration and Annoyance".
 
-Sentiment is the feeling. It does not yet give you a score you can filter on. [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
+Click the connectivity one. It is about 25 traces. The summaries say Dad was frustrated that the laptop would not reconnect to Wi-Fi, or that the Wi-Fi troubleshooting did not work.
+
+![Sentiment groups, with Frustration with connectivity difficulties open.](../../images/topics/sentiment-frustration.png)
+
+That tile is the feeling, not a score you can filter on. A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
 
 ### Laptop help is a chance to widen what Specs supports
 

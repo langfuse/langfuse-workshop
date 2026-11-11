@@ -13,7 +13,7 @@ Once traces are coming in, you want a judgment on them that does not require ope
 
 Signals are different from a quality rubric you wrote ahead of time. They measure how the user reacted at the moment of use, including reactions you had not thought to score. Negative signals are the ones to open individually. A user rarely corrects an answer they were happy with.
 
-For Specs we capture two conversation signals. Topics already showed the feeling on Sentiment: a large frustrated group, including lines in all caps and Dad pushing back on the steps. These two scores are how you find those turns without opening the treemap.
+For Specs we capture two conversation signals. Topics already showed the feeling on Sentiment: a tile close to "Frustration with connectivity difficulties", where Dad is frustrated that the laptop would not reconnect to Wi-Fi. Some of those lines are in all caps, and some push back on the steps. These two scores are how you find those turns without opening the treemap.
 
 - **User disagreement** — Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
 - **All-caps frustration** — Dad writes something like "THIS STILL ISNT WORKING". A long run of capital letters is a cheap deterministic clue that the conversation may need extra attention. It is a triage hint, not proof that Dad is angry.
