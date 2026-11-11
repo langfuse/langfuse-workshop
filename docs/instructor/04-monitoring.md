@@ -29,7 +29,7 @@ Demo order:
 - The queue is created with **open coding** (Text) and **pass/fail** (Categorical: pass and fail). Select the last 20 traces, tagged `error-analysis-seed`. A queue does not pick up score configs added later.
 - Do not hand them the cluster names before they have written the open-coding notes. After the set, they ask Halo to find clusters. The expected names (out of scope, impersonation, and lengthy responses) are in a collapsed block on the page. That list is a check, not the Halo prompt. They judge each trace against three expectations: structured and easy to follow, phone IT support only, and the agent talks about itself as an AI agent.
 - Ask Halo to create categorical scores for the clusters it found. If Halo words them differently, map those names to the three decisions before the second pass. They then assign each failing trace.
-- Halo builds the frequency dashboard. How that dashboard should look is still a TODO.
+- Halo builds the frequency dashboard. The page shows the shape: one bar per failure category, and the longest bar is the failure that shows up most often. The picture is the layout, not the counts from this 20-trace lab.
 - Close on the three decisions. First ask whether the fix belongs in the system prompt or in production monitoring. Out of scope: a friendly decline that points Dad back to iPhone help, plus a production monitor. Impersonation: a system-prompt fix so Specs answers as the support agent, with optional monitoring because it should be avoided. Lengthy responses: a system-prompt fix toward short numbered steps, with an optional production monitor.
 
 ### Topics and issues

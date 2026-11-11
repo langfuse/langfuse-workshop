@@ -51,9 +51,9 @@ The seed is **not idempotent**: running it again adds another 20 traces. Run it 
 
 6. Ask Halo to create categorical scores for the clusters it found.
 7. Go through the queue again and assign each failing trace to a category.
-8. Ask Halo to build a dashboard for the frequency of each category.
+8. Ask Halo to build a dashboard for the frequency of each category. One bar per failure. The longest bar is the failure that shows up most often.
 
-   > **TODO:** Add how that dashboard should look.
+   ![Failure categories, with one bar per failure mode.](../../images/monitoring/failure-categories.png)
 
 9. Decide what to do with each category. Is it something that can be fixed through improving the specification in the system prompt? Is it something that needs to be monitored in production?
 
