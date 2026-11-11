@@ -19,8 +19,6 @@ git checkout checkpoint/04-monitoring
 npm run langfuse:seed:topics
 ```
 
-This loads 200 traces spread over the last five days. One hundred and ten are ordinary iPhone questions, some one turn and some two or three. Sixty are laptop requests in two loose groups: thirty about the printer and its paper, and thirty about the laptop's Wi-Fi. Those two groups should be among the larger tiles. The wording varies inside each group. Thirty are follow-ups where Dad says the steps did not work. At least 40% of the traces have Dad sounding frustrated, mostly where the problem is still unresolved. A few of those lines are in all caps, and a few push back on the steps. The seed writes no scores, and every trace is tagged `topics-seed`.
-
 > ⚠️ The seed is **not idempotent**. OpenTelemetry mints fresh trace IDs on every run, so re-running doubles the data. Run it once. If you need a clean slate, delete the prior seed traces in Langfuse before seeding again.
 
 Open [Tracing](https://cloud.langfuse.com/project/~/traces) and filter to the `production` environment. Then open [Topics](https://cloud.langfuse.com/project/~/topics).
@@ -44,7 +42,7 @@ The model list comes from the project's LLM connections. If the dropdowns in the
 
    ![Choose intent, sentiment, outcome, and issues, and keep the recommended models.](../../images/topics/setup-look-for.png)
 
-3. On **Select traces to analyze**, leave the sample rate at **100%**. Trace filters are not available yet. Click **Next**.
+3. On **Select traces to analyze**, leave the sample rate at **100%**. Click **Next**.
 
    ![Analyze new traces at a 100% sample rate.](../../images/topics/setup-traces.png)
 
@@ -66,7 +64,9 @@ Click a tile. The list under it is the traces in that group, each with a one-lin
 
 Start by walking the tabs, before looking for something to fix. Intent is the kinds of help Dad asked for. Sentiment is how the conversation felt. Outcome is where it ended. Issues is what went wrong in the handling, including when the same problem sits under more than one intent.
 
-That first pass is the point of Topics. A few hundred traces become a handful of classes you can name. Some of what you see is the product working: iPhone tasks grouping together, ordinary requests landing cleanly. You are learning the shape of the system, not only hunting failures.
+A few hundred traces become a handful of classes you can name. Some of what you see is the product working: iPhone tasks grouping together, ordinary requests landing cleanly. You are learning the shape of the system, not only hunting failures. It also helps to understand how the system is used over time. Some topics that might have been important last month because there was a special event might now be less requested.
+
+Every generation of topics is non-deterministic, because the clustering is done by an LLM. Below is a walkthrough of the topics and issues we found on one run of this data.
 
 ### Sentiment shows the frustration
 
@@ -84,7 +84,7 @@ On **Intent**, look for two of the larger groups that are not iPhone tasks: one 
 
 Open a few of those traces. The answer does not ask which laptop Dad has. It hedges every time: if it is Windows, do this; if it is a Mac, do this.
 
-That hedge is the gap, and the fix is context, not a refusal. `DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts` already lists Dad's iPhone under `devices`. Add the laptop there, next to the phone. Specs can then give the steps for that machine instead of both. A cluster that looks out of scope is a chance to extend what the product supports.
+The agent is trying to be helpful, while it is missing the context it needs to answer the question. This is a context problem, and we can provide that context through the `get_support_context` tool. `DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts` already lists Dad's iPhone under `devices`, and that is what the tool returns. Add the laptop there, next to the phone. Specs can then give the steps for that machine instead of both.
 
 A tile summary may describe these replies as unsupported and suggest sending Dad back to iPhone help. Read the traces before you take that suggestion. Specs is already trying to help. Telling it which laptop Dad uses makes those answers specific.
 
