@@ -23,7 +23,18 @@ npm run langfuse:seed:topics
 
 Open [Tracing](https://cloud.langfuse.com/project/~/traces) and filter to the `production` environment. Then open [Topics](https://cloud.langfuse.com/project/~/topics).
 
-The model list comes from the project's LLM connections. If the dropdowns in the next step are empty, add an OpenAI connection first: Project Settings → LLM Connections → Add LLM Connection. The [capturing signals](./capturing-signals.md) section uses that same connection.
+## Add the model connection
+
+The model list in the next step comes from the project's LLM connections. Add an OpenAI connection now. [Capturing signals](./capturing-signals.md) uses this same connection.
+
+1. In Langfuse, open **Project Settings → LLM Connections**.
+2. Click **Add LLM Connection**.
+3. Choose OpenAI, name the connection, and paste your OpenAI API key into the secret field.
+4. Save the connection.
+
+If a connection is already there, keep it and continue.
+
+Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
 
 ## Set up topics
 

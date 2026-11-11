@@ -35,21 +35,11 @@ You have a traced app. This section seeds its own sample for mapping the evaluat
 
 You don't need to change any code. The agent observation has the full conversation and final answer, and each OpenAI generation has the system prompt plus the same message array.
 
-## Step 0 — Configure the Langfuse evaluator model
+## The evaluator model
 
-The disagreement monitor uses an LLM-as-a-judge template. Langfuse runs that judge call from an LLM connection inside your Langfuse project, so configure the evaluator model now, right before you use it.
+Use the OpenAI connection you added in [Topics](./topics.md#add-the-model-connection). When the wizard asks you to pick a model, choose that connection and **5.6 Luna** (`gpt-5.6-luna`).
 
-If your project already has a default evaluator model, keep it and continue to Step 1. The Topics section uses this same connection.
-
-1. In Langfuse, open Project Settings → LLM Connections.
-2. Click Add LLM Connection.
-3. Choose OpenAI, name the connection, and paste your OpenAI API key into the secret field.
-4. Save the connection.
-5. No extra action after saving the connection. The evaluation model is chosen while you create the evaluator. When the wizard asks you to pick a model, choose the OpenAI connection and **5.6 Luna** (`gpt-5.6-luna`).
-
-   ![Pick the evaluator model in the Set up evaluator wizard. Choose 5.6 Luna.](../../images/monitoring/default-evaluation-model.png)
-
-Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
+![Pick the evaluator model in the Set up evaluator wizard. Choose 5.6 Luna.](../../images/monitoring/default-evaluation-model.png)
 
 ## Step 1 — Wire the judge-based monitor (Langfuse UI)
 
@@ -98,7 +88,7 @@ Code evaluators are a good fit for that pattern: no model call, no prompt design
 3. Run a test on the evaluator.
 4. Click on **Create Evaluator** and then on execute.
 
-This evaluator runs as TypeScript inside Langfuse's sandbox, so it does not use the evaluator model from Step 0.
+This evaluator runs as TypeScript inside Langfuse's sandbox, so it does not use the OpenAI connection from [Topics](./topics.md#add-the-model-connection).
 
 ## Verify
 
