@@ -40,9 +40,3 @@ Chat agents benefit from capturing signals. Any agent that interacts with a pers
 For Specs, we start with two conversation signals. We identify whether Dad disagrees with the steps, and whether Dad is writing in all caps. Both are strong signs that the last answer failed, or at least that the conversation is worth looking into. [Capturing signals](./04-monitoring/capturing-signals.md) sets those two up.
 
 Check out the Academy page on [capturing signals](https://langfuse.com/academy/monitoring/capturing-signals) for the broader map of explicit ratings, behavioral signals, conversation signals, and outcomes.
-
-Each section seeds the traces it uses.
-
-1. [Error analysis](./04-monitoring/error-analysis.md): seed 20 traces, annotate them, and cluster the failures.
-2. [Detect topics and issues](./04-monitoring/topics.md): group traces by intent, sentiment, outcome, and issues.
-3. [Capturing signals](./04-monitoring/capturing-signals.md): score disagreement and all-caps frustration as they arrive.
