@@ -1,18 +1,18 @@
 ## Overall storyline of the workshop
 
-Sample application:
+## Sample application:
 
 A chat agent with two available tools that is anwering questions of the user.
 
-Goal:
+# Goal:
 
 Run the full AI Engineering loop and all related processes on the sample application to teach about Langfuse
 
-Tracing:
+## Tracing:
 
 To properly
 
-Monitoring:
+## **Monitoring:**
 
 ### Error Analysis:
 
@@ -29,13 +29,21 @@ Failure modes:
 
 ### **Topics:**
 
-- We seed 200 sample traces with all kinds of lengths and requests
-- First pass is exploration: intent, sentiment, outcome, and issues show the classes of requests and how they landed, including where the product is working.
-- The page opens with why: Topics is a map of what the agent handles, how users feel, and where it fails. The facets are a starting point for expansion, for changes that a failure tile is pointing at, and for which evaluators to set up. Goal is then one scope extension and one failure mode.
+- Seed a mix of ordinary phone help, laptop requests, stuck follow-ups, and some frustrated replies.
+- First pass is the map: intent, sentiment, outcome, and issues, including where the product is working.
+- Why: what the agent handles, how users feel, and where it fails. The facets start an expansion, a system change, or an evaluator.
 
-Potentials:
+Insights:
 
-- Intent shows laptop help outside the iPhone the agent is built for: laptop Wi-Fi, and printing from the laptop. In one run the printing tile is "Laptop Printing Assistance" (29 traces). The answer always hedges Windows versus Apple. Specs is trying to help and is missing context. Provide it through `get_support_context` by adding the laptop next to the iPhone. A tile summary may call these replies unsupported. Read the traces first.
-- Sentiment keeps a large neutral tile and splits frustration across a few smaller ones. Open "Frustration with connectivity difficulties": Dad is frustrated that the laptop would not reconnect to Wi-Fi. That hands off to conversation signals (disagreement and all-caps).
-- Issues also shows repeated troubleshooting. In one run the tile is "Repeated Failed Troubleshooting" (30 traces): Dad says the steps failed and Specs sends the same list again. The fix could live in the system prompt: ask what he sees and try a different path.
-- Issues can also flag mismatched help-library searches. In that same run the tile is "Mismatched Help Search Queries" (39 traces), shown on the page. Open them: the final answer is often still right. The follow-up is how useful the search library is, and which requests it has nothing for. Not a fix in the session.
+- Laptop help sits outside the iPhone Specs is built for: printing, and the laptop's Wi-Fi. Specs answers anyway and hedges Windows versus Apple. Add the laptop to the support context. Do not turn it into a refusal.
+- Sentiment stays mostly calm, and frustration splits across a few groups. Some lines are all caps, and some push back on the steps. That hands off to capturing signals.
+- Repeated troubleshooting: Dad says the steps failed and Specs sends the same list again. The fix can live in the system prompt: ask what he sees and try a different path.
+- A mismatched help search where the final answer still works. Not a patch in the session. The question is how useful the library is, and which requests it has nothing for.
+
+
+
+### Capture signals:
+
+- A result of topics also was, that there are frustrated users
+- Standard signals to capture: user disagreement + all-caps
+- On top: Detect conversation signals with decision models
