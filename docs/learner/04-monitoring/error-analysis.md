@@ -5,7 +5,12 @@ description: "Seed 20 traces, annotate them in a queue, and use Halo to cluster 
 
 # 4.1 Error analysis
 
-Error analysis is a structured approach to find failure modes by open-coding traces, then clustering those notes, and checking the number of occurrences. In this lab we will do error analysis on 20 example traces of the sample application. Usually 50–100 traces are recommended as a starting point. The process should be repeated over and over again as system usage and failure modes can shift.
+- Error analysis helps identify concrete failures of the application through real cases.
+- It is often an approach to understand how the system prompt was underspecified, in terms of output format, scope, and the way of handling interactions.
+- It lets you find hidden failures and quantify how often they occur, so you can prioritize what to tackle.
+- Beyond this, the process helps engineers, domain experts, and PMs understand how the agent behaves in production, and it gives them a common ground for discussion.
+
+In this lab we open-code 20 example traces, cluster the notes, and count how often each failure appears. Usually 50–100 traces are recommended as a starting point. The process should be repeated over and over again as system usage and failure modes can shift.
 
 ```bash
 git checkout checkpoint/04-monitoring
@@ -63,11 +68,4 @@ The seed is **not idempotent**: running it again adds another 20 traces. Run it 
    - **Impersonation.** Fix it in the system prompt, so Specs answers as the support agent. Optionally monitor over time, as this should be avoided.
    - **Lengthy responses.** Fix it in the system prompt, so answers stay short and in numbered steps. Optionally monitor long replies in production as well.
 
-## Takeaway
-
-- Error analysis helps identify concrete failures of the application through real cases.
-- It is often an approach to understand how the system prompt was underspecified, in terms of output format, scope, and the way of handling interactions.
-- It lets you find hidden failures and quantify how often they occur, so you can prioritize what to tackle.
-- Beyond this, the process helps engineers, domain experts, and PMs understand how the agent behaves in production, and it gives them a common ground for discussion.
-
-[Detect topics and issues](./topics.md) is the next section. It looks at production traffic at a larger scale, without reading every trace by hand.
+For this run, each failure is a prompt fix, a production monitor, or both. [Detect topics and issues](./topics.md) is next. It looks at the same production traffic at a larger scale, without reading every trace by hand.

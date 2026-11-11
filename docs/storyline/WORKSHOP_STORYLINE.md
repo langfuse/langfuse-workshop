@@ -19,7 +19,7 @@ Monitoring:
 - We seed 15 sample traces with clear failure mode patterns into langfuse
 - The learner runs error analysis in UI and annotates the data quickly identofying the failure modes
 - the failure modes are getting clustered
-- Takeaway: concrete failures from real cases, often an underspecified system prompt, a count you can prioritize, and a shared picture for engineers, domain experts, and PMs
+- The page opens with why: concrete failures from real cases, an underspecified system prompt, a count you can prioritize, and a shared picture for engineers, domain experts, and PMs. It closes on the three decisions for this run, then points to topics.
 
 Failure modes:
 
