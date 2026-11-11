@@ -117,7 +117,11 @@ The fix could live in the system prompt: when Dad says a step failed, ask what h
 
 ### A search that looks wrong, and an answer that still works
 
-**Issues** also has a group for searches that do not match the question. In this run that tile is **Mismatched Help Search Queries**, 39 traces. Open a few traces. The help-library query or result is unrelated, and the final answer still covers what Dad asked. The summaries say the mismatch was an extra step, not the thing that decided the turn.
+On **Issues**, one tile in this run is **Mismatched Help Search Queries**, 39 traces. The tile says most of these traces used an unrelated or mismatched search query during the help lookup, and often still recovered with relevant instructions.
+
+![Issues treemap with Mismatched Help Search Queries open, 39 traces.](../../images/topics/mismatched-help-search.png)
+
+Open a few traces. The help-library query or result is unrelated, and the final answer still covers what Dad asked. The summaries say the mismatch was an extra step, not the thing that decided the turn.
 
 That is not a failure to patch in this session. It raises a question about the library. How often does `search_help_library` actually help, and which requests does it have nothing useful for? That is worth a closer look at the guides in `src/server/support-data.ts` before treating the tile as a broken answer.
 
