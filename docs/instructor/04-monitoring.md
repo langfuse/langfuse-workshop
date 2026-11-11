@@ -54,7 +54,8 @@ Demo order:
 - After **Create evaluator**, review filters, estimated weekly volume and cost, and sampling rate, then click **Execute**.
 - Execute scores observations that arrive afterwards. Traces already in the project are the mapping sample, not an automatic backfill. The two chat turns in Verify are what should light up. Historical scoring is batch evaluation, and re-running a seed is the wrong way to get scores.
 - The ALL-CAPS template is there to show a deterministic signal that needs no model call.
-- The bonus is optional. In the evaluator library, **Detect conversation signals** is a decision-model template: one call scores several conversation signals at once. Have them test one or two examples and save. Do not replace the disagreement judge or the all-caps evaluator with it.
+- After the two live turns, they can ask Halo to chart the conversation signals. Stay on a page Halo can use as context, open the **Dashboard** tab, and ask for a dashboard of the signals they evaluate. The page shows one result: a chart per score over the past week.
+- The bonus is optional. In the evaluator library, **Detect conversation signals** is a decision-model template: one call scores several conversation signals at once. Have them test one or two examples and save. Do not replace the disagreement judge or the all-caps evaluator with it. There is no screenshot of that template yet.
 
 ## Demo rhythm
 
@@ -63,13 +64,13 @@ Demo order:
 3. Topics: add the OpenAI connection, run that section's seed once, open Topics, run **Set up topics** with all four labels and the recommended models, then walk the four tabs. Open the laptop printing tile as missing context. On Sentiment, open "Frustration with connectivity difficulties" and point ahead to disagreement and all-caps scores. Then repeated failed troubleshooting as a prompt fix, and mismatched searches that did not change the answer. Close on the general takeaway: a map of production, then the facets as a starting point for scope, system changes, and evaluators.
 4. Capturing signals: the OpenAI connection is already in place from Topics. Pick **5.6 Luna**, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
-6. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them.
+6. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them. If time remains, ask Halo on the **Dashboard** tab to chart those signals over time.
 7. If time remains, open the bonus: evaluator library → **Detect conversation signals**, test on one or two examples, save.
 
 ## Watch for
 
 - Re-running a section's seed, or running the topics seed again to fill error analysis or capturing signals. Each run mints new trace IDs.
-- Treating dashboards as a configuration step. The overview only points at them.
+- Treating the overview's dashboard link as a configuration step. The signals section is where Halo builds a chart of the scores.
 - Skipping the reading in error analysis and jumping straight to evaluator templates.
 - Starting Topics with empty model dropdowns. Those lists are the project's LLM connections.
 - Clicking **Start analyzing** when the review still says there are no traces in the last 7 days.

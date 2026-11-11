@@ -13,8 +13,8 @@ Signals are different from a quality rubric you wrote ahead of time. They measur
 
 For Specs we capture two conversation signals. [Topics](./topics.md) already showed the feeling on Sentiment: a tile close to "Frustration with connectivity difficulties", where Dad is frustrated that the laptop would not reconnect to Wi-Fi. Some of those lines are in all caps, and some push back on the steps. These two scores are how you find those turns without opening the treemap.
 
-- **User disagreement** — Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
-- **All-caps frustration** — Dad writes something like "THIS STILL ISNT WORKING". A long run of capital letters is a cheap deterministic clue that the conversation may need extra attention. It is a triage hint, not proof that Dad is angry.
+- **User disagreement:** Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
+- **All-caps frustration:** Dad writes something like "THIS STILL ISNT WORKING". A long run of capital letters is a cheap deterministic clue that the conversation may need extra attention. It is a triage hint, not proof that Dad is angry.
 
 Complementary materials:
 
@@ -26,12 +26,6 @@ Complementary materials:
 ```bash
 git checkout checkpoint/04-monitoring
 ```
-
-You have a traced app. This section seeds its own sample for mapping the evaluators.
-
-> **TODO:** Choose the traces this section seeds. Until then, map the evaluators against `production` traces already in the project. Do not re-run another section's seed to fill this one. The two turns in Verify are new traces you send after both evaluators are executing.
-
-You don't need to change any code. The agent observation has the full conversation and final answer, and each OpenAI generation has the system prompt plus the same message array.
 
 ## The evaluator model
 
@@ -45,12 +39,13 @@ Langfuse ships a published **Detect User Disagreement** template. It is an LLM-a
 
 **Detect User Disagreement** maps `{{conversation_history}}` to every input message and `{{last_user_message}}` to the last input message. Target the root `dad-it-support-chat-turn` agent observation.
 
-**Detect Out-of-Scope Request** uses a different first variable, `{{system_prompt}}`, for the system prompt on a generation. Pick **Detect User Disagreement** for the mapping in this step.
+Pick **Detect User Disagreement** for the mapping in this step.
 
 1. In Langfuse, open **Evaluators → New Evaluator** and pick **Detect User Disagreement** from the **Template Gallery**.
-2. On the right side, select the trace root as a sample observation. Filter to the `production` environment if the panel is showing something else. We are targeting the root observation of type Agent, the place where the overall trace input and output is logged.
+2. On the right side, select the trace root as a sample observation. Filter to the `production` environment if the panel is showing something else. We are targeting the root observation of type Agent, the place where the overall trace input and output is logged. **Hint**: If you hover over the filters in the filter bar, you will see what each of those filter out. You can also 'Ask AI' to configure your filters.
+
    ![Select the trace root as a sample observation in the evaluator setup panel.](../../images/monitoring/select-sample-observation.png)
-   **Hint**: If you hover over the filters in the filter bar, you will see what each of those filter out. You can also 'Ask AI' to configure your filters.
+
 3. Under **Map variables to data**, bind each variable from the live observation tree. Open a row, hover the field, and press **Use**. Do not use **Type a JSONPath instead**.
 
    - `{{conversation_history}}`: open **Input**, hover **messages**, and press **Use**. The binding reads **Input → messages** (every message).
@@ -76,9 +71,7 @@ The monitor above uses LLM-as-a-judge because it needs semantic judgment. This o
 
 Code evaluators are a good fit for that pattern: no model call, no prompt design, just a simple rule that runs on live observations.
 
-1. In Langfuse, open **Evaluators → New Evaluator** and pick **Detect User Frustration (ALL CAPS)**.
-   In the view you can see a pre-configured code evaluator, that is targeting the Input of an observation and checks whether more than 70% of a message are all caps letters.
-
+1. In Langfuse, open **Evaluators → New Evaluator** and pick **Detect User Frustration (ALL CAPS)**. In the view you can see a pre-configured code evaluator, that is targeting the Input of an observation and checks whether more than 70% of a message are all caps letters.
 2. Target the same root agent observation as the disagreement monitor:
 
    ![Target the same root observation for the user-frustration code evaluator.](../../images/monitoring/user-frustration-target-root-observation.png)
@@ -108,9 +101,11 @@ In Langfuse, wait for the evaluators to run (refresh after a few seconds), then 
 
 ![Filter Tracing for traces with a specific evaluator score.](../../images/monitoring/filter-traces-by-evaluator-score.png)
 
-![User disagrees Example](../../images/monitoring/user-disagrees-example.png)
+You can also ask Halo to turn conversation signals into a dashboard to see the developments over time. Stay on a page Halo can use as context, open the **Dashboard** tab, and ask it to chart the signals you evaluate.
 
-![ALL-CAPS evaluator flagging a frustrated user message on a trace.](../../images/monitoring/all-caps-example.png)
+![Ask Halo, on the Dashboard tab, to chart the conversation signals over time.](../../images/monitoring/halo-conversation-signals-prompt.png)
+
+![A dashboard of conversation signals, with one chart per score.](../../images/monitoring/user-frustration-dashboard.png)
 
 User disagreement is a high-signal event. When a user pushes back on an answer the agent just gave, something almost certainly went wrong: wrong tool result, missing context, an instruction that doesn't match the iPhone they're on. These are the traces you want to read first, and they're prime candidates to turn into dataset items for `05-dataset`.
 
