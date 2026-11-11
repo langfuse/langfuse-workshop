@@ -59,7 +59,7 @@ Keep the API key in the Langfuse secret field only. Do not paste it into worksho
 
 4. On **Review**, check that **Look for** is Intent, Sentiment, Outcome, and Issues, then click **Start analyzing**.
 
-   The review tells you how many traces from the last 7 days it can use. Topics need about 100 traces before the groups settle, so a smaller batch can take longer to form. New traces show up about 5 minutes after their last activity. If the review says there are no past traces, the seed in this section has not landed in that window yet.
+   The review tells you how many traces from the last 7 days it can use. Topics need about 100 traces before the groups settle, so a smaller batch can take longer to form. New traces show up about 5 minutes after their last activity. This seed already places the newest trace more than 5 minutes before now, so the batch is past that wait. If the review says there are no past traces, the seed in this section has not landed in that window yet.
 
    ![Review what Topics will look for, then start analyzing.](../../images/topics/setup-review.png)
 

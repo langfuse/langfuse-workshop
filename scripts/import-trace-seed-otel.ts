@@ -19,8 +19,9 @@
  *   4. OTel-generated trace/observation IDs are captured so scores (which have no OTel
  *      path) can be re-pointed and sent via the REST score-create batch afterwards.
  *
- * All timestamps are shifted uniformly so the newest seeded event lands at "now",
- * preserving the original spread — same behaviour as the REST importer.
+ * All timestamps are shifted uniformly so the newest seeded event lands more than
+ * 5 minutes before now, preserving the original spread. Topics only picks up a
+ * trace after its last activity is outside that window.
  *
  * On top of the exported file, this script also synthesises a handful of edge-case
  * turns that the calm, in-scope export is missing — out-of-scope asks, ALL-CAPS
@@ -437,7 +438,8 @@ function buildEdgeBundle(
   const clone = JSON.parse(JSON.stringify(template)) as TraceSeedTraceBundle;
 
   // Spread the new turns a few minutes past the rest of the window so they are the
-  // most recent traffic; computeTimestampOffsetMs later lands the newest at "now".
+  // most recent traffic; computeTimestampOffsetMs later lands the newest more than
+  // 5 minutes before now.
   const offsetMs = (index + 1) * 60_000;
 
   const swaps: Array<{ from: string; token: string; to: string }> = [];
@@ -550,8 +552,9 @@ async function main() {
   const bundles = [...fileBundles, ...edgeCaseBundles];
 
   const combined: TraceSeedSnapshot = { ...snapshot, traces: bundles };
-  const offsetMs = computeTimestampOffsetMs(combined, Date.now());
-  logTimestampShift(combined, offsetMs);
+  const nowMs = Date.now();
+  const offsetMs = computeTimestampOffsetMs(combined, nowMs);
+  logTimestampShift(combined, offsetMs, nowMs);
 
   const totalObservations = bundles.reduce((sum, b) => sum + b.observations.length, 0);
   const totalScores = includeScores ? bundles.reduce((sum, b) => sum + b.scores.length, 0) : 0;
@@ -798,9 +801,19 @@ function formatTypeCounts(counts: Record<string, number>) {
     .join(", ");
 }
 
-// Uniformly shifts every seeded timestamp so the most recent lands at `nowMs`,
-// preserving the original spread and each trace's internal timing.
+// Topics waits about 5 minutes after a trace's last activity before it can use it.
+// Land the newest seeded event strictly outside that window.
+const NEWEST_EVENT_LAG_MS = 6 * 60_000;
+
+// Uniformly shifts every seeded timestamp so the most recent lands
+// NEWEST_EVENT_LAG_MS before `nowMs`, preserving the original spread and each
+// trace's internal timing.
 function computeTimestampOffsetMs(snapshot: TraceSeedSnapshot, nowMs: number) {
+  const latestMs = newestTimestampMs(snapshot);
+  return Number.isFinite(latestMs) ? nowMs - NEWEST_EVENT_LAG_MS - latestMs : 0;
+}
+
+function newestTimestampMs(snapshot: TraceSeedSnapshot) {
   let latestMs = Number.NEGATIVE_INFINITY;
 
   const consider = (value: string | null | undefined) => {
@@ -821,13 +834,18 @@ function computeTimestampOffsetMs(snapshot: TraceSeedSnapshot, nowMs: number) {
     }
   }
 
-  return Number.isFinite(latestMs) ? nowMs - latestMs : 0;
+  return latestMs;
 }
 
-function logTimestampShift(snapshot: TraceSeedSnapshot, offsetMs: number) {
+function logTimestampShift(snapshot: TraceSeedSnapshot, offsetMs: number, nowMs: number) {
   const days = (offsetMs / (1000 * 60 * 60 * 24)).toFixed(1);
+  const newestMs = newestTimestampMs(snapshot) + offsetMs;
+  const ageMinutes = (nowMs - newestMs) / 60_000;
+  if (!(ageMinutes > 5)) {
+    throw new Error(`Newest seeded event is only ${ageMinutes.toFixed(2)} minutes before now.`);
+  }
   console.log(
-    `Shifting all timestamps forward by ${days} day(s) so the newest of ${snapshot.traces.length} traces lands now.`
+    `Shifting all timestamps forward by ${days} day(s) so the newest of ${snapshot.traces.length} traces lands ${ageMinutes.toFixed(1)} minutes before now.`
   );
 }
 
