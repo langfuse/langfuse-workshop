@@ -62,3 +62,12 @@ The seed is **not idempotent**: running it again adds another 20 traces. Run it 
    - **Out of scope request that is responded to.** Fix the behavior so Specs declines an out-of-scope request in a friendly way and points Dad back to iPhone help. Also monitor this on production traffic, so a later reply that answers a recipe, an investment question, or a laptop problem still shows up.
    - **Impersonation.** Fix it in the system prompt, so Specs answers as the support agent. Optionally monitor over time, as this should be avoided.
    - **Lengthy responses.** Fix it in the system prompt, so answers stay short and in numbered steps. Optionally monitor long replies in production as well.
+
+## Takeaway
+
+- Error analysis helps identify concrete failures of the application through real cases.
+- It is often an approach to understand how the system prompt was underspecified, in terms of output format, scope, and the way of handling interactions.
+- It lets you find hidden failures and quantify how often they occur, so you can prioritize what to tackle.
+- Beyond this, the process helps engineers, domain experts, and PMs understand how the agent behaves in production, and it gives them a common ground for discussion.
+
+[Detect topics and issues](./topics.md) is the next section. It looks at production traffic at a larger scale, without reading every trace by hand.
