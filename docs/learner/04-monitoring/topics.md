@@ -5,7 +5,17 @@ description: "Detect topics and issues in 200 sample traces, grouped by intent, 
 
 # Detect topics and issues
 
-Topics and issue detection is an approach that analyzes trace data at scale by intent, sentiment, outcome, and issues, then groups the ones that belong together.
+## Why topics and issue detection
+
+Topics and issue detection analyzes trace data at scale by intent, sentiment, outcome, and issues, then groups the ones that belong together.
+
+Topics gives you a map of what your agent is handling in production, how users are feeling about the system, and where it fails.
+
+The facets give you a starting point to dig deeper and explore.
+
+- There might be insights on expansion opportunities for your system.
+- Some things might show up as failures but are actually an indication that you could change your system.
+- They can give you inspiration for what kind of evaluators to set up.
 
 In this lab we will detect topics and issues in 200 sample traces.
 
@@ -122,15 +132,5 @@ On **Issues**, one tile in this run is **Mismatched Help Search Queries**, 39 tr
 Open a few traces. The help-library query or result is unrelated, and the final answer still covers what Dad asked. The summaries say the mismatch was an extra step, not the thing that decided the turn.
 
 That is not a failure to patch in this session. It raises a question about the library. How often does `search_help_library` actually help, and which requests does it have nothing useful for? That is worth a closer look at the guides in `src/server/support-data.ts` before treating the tile as a broken answer.
-
-## Takeaway
-
-Topics gives you a map of what your agent is handling in production, how users are feeling about the system, and where it fails.
-
-The facets give you a starting point to dig deeper and explore.
-
-- There might be insights on expansion opportunities for your system.
-- Some things might show up as failures but are actually an indication that you could change your system.
-- They can give you inspiration for what kind of evaluators to set up.
 
 [Capturing signals](./capturing-signals.md) is the next section. It is one of those evaluators: a score for disagreement, and a score for all-caps frustration.

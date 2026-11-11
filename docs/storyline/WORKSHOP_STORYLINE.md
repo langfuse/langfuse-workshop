@@ -31,7 +31,7 @@ Failure modes:
 
 - We seed 200 sample traces with all kinds of lengths and requests
 - First pass is exploration: intent, sentiment, outcome, and issues show the classes of requests and how they landed, including where the product is working.
-- Goal is then one scope extension and one failure mode. The page closes with a general takeaway: Topics is a map of what the agent handles, how users feel, and where it fails. The facets are a starting point for expansion, for changes that a failure tile is pointing at, and for which evaluators to set up.
+- The page opens with why: Topics is a map of what the agent handles, how users feel, and where it fails. The facets are a starting point for expansion, for changes that a failure tile is pointing at, and for which evaluators to set up. Goal is then one scope extension and one failure mode.
 
 Potentials:
 

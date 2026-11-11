@@ -5,6 +5,8 @@ description: "Seed 20 traces, annotate them in a queue, and use Halo to cluster 
 
 # 4.1 Error analysis
 
+## Why error analysis
+
 - Error analysis helps identify concrete failures of the application through real cases.
 - It is often an approach to understand how the system prompt was underspecified, in terms of output format, scope, and the way of handling interactions.
 - It lets you find hidden failures and quantify how often they occur, so you can prioritize what to tackle.
