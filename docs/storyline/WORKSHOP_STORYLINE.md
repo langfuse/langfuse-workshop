@@ -34,6 +34,6 @@ Failure modes:
 
 Potentials:
 
-- Intent shows laptop clusters (printer and paper, laptop Wi-Fi), about thirty traces each so they are among the larger tiles. The answer always hedges Windows versus Apple. Specs is trying to help and is missing context. Provide it through `get_support_context` by adding the laptop next to the iPhone. The same hedge shows up under Issues as generic guidance that never asks which device it is.
+- Intent shows laptop help outside the iPhone the agent is built for: laptop Wi-Fi, and printing from the laptop. In one run the printing tile is "Laptop Printing Assistance" (29 traces). The answer always hedges Windows versus Apple. Specs is trying to help and is missing context. Provide it through `get_support_context` by adding the laptop next to the iPhone. A tile summary may call these replies unsupported. Read the traces first.
 - Issues also shows repeated troubleshooting: Dad says the steps failed and Specs sends the same list again. Fix in the system prompt: ask what he sees and try a different path.
 - Issues can also flag off-target help-library searches. Open them: the final answer is often still right. The follow-up is how useful the search library is, and which requests it has nothing for. Not a fix in the session.

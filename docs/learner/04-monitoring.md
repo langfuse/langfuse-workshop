@@ -29,7 +29,7 @@ In the hands-on lab in [section 4.1](./04-monitoring/error-analysis.md), we run 
 
 Error analysis derives general concepts from individual traces, and a person does that reading. Topics and issue detection is the scaled and automated approach: it clusters incoming traces into intent, sentiment, outcome, and issue categories. That shows the current state of the system, and how that state changes over time.
 
-[Topics and issues](./04-monitoring/topics.md) is that view for Specs.
+[Detect topics and issues](./04-monitoring/topics.md) is that view for Specs.
 
 ### Capture signals from users
 
@@ -44,5 +44,5 @@ Check out the Academy page on [capturing signals](https://langfuse.com/academy/m
 Each section seeds the traces it uses.
 
 1. [Error analysis](./04-monitoring/error-analysis.md): seed 20 traces, annotate them, and cluster the failures.
-2. [Topics and issues](./04-monitoring/topics.md): group traces by intent, sentiment, outcome, and issues.
+2. [Detect topics and issues](./04-monitoring/topics.md): group traces by intent, sentiment, outcome, and issues.
 3. [Capturing signals](./04-monitoring/capturing-signals.md): score disagreement and all-caps frustration as they arrive.

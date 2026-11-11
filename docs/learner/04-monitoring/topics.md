@@ -1,13 +1,15 @@
 ---
-title: "Workshop: Topics and Issues"
-description: "Set up Topics so production traces are grouped by intent, sentiment, outcome, and issues."
+title: "Workshop: Detect topics and issues"
+description: "Detect topics and issues in 200 sample traces, grouped by intent, sentiment, outcome, and issues."
 ---
 
-# Topics and issues
+# Detect topics and issues
 
 Part of [04 Monitoring](../04-monitoring.md).
 
-Topics labels every trace by intent, sentiment, outcome, and issues, then groups the ones that belong together. Seed the traces, set Topics up, then read what the groups say about Specs.
+Topics and issue detection is an approach that analyzes trace data at scale by intent, sentiment, outcome, and issues, then groups the ones that belong together.
+
+In this lab we will detect topics and issues in 200 sample traces.
 
 ```bash
 git checkout checkpoint/04-monitoring
@@ -21,7 +23,7 @@ npm run langfuse:seed:topics
 
 > ⚠️ The seed is **not idempotent**. OpenTelemetry mints fresh trace IDs on every run, so re-running doubles the data. Run it once. If you need a clean slate, delete the prior seed traces in Langfuse before seeding again.
 
-Open [Tracing](https://cloud.langfuse.com/project/~/traces) and filter to the `production` environment. Then open [Topics](https://cloud.langfuse.com/project/~/topics).
+Open [Tracing](https://cloud.langfuse.com/project/~/traces) if you want to inspect the seeded traces first. Then open [Topics](https://cloud.langfuse.com/project/~/topics).
 
 ## Add the model connection
 
@@ -44,10 +46,10 @@ Keep the API key in the Langfuse secret field only. Do not paste it into worksho
 
 2. Under **What to look for**, leave all four checked:
 
-   - **Intent** — what the run was asked to do.
-   - **Sentiment** — how the end user felt about the interaction.
-   - **Outcome** — where the run ended, and whether that is confirmed.
-   - **Issues** — the main problem in how the run was handled.
+   - **Intent:** what the agent was asked to do.
+   - **Sentiment:** how the end user felt about the interaction.
+   - **Outcome:** where the run ended, and whether that is confirmed.
+   - **Issues:** the main problem in how the run was handled.
 
    Under **Select models for analysis**, keep the models marked **Recommended**: summaries, embeddings (`text-embedding-3-small`), and grouping. Click **Next**.
 
@@ -65,7 +67,7 @@ Keep the API key in the Langfuse secret field only. Do not paste it into worksho
 
 ## Insights
 
-When the page fills in, the tabs are **Intent**, **Sentiment**, **Outcome**, and **Issues**. **Visualize as** can stay on **Treemap**. **Auto-analyze** stays on, so later traces are labeled the same way.
+When the page fills in, the tabs are **Intent**, **Sentiment**, **Outcome**, and **Issues**. There are different approaches to visualize the data. The default is Treemap.
 
 Click a tile. The list under it is the traces in that group, each with a one-line summary. **Open in Tracing** shows those same traces in the trace table. Tile names come from the model, so yours will be close to the ones below, not necessarily identical.
 
@@ -75,7 +77,7 @@ Click a tile. The list under it is the traces in that group, each with a one-lin
 
 Start by walking the tabs, before looking for something to fix. Intent is the kinds of help Dad asked for. Sentiment is how the conversation felt. Outcome is where it ended. Issues is what went wrong in the handling, including when the same problem sits under more than one intent.
 
-A few hundred traces become a handful of classes you can name. Some of what you see is the product working: iPhone tasks grouping together, ordinary requests landing cleanly. You are learning the shape of the system, not only hunting failures. It also helps to understand how the system is used over time. Some topics that might have been important last month because there was a special event might now be less requested.
+A few hundred traces become a handful of classes you can name. Some of what you see is the product working: iPhone tasks grouping together, ordinary requests landing cleanly. You are learning about the shape of how the system is used in production, not only hunting failures. It also helps to understand how the system is used over time. Some topics that might have been important last month because there was a special event might now be less requested.
 
 Every generation of topics is non-deterministic, because the clustering is done by an LLM. Below is a walkthrough of the topics and issues we found on one run of this data.
 
@@ -87,11 +89,15 @@ Click the connectivity one. It is about 25 traces. The summaries say Dad was fru
 
 ![Sentiment groups, with Frustration with connectivity difficulties open.](../../images/topics/sentiment-frustration.png)
 
-That tile is the feeling, not a score you can filter on. A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
+A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Capturing signals](./capturing-signals.md) is the next section, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
 
 ### Laptop help is a chance to widen what Specs supports
 
-On **Intent**, look for two of the larger groups that are not iPhone tasks: one about the laptop's Wi-Fi, and one about printing from the laptop, including paper jams and paper in the tray. Each of those has about thirty traces. The iPhone is the device Specs is built for. These requests sit outside that, and Specs answers them anyway.
+On **Intent**, look for two of the larger groups that are not iPhone tasks: one about the laptop's Wi-Fi, and one about printing from the laptop, including paper jams and paper in the tray. The iPhone is the device Specs is built for. These requests sit outside that, and Specs answers them anyway.
+
+In this run the printing tile is **Laptop Printing Assistance**, 29 traces. The summaries are print jobs, a flashing printer light, and paper that comes out sideways.
+
+![Intent treemap with Laptop Printing Assistance open, 29 traces.](../../images/topics/laptop-printing.png)
 
 Open a few of those traces. The answer does not ask which laptop Dad has. It hedges every time: if it is Windows, do this; if it is a Mac, do this.
 
@@ -99,15 +105,11 @@ The agent is trying to be helpful, while it is missing the context it needs to a
 
 A tile summary may describe these replies as unsupported and suggest sending Dad back to iPhone help. Read the traces before you take that suggestion. Specs is already trying to help. Telling it which laptop Dad uses makes those answers specific.
 
-### The same laptop gap shows up under Issues
-
-On **Issues**, one of the larger groups is answers that give guidance without confirming the setup. The name may be close to "Unclarified Setup or Support Scope". Open it. The laptop traces are here too: Specs tries to answer the printer or Wi-Fi question, and the steps stay generic because it never asks which device this is. The Windows branch and the Apple branch are both in the reply. The same context change, adding the laptop beside the iPhone, is what makes these specific.
-
 ### Repeated steps after Dad says it failed
 
 **Issues** also has a group for troubleshooting that repeats. The name may be close to "Repeated Failed Troubleshooting", and it is about 30 traces. These are the two- and three-turn sessions where Dad says the steps did not work ("I did that, but nothing changed", "I can't find that option") and Specs sends the same numbered list again. They hide inside ordinary intents such as Bluetooth or WhatsApp, which is why they show up together here and not as their own intent.
 
-The fix belongs in the system prompt: when Dad says a step failed, ask what he sees on screen and try a different path instead of repeating the list.
+The fix could live in the system prompt: when Dad says a step failed, ask what he sees on screen and try a different path instead of repeating the list.
 
 ### A search that looks wrong, and an answer that still works
 
