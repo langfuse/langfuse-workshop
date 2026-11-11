@@ -9,6 +9,10 @@ Part of [04 Monitoring](../04-monitoring.md).
 
 Error analysis is a structured approach to find failure modes by open-coding traces, then clustering those notes, and checking the number of occurrences. In this lab we will do error analysis on 20 example traces of the sample application. Usually 50–100 traces are recommended as a starting point. The process should be repeated over and over again as system usage and failure modes can shift.
 
+```bash
+git checkout checkpoint/04-monitoring
+```
+
 If you are new to error analysis, check out the Academy page on [error analysis](https://langfuse.com/academy/monitoring/error-analysis).
 
 To be able to judge the outputs, we need to establish a few expectations towards the application:
