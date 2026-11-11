@@ -29,16 +29,16 @@ Failure modes:
 
 ### **Topics:**
 
-- Seed a mix of ordinary phone help, laptop requests, stuck follow-ups, and some frustrated replies.
+- Topic seed data: a mix of on-topic requests, plus the cases below.
 - First pass is the map: intent, sentiment, outcome, and issues, including where the product is working.
 - Why: what the agent handles, how users feel, and where it fails. The facets start an expansion, a system change, or an evaluator.
 
 Insights:
 
-- Laptop help sits outside the iPhone Specs is built for: printing, and the laptop's Wi-Fi. Specs answers anyway and hedges Windows versus Apple. Add the laptop to the support context. Do not turn it into a refusal.
-- Sentiment stays mostly calm, and frustration splits across a few groups. Some lines are all caps, and some push back on the steps. That hands off to capturing signals.
-- Repeated troubleshooting: Dad says the steps failed and Specs sends the same list again. The fix can live in the system prompt: ask what he sees and try a different path.
-- A mismatched help search where the final answer still works. Not a patch in the session. The question is how useful the library is, and which requests it has nothing for.
+- The tool is used for something it was not initially made for.
+- Sentiment is mostly calm, but some requests invoke frustration: all caps, pushback, or frustration expressed in other words.
+- Repeated troubleshooting: after the user says it is not really helping, no better steps are provided.
+- A mismatched information lookup where the final answer still worked out.
 
 
 
