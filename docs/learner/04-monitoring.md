@@ -27,7 +27,7 @@ In the hands-on lab in [section 4.1](./04-monitoring/error-analysis.md), we run 
 
 ### Identify topics and issues at scale
 
-Error analysis derives general concepts from individual traces, and a person does that reading. Topics and issue detection is the scaled and automated approach: it clusters incoming traces into intent, sentiment, outcome, and issue categories. That shows the current state of the system, and how that state changes over time.
+Error analysis derives general concepts from individual traces, and a person does that reading. [Topics](./04-monitoring/topics.md) and issue detection is the scaled and automated approach: it clusters incoming traces into intent, sentiment, outcome, and issue categories. That shows the current state of the system, and how that state changes over time.
 
 [Detect topics and issues](./04-monitoring/topics.md) is that view for Specs.
 
