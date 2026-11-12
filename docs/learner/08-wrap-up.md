@@ -15,6 +15,8 @@ Complementary materials:
 - Academy: [The AI Engineering Loop](https://langfuse.com/academy/ai-engineering-loop)
   - [Tracing](https://langfuse.com/academy/tracing)
   - [Monitoring](https://langfuse.com/academy/monitoring)
+    - [Error analysis](https://langfuse.com/academy/monitoring/error-analysis)
+    - [Capturing signals](https://langfuse.com/academy/monitoring/capturing-signals)
   - [Datasets](https://langfuse.com/academy/datasets)
   - [Experiments](https://langfuse.com/academy/experiments)
   - [Evaluate](https://langfuse.com/academy/evaluate)
@@ -29,20 +31,20 @@ git checkout checkpoint/08-wrap-up
 
 - Trace an LLM app end-to-end and read the result as a debugging surface.
 - Connect prompts to traces so a prompt change has a measurable next-trace effect.
-- Detect interesting production behavior (user disagreement, all-caps frustration) automatically.
+- Make sense of a pile of production traces: read failures, and detect disagreement and all-caps frustration automatically.
 - Turn product scope into a starter dataset of realistic examples.
 - Run experiments on the same agent code with no parallel implementation.
-- Compare runs after changes and decide which setup is better — by score and by reading individual outputs.
+- Compare runs after changes and decide which setup is better: by score and by reading individual outputs.
 
 
 ## Bigger picture
 
 Langfuse in this workshop is a *shared surface*, not just observability:
 
-- understanding behavior — every interaction is inspectable
-- collecting representative examples — production seeds datasets
-- comparing changes — every prompt or code change has a baseline
-- improving systems continuously — the loop closes back on itself
+- understanding behavior: every interaction is inspectable
+- collecting representative examples: production seeds datasets
+- comparing changes: every prompt or code change has a baseline
+- improving systems continuously: the loop closes back on itself
 
 ## How to work on your own application
 

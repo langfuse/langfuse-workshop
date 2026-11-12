@@ -10,7 +10,7 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 ## Instructor notes
 
 - The key idea is reuse: the experiment runner calls the same `runSupportConversation(...)` as the web app.
-- Contrast deterministic scoring (`keyword_overlap`) with LLM-as-a-judge scoring (`correctness`) — both as **callbacks** on `runExperiment`.
+- Contrast deterministic scoring (`keyword_overlap`) with LLM-as-a-judge scoring (`correctness`): both as **callbacks** on `runExperiment`.
 - Point at the semantic-equivalence judge prompt in `scripts/run-dataset.ts`: expected output is the source of truth; paraphrases pass; missing material meaning fails.
 - Call out why this chapter avoids Langfuse Platform evaluators as the primary path: configuring one needs existing experiment data to preview mappings, which blocks a clean first run.
 - The correctness judge uses the learner's `OPENAI_API_KEY` / `OPENAI_MODEL`. Session 4's Langfuse default evaluator model is **not** required here.
@@ -24,7 +24,7 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 1. Skim the numbered sections in `scripts/run-dataset.ts`.
 2. Point out both callback evaluators in the `evaluators` array.
 3. Run `npm run dataset:run`.
-4. Open the run table, per-item traces, and chart view — both scores should already be present.
+4. Open the run table, per-item traces, and chart view: both scores should already be present.
 5. (Optional) Mention Platform evaluators / **Check Correctness** as a later add-on once experiment data exists.
 
 ## Watch for
