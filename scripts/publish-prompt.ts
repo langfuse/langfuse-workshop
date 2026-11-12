@@ -10,8 +10,7 @@ const PROMPT_VARIANTS = {
 Tone variant:
 - Be extra patient and reassuring when Dad seems uncertain.
 - Use plain, familiar wording before technical terms.
-- Start in-scope final answers with one brief confidence-building sentence.
-- If the request is out of scope, say so directly but warmly, then offer the closest iPhone-help next step.
+- Start the answer with one brief confidence-building sentence.
 `
 } as const;
 

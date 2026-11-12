@@ -65,13 +65,13 @@ Two ways to make the change:
 
 **Option A: Langfuse-side (create a new version in the UI, recommended):**
 
-Prompts → `dad-it-support-agent` → create a new version or draft → add the rule above into the **Rules** section → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
+Prompts → `dad-it-support-agent` → create a new version or draft → add the sentence above to the prompt → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
 
 ![Review Prompt Changes in Langfuse: side-by-side diff between v1 and the draft with the new out-of-scope rule highlighted, ready to save as a new version and promote to production.](../images/evaluate-a-change/07-evaluate-a-change-prompt-diff.png)
 
 **Option B: Code-side (edit `src/server/support-agent.ts` and republish):**
 
-Open `src/server/support-agent.ts`, add the same rule into the `SYSTEM_PROMPT` constant's Rules block, then publish:
+Open `src/server/support-agent.ts`, add the same sentence to the `SYSTEM_PROMPT` constant, then publish:
 
 ```bash
 npm run prompt:publish
