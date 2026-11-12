@@ -10,7 +10,7 @@ Learner guide: [04 Monitoring](../learner/04-monitoring.md)
 ## Instructor notes
 
 - This is a UI-first chapter with two signals: **Detect User Disagreement** uses LLM-as-a-judge for semantic judgment, while **Detect User Frustration (ALL CAPS)** uses deterministic TypeScript logic.
-- Before the disagreement evaluator, confirm **Project Settings → LLM Connections** uses the same credential as the app. When `LANGFUSE_GATEWAY_KEY` is set, the connection API key is that gateway key and **API Base URL** is the gateway OpenAI route (`https://gateway.cloud.langfuse.com/openai/v1` on EU Cloud). When only `OPENAI_API_KEY` is set, paste that key and leave **API Base URL** blank. When both are set, use the gateway key and the gateway base URL. Leave **Use Responses API** off. The keys in `.env` do not fill this form by themselves.
+- Before the disagreement evaluator, confirm the project has **Project Settings → LLM Connections** configured. The API keys in `.env` do not configure the judge model inside Langfuse.
 - Both evaluators target the logical root `dad-it-support-chat-turn` agent observation because that observation carries the overall conversation input and final answer.
 - Have learners use the right-side sample panel instead of mapping from memory: select a root observation, map `conversation_history` to all input messages and `last_user_message` to the last input message, then test the evaluator before saving.
 - `{{system_prompt}}` is the system-prompt variable on **Detect Out-of-Scope Request**. The disagreement mapping in this chapter is `conversation_history`.
@@ -21,7 +21,7 @@ Learner guide: [04 Monitoring](../learner/04-monitoring.md)
 
 ## Demo rhythm
 
-1. Confirm or configure the project's LLM connection: gateway key plus gateway base URL, or an OpenAI key with the base URL left blank.
+1. Confirm or configure the project's default evaluator model.
 2. Create **Detect User Disagreement**, select a sample root observation, map both variables through the data tree, run a test, then create and execute the evaluator.
 3. Create **Detect User Frustration (ALL CAPS)** on the same root observation, run a test, then create and execute it.
 4. Send one disagreement turn and one ALL-CAPS turn, then in **Tracing** filter by the evaluator score (Boolean Scores → evaluator name → equals → true/false) to find the flagged traces.
@@ -30,7 +30,7 @@ Learner guide: [04 Monitoring](../learner/04-monitoring.md)
 ## Watch for
 
 - Accidentally choosing **Out-of-Scope Request** or another gallery template instead of **Detect User Disagreement**. Out-of-Scope Request's first variable is `system_prompt` (the system prompt on a generation). This chapter maps `conversation_history` on **Detect User Disagreement**, plus the ALL-CAPS code evaluator.
-- Treating the Langfuse project keys from `.env` as enough for evaluators. Judge-based evaluators also need the Langfuse-side LLM connection, with the gateway base URL when the gateway key is the credential.
+- Treating the Langfuse API keys from `.env` as enough for evaluators. Judge-based evaluators also need the Langfuse-side LLM connection.
 - Selecting a child generation instead of the root agent observation. The evaluator only receives data from the observation it targets; it does not automatically read sibling or child observations.
 - Mapping `conversation_history` to a single message, or `last_user_message` to every message. Use the live sample tree: **Input → messages** and **Input → messages → last**.
 - Forgetting to select a sample observation before testing. The right panel can be filtered with the preset buttons or **Ask AI**.
