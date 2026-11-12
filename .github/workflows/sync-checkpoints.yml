@@ -1,0 +1,72 @@
+name: Sync checkpoint tags
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-checkpoints
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Classify changed files
+        id: changes
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            echo "docs=true" >> "$GITHUB_OUTPUT"
+            echo "code=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          changed="$(git diff --name-only "$BEFORE" "$AFTER")"
+          docs="$(grep -E '^(docs/|README\.md$|AGENTS\.md$)' <<<"$changed" || true)"
+          code="$(grep -vE '^(docs/|README\.md$|AGENTS\.md$|\.github/)' <<<"$changed" || true)"
+
+          echo "docs=$([[ -n "$docs" ]] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          {
+            echo "code<<EOF"
+            echo "$code"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Sync docs onto checkpoint tags
+        if: steps.changes.outputs.docs == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          ./scripts/sync-checkpoint-docs.sh --push
+
+      - name: Flag app changes that need manual tag patches
+        if: steps.changes.outputs.code != ''
+        env:
+          CODE_FILES: ${{ steps.changes.outputs.code }}
+        run: |
+          {
+            echo "## Checkpoint tags need a manual update"
+            echo
+            echo "This push changed files outside \`docs/\`, \`README.md\`, and \`AGENTS.md\`."
+            echo "The docs sync does not carry these. Patch every \`checkpoint/*\` tag that already"
+            echo "contains the affected code path, force-move the tag, and push it (see AGENTS.md)."
+            echo
+            echo '```'
+            echo "$CODE_FILES"
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+          while IFS= read -r f; do
+            [[ -n "$f" ]] && echo "::warning file=$f::Changed on main; patch the checkpoint tags that contain this file."
+          done <<<"$CODE_FILES"
