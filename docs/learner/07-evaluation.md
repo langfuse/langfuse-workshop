@@ -22,13 +22,12 @@ Complementary materials:
 git checkout checkpoint/07-evaluation
 ```
 
-Your app is traced, monitored, has a hosted dataset, and at least one experiment run with `behavior_match`, `short_reply`, and `correctness` scores. That run is your **baseline experiment**: it used the production `dad-it-support-agent` prompt, the same one whose traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md). Now you swap in the more specific prompt that error analysis suggested and rerun the experiment to see whether it helped or hurt.
+Your app is traced, monitored, has a hosted dataset, and at least one experiment run with `behavior_match` and `correctness` scores. That run is your **baseline experiment**: it used the production `dad-it-support-agent` prompt, the same one whose traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md). Now you swap in the more specific prompt that error analysis suggested and rerun the experiment to see whether it helped or hurt.
 
 Look at your baseline run before making changes. Open the dataset → **Experiments** tab and check the averages:
 
 - `correctness` average: what fraction of items did the judge mark as actually correct?
 - `behavior_match` average: how often did Specs reply, defer, or ask a follow-up when the dataset expected it to?
-- `short_reply` average: what fraction of answers stayed within the word limit?
 
 Open the items where either score is low and read the agent's answer. A typical finding at this stage: the agent walks Dad through an out-of-scope request instead of deferring, answers a vague request without asking what is wrong, or gives generic advice instead of the iPhone-specific instructions. Whatever you see is the *problem you're about to try to fix*.
 
@@ -45,7 +44,7 @@ The shape is always the same: change *one* thing (or a configuration of multiple
 
 ## Goal
 
-Publish the prompt suggested at the end of error analysis and improve the experiment results: measured by `behavior_match` and `short_reply` going up across the dataset compared with the baseline, without `correctness` going down.
+Publish the prompt suggested at the end of error analysis and improve the experiment results: measured by `behavior_match` going up across the dataset compared with the baseline, without `correctness` going down.
 
 
 Three passes:
@@ -58,9 +57,9 @@ Three passes:
 
 Error analysis ended with a more specific prompt. Its Rules section answers the failure categories you found there, and the same rules address what the baseline run shows:
 
-- **Out of scope:** "If he asks for something other than IT help, say so in one short sentence and point him back to his phone. Do not answer that request." This targets the `defer_question` items, where the baseline agent walks Dad through filing taxes or booking a train.
+- **Out of scope:** "If he asks for something other than IT help, say so in one short sentence and point him back to his phone. Do not answer that request." This targets the `defer_question` items, where the baseline agent walks Dad through a cake recipe or his savings, or answers a pasta question that comes up after a Bluetooth fix.
 - **Vague requests:** "If you can't tell what he needs, ask one short clarifying question before giving any steps." This targets the `ask_follow_up` items, where the baseline agent answers "My phone is not working." with steps right away.
-- **Lengthy responses and impersonation:** short numbered lists, and the agent speaks as the support agent, not as family.
+- **Lengthy responses and impersonation:** short numbered lists, and the agent speaks as the support agent, not as family. Neither has an evaluator in this workshop, so read a few answers to check them.
 
 Two ways to make the change:
 
@@ -102,13 +101,13 @@ Either way you end up with a new prompt version, and the next `runSupportConvers
 npm run dataset:run
 ```
 
-You now have two runs under the same dataset: the baseline and the error-analysis prompt, each linked to its prompt version. The same `behavior_match`, `short_reply`, and `correctness` callback evaluators from step 06 score the new run automatically inside `runExperiment`.
+You now have two runs under the same dataset: the baseline and the error-analysis prompt, each linked to its prompt version. The same `behavior_match` and `correctness` callback evaluators from step 06 score the new run automatically inside `runExperiment`.
 
 ## Step 3: Compare
 
 In Langfuse:
 
-- Dataset → **Experiments** tab → both rows visible with `behavior_match`, `short_reply`, and `correctness` averages.
+- Dataset → **Experiments** tab → both rows visible with `behavior_match` and `correctness` averages.
 - **Chart view** → per-run averages side by side.
 - Add the new run as 'Compare with' in the sidebar
 
@@ -117,16 +116,16 @@ In Langfuse:
 Things to look for:
 
 - Which items improved (intentional).
-- Which items regressed (the part that makes evaluation feel useful). Check `correctness` first: it is the regression check, so a drop there means the new prompt made an answer worse even if the other scores went up.
+- Which items regressed (the part that makes evaluation feel useful). Check `correctness` first: it is the regression check, so a drop there means the new prompt made an answer worse even if `behavior_match` went up.
 - Whether the prompt change shifted scope (more refusals? more confident answers? more steps per response?).
 
-For reference, test runs of this exact comparison on the 16-item dataset went from `behavior_match` 0.81–0.88 to 1.00, `short_reply` 0.25–0.31 to 0.94–1.00, and `correctness` 0.69 to 0.81. The model-based scores move between runs, so read the items that changed rather than trusting the averages alone.
+For reference, test runs of this exact comparison on the 25-item dataset went from `behavior_match` 0.68–0.72 to 1.00 and `correctness` 0.68 to 0.84. Scores move between runs, so read the items that changed rather than trusting the averages alone.
 
 ## How to verify you are done
 
 - Two runs appear under the dataset, linked to different prompt versions.
-- All three scores (`behavior_match`, `short_reply`, `correctness`) have averages you can compare.
-- The console summary from `npm run dataset:run` already lists all three scores for the new run.
+- Both scores (`behavior_match`, `correctness`) have averages you can compare.
+- The console summary from `npm run dataset:run` already lists both scores for the new run.
 
 ## Wrap-up
 

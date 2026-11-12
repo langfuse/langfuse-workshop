@@ -47,14 +47,16 @@ For Specs, two things matter most:
 
 On top of that, the dataset should cover the shapes of input we expect Specs to handle in production, at least the ones we have seen so far. It mixes cases that already work well, for example traces that passed error analysis, with cases that caused problems in the past and cases that must be handled correctly.
 
-The starter dataset covers:
+The starter dataset has 25 items. Nine come straight from the traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md), each marked `"source": "error-analysis"` in its metadata:
 
-- iPhone Bluetooth basics and edge cases
-- iPhone Wi-Fi reconnect + "I can't see the network"
-- Photo capture + WhatsApp share
-- Apple Maps directions + the live-location limit
-- Messages basics
-- Out-of-scope requests (file my taxes, book my train), the failure mode error analysis found
+- Ordinary questions that passed: pin a WhatsApp chat, turn on Do Not Disturb, make the text bigger
+- Out-of-scope questions that got answered: a cake recipe, an index fund
+- Multi-turn conversations: an out-of-scope question after a Bluetooth fix ("Can you also tell me how to cook pasta?") or a Wi-Fi fix (a laptop recommendation), and follow-ups such as "Where is the moon icon?" after Do Not Disturb
+
+The other 16 (`"source": "starter"`) cover cases error analysis didn't include but that must be handled correctly:
+
+- iPhone Bluetooth, Wi-Fi, photos, WhatsApp, Maps, and Messages basics and edge cases
+- Out-of-scope requests not seen in error analysis (file my taxes, book my train), so the step 07 prompt is also measured on cases it wasn't written from
 - Limitation cases (passwords, live location)
 - Vague requests that need a clarifying question first ("My phone is not working.")
 
@@ -79,7 +81,7 @@ In our case, the conceptual shape of one item is:
     "idealAnswer": "1. Open the Settings app.\n2. Tap Bluetooth.\n3. Turn the Bluetooth switch on. It turns green when Bluetooth is on.",
     "expectedBehavior": "reply"
   },
-  "metadata": { "category": "iphone-bluetooth", "difficulty": "easy" }
+  "metadata": { "category": "iphone-bluetooth", "difficulty": "easy", "source": "starter" }
 }
 ```
 
@@ -90,9 +92,9 @@ The two fields inside `expectedOutput` match the two evaluation questions from S
 
 In chapter 06 you will see how each of these is evaluated.
 
-`metadata` lets us slice runs by category or difficulty later when comparing experiment runs side by side.
+`metadata` lets us slice runs by category, difficulty, or source later when comparing experiment runs side by side.
 
-If you look at the actual JSON in `data/seed-dataset.json`, the `input` is the full `{ messages: [...] }` shape that `/api/chat` accepts, plus an `id` field for the dataset row. We've simplified the example above to show *what an item is*; the on-disk format is what the experiment script (step 06) can feed straight into `runSupportConversation(...)` without rewriting inputs.
+If you look at the actual JSON in `data/seed-dataset.json`, the `input` is the full `{ messages: [...] }` shape that `/api/chat` accepts, plus an `id` field for the dataset row. Multi-turn items carry the earlier user and assistant turns in that array, and the expectations apply to the last reply. We've simplified the example above to show *what an item is*; the on-disk format is what the experiment script (step 06) can feed straight into `runSupportConversation(...)` without rewriting inputs.
 
 ## Step 3: Seed the dataset
 
@@ -109,7 +111,7 @@ For this workshop we use the programmatic path because we already have a curated
 npm run dataset:seed
 ```
 
-Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 16 items and 0 experiment runs (so far).
+Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 25 items and 0 experiment runs (so far).
 
 Click into the dataset and switch to the **Items** tab. You should see every seeded item with input, expected output, and metadata columns:
 

@@ -38,7 +38,7 @@
       "messages": [{ "role": "user", "content": "How do I get directions to the next bus stop?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "1. Open Maps.\n2. Type the bus stop name or a nearby street in the search bar.\n3. Tap Directions.\n4. Choose Walking or Transit. Maps shows the route on the map.",
+      "idealAnswer": "1. Open Maps.\n2. Type the bus stop name or a nearby street in the search bar.\n3. Tap Directions. Maps shows the route on the map.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "medium", "source": "starter" }
@@ -82,7 +82,7 @@
       "messages": [{ "role": "user", "content": "Can you see my live location and tell me which bus stop is closest?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "I can't see your live location, but Maps can find the closest stop for you.\n1. Open Maps.\n2. Type \"bus stop\" in the search bar.\n3. Tap the closest stop in the list, then tap Directions.",
+      "idealAnswer": "I can't see your live location, but Maps can find a stop near you.\n1. Open Maps.\n2. Type \"bus stop\" in the search bar.\n3. Tap a stop near you, then tap Directions.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "medium", "source": "starter" }
@@ -115,7 +115,7 @@
       "messages": [{ "role": "user", "content": "How do I search for the bus stop in Maps?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "1. Open Maps.\n2. Tap the search bar at the bottom of the screen.\n3. Type the bus stop name or the street name. Matching places appear in a list.\n4. Tap the bus stop, then tap Directions.",
+      "idealAnswer": "1. Open Maps.\n2. Tap the search bar at the bottom of the screen.\n3. Type the bus stop name or the street name.\n4. Tap the bus stop, then tap Directions.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "easy", "source": "starter" }
@@ -137,7 +137,7 @@
       "messages": [{ "role": "user", "content": "How do I send a text message from my iPhone?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "1. Open the Messages app.\n2. Tap the new message button in the top-right corner.\n3. Type the contact's name or phone number in the To field.\n4. Tap the message box, type your message, then tap the blue send arrow. Your message appears in a bubble.",
+      "idealAnswer": "1. Open the Messages app.\n2. Tap the new message button in the top-right corner.\n3. Type the contact's name or phone number in the To field.\n4. Tap the message box, type your message, then tap the blue send arrow.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-messages", "difficulty": "easy", "source": "starter" }
@@ -192,7 +192,7 @@
       "messages": [{ "role": "user", "content": "How do I turn on Do Not Disturb?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "1. Open Settings.\n2. Tap Focus.\n3. Tap Do Not Disturb.\n4. Turn on Do Not Disturb. A moon icon shows at the top of the screen.",
+      "idealAnswer": "1. Swipe down from the top-right corner to open Control Center.\n2. Tap Focus.\n3. Tap Do Not Disturb. A moon icon shows at the top of the screen.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-focus", "difficulty": "easy", "source": "error-analysis" }
@@ -272,7 +272,7 @@
       ]
     },
     "expectedOutput": {
-      "idealAnswer": "The moon icon is in Control Center.\n1. Swipe down from the top-right corner of the screen to open Control Center.\n2. Tap Focus, the button with the moon.\n3. Tap Do Not Disturb. The moon shows at the top of the screen.",
+      "idealAnswer": "1. Look at the top of the screen. When Do Not Disturb is on, a small moon shows there.\n2. To change it, swipe down from the top-right corner to open Control Center. The moon is on the Focus button.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-focus", "difficulty": "medium", "source": "error-analysis" }
@@ -289,7 +289,7 @@
       ]
     },
     "expectedOutput": {
-      "idealAnswer": "1. Tap the search field at the bottom of the Maps screen. The keyboard comes up.\n2. Type the bus stop or street name.\n3. Tap the matching result in the list.",
+      "idealAnswer": "1. Tap the search field at the bottom of the Maps screen. The keyboard comes up.\n2. Type the bus stop or street name, then tap Search.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps-bus-stop", "difficulty": "medium", "source": "error-analysis" }

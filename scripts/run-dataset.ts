@@ -123,6 +123,11 @@ Score true only when the actual output conveys every material meaning, fact, con
 - Treat equivalent information expressed in text, objects, arrays, or another representation as matching when the meaning is preserved.
 - Score false for a wrong conclusion, contradicted fact, missing required detail, altered constraint, unsupported claim, misleading addition, or changed relationship between facts.
 
+## What Is Material For This Support Agent
+- Material: the kind of reply (steps, a decline, or a clarifying question), any limitation the expected output states, and the screens and actions needed to finish the task.
+- Not material: confirmations of what the user will see, optional alternatives (for example Face ID or passcode), the exact wording of a decline or whether it names the topic, the example options a clarifying question lists, and a minor step the user can skip and still finish the task.
+- A different valid route to the same result is a match.
+
 ## Decision Rules
 1. Identify the expected output's material claims, facts, constraints, conclusions, and relationships.
 2. Compare the actual output against each semantic requirement.

@@ -120,7 +120,7 @@ You can also ask Halo to turn conversation signals into a dashboard to see the d
 
 ![A dashboard of conversation signals, with one chart per score.](../../images/monitoring/user-frustration-dashboard.png)
 
-User disagreement is a high-signal event. When a user pushes back on an answer the agent just gave, something almost certainly went wrong: wrong tool result, missing context, an instruction that doesn't match the iPhone they're on. These are the traces you want to read first, and they're prime candidates to turn into dataset items for `05-dataset`.
+User disagreement is a high-signal event. When a user pushes back on an answer the agent just gave, something almost certainly went wrong: wrong tool result, missing context, an instruction that doesn't match the iPhone they're on. These are the traces you want to read first, and they're prime candidates to turn into dataset items in [05 Build eval datasets](../05-dataset.md).
 
 The all-caps signal is a rougher clue that the conversation might be going sideways. Paired with the disagreement judge, it is a good "review these first" monitor.
 
@@ -141,8 +141,8 @@ Using this, we can capture a variety of signals at once.
 
 The scores answer which traces to open. [Section 4.1 Error analysis](./error-analysis.md) is how you decide which further signals are worth adding, by reading what actually goes wrong and naming it. [Dashboards](https://langfuse.com/docs/metrics/features/custom-dashboards) are where a score becomes a trend over time.
 
-The traces you catch with these monitors are also the best source for the next step, `05-dataset`, because they're real examples of behavior you want to lock in or fix.
+The traces you catch with these monitors are also the best source for the next step, [05 Build eval datasets](../05-dataset.md), because they're real examples of behavior you want to lock in or fix.
 
 ## End state
 
-This is the starting point for `05-dataset`.
+This is the starting point for [05 Build eval datasets](../05-dataset.md).

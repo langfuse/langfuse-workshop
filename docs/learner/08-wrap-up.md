@@ -32,7 +32,7 @@ git checkout checkpoint/08-wrap-up
 - Trace an LLM app end-to-end and read the result as a debugging surface.
 - Connect prompts to traces so a prompt change has a measurable next-trace effect.
 - Make sense of a pile of production traces: read failures, and detect disagreement and all-caps frustration automatically.
-- Turn product scope into a starter dataset of realistic examples.
+- Decide what you want to evaluate and build an eval dataset from error analysis and the cases that must work.
 - Run experiments on the same agent code with no parallel implementation.
 - Compare runs after changes and decide which setup is better: by score and by reading individual outputs.
 
@@ -67,6 +67,6 @@ When you go back to your own codebase, do this in order:
 
 3. **Run realistic cases through your app** so you have traces to work with for error analysis.
 
-4. **Build your first dataset** so it represents what your application will actually do.
+4. **Build your first eval dataset.** Decide what you want to evaluate, then fill it with traces from error analysis and the cases your application must handle.
 
 5. **Measure and iterate** on the quality of your system. Change one thing, rerun, and compare.
