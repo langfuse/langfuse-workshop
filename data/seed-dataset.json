@@ -5,7 +5,7 @@
       "messages": [{ "role": "user", "content": "How do I turn Bluetooth on on my iPhone?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Open Settings, tap Bluetooth, and turn the Bluetooth switch on.",
+      "idealAnswer": "1. Open the Settings app.\n2. Tap Bluetooth.\n3. Turn the Bluetooth switch on. It turns green when Bluetooth is on.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-bluetooth", "difficulty": "easy" }
@@ -16,7 +16,7 @@
       "messages": [{ "role": "user", "content": "How do I take a photo and send it on WhatsApp?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Take the photo in Camera, open WhatsApp, choose the chat, attach the photo, and send it.",
+      "idealAnswer": "1. Open Camera and tap the white shutter button to take the photo.\n2. Open WhatsApp and tap the chat you want.\n3. Tap the plus button, then Photo Library, and choose the photo.\n4. Tap Send. The photo appears in the chat.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-photo", "difficulty": "easy" }
@@ -27,7 +27,7 @@
       "messages": [{ "role": "user", "content": "How do I reconnect the iPhone to Wi-Fi?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Open Settings, tap Wi-Fi, choose the network, and join it with the password.",
+      "idealAnswer": "1. Open Settings and tap Wi-Fi.\n2. Make sure the Wi-Fi switch is on. It shows green.\n3. Tap your home network name.\n4. Enter the Wi-Fi password and tap Join. A check mark appears next to the network name.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-wifi", "difficulty": "easy" }
@@ -38,7 +38,7 @@
       "messages": [{ "role": "user", "content": "How do I get directions to the next bus stop?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Open Maps, search for the bus stop or nearby street, tap Directions, and choose walking or transit.",
+      "idealAnswer": "1. Open Maps.\n2. Type the bus stop name or a nearby street in the search bar.\n3. Tap Directions.\n4. Choose Walking or Transit. Maps shows the route on the map.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "medium" }
@@ -49,7 +49,7 @@
       "messages": [{ "role": "user", "content": "My Bluetooth is already on but the earbuds are not showing up." }]
     },
     "expectedOutput": {
-      "idealAnswer": "Explain that the earbuds likely still need pairing mode, then tell Dad where to check Bluetooth.",
+      "idealAnswer": "Your earbuds probably still need to be in pairing mode.\n1. Put the earbuds in pairing mode. Their instructions say how, often by holding a button on the case.\n2. Open Settings and tap Bluetooth.\n3. Wait for the earbuds' name to appear in the list, then tap it.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-bluetooth", "difficulty": "medium" }
@@ -60,7 +60,7 @@
       "messages": [{ "role": "user", "content": "I do not see the home Wi-Fi name on my phone." }]
     },
     "expectedOutput": {
-      "idealAnswer": "Tell Dad to stay in Wi-Fi settings, move closer to the router, and wait for the network list to refresh.",
+      "idealAnswer": "1. Stay on the Wi-Fi screen in Settings.\n2. Move closer to your router.\n3. Wait a moment. The list of networks refreshes and your home network name should appear.\n4. Tap it and enter the password if asked.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-wifi", "difficulty": "medium" }
@@ -71,7 +71,7 @@
       "messages": [{ "role": "user", "content": "How do I open the photo I just took?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Tell Dad to tap the photo preview thumbnail after taking the picture.",
+      "idealAnswer": "1. Stay in the Camera app right after taking the photo.\n2. Tap the small picture in the bottom-left corner. Your photo opens full screen.\n3. Tap Done to go back to the camera.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-photo", "difficulty": "easy" }
@@ -82,7 +82,7 @@
       "messages": [{ "role": "user", "content": "Can you see my live location and tell me which bus stop is closest?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Explain that the assistant cannot see live location, then offer step-by-step help using Maps.",
+      "idealAnswer": "I can't see your live location, but you can find the closest stop in Maps.\n1. Open Maps.\n2. Type \"bus stop\" in the search bar.\n3. Maps lists the stops near you with their distance. Tap the closest one, then tap Directions.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "medium" }
@@ -93,7 +93,7 @@
       "messages": [{ "role": "user", "content": "Can you file my taxes for me?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Politely refuse because it is out of scope and redirect to phone-support help.",
+      "idealAnswer": "I can only help with your iPhone, not with taxes. Is there anything on your phone I can help you with?",
       "expectedBehavior": "defer_question"
     },
     "metadata": { "category": "out-of-scope", "difficulty": "easy" }
@@ -104,7 +104,7 @@
       "messages": [{ "role": "user", "content": "What is my Wi-Fi password?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Explain that the assistant cannot see passwords and then offer reconnection steps.",
+      "idealAnswer": "I can't see your Wi-Fi password. It is often printed on a sticker on your router.\n1. Open Settings and tap Wi-Fi.\n2. Tap your home network name.\n3. Enter the password from the router and tap Join.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "limits", "difficulty": "easy" }
@@ -115,7 +115,7 @@
       "messages": [{ "role": "user", "content": "How do I search for the bus stop in Maps?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Open Maps, use the search bar, type the bus stop or street name, and then ask for directions.",
+      "idealAnswer": "1. Open Maps.\n2. Tap the search bar at the bottom of the screen.\n3. Type the bus stop name or the street name. Matching places appear in a list.\n4. Tap the bus stop, then tap Directions.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "easy" }
@@ -126,7 +126,7 @@
       "messages": [{ "role": "user", "content": "How do I send the photo after I pick it in WhatsApp?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "After choosing the photo, tap Send in WhatsApp.",
+      "idealAnswer": "1. Check the large preview to make sure it is the right photo.\n2. Tap the Send button in the bottom-right corner. The photo appears in the chat.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-photo", "difficulty": "easy" }
@@ -137,7 +137,7 @@
       "messages": [{ "role": "user", "content": "How do I send a text message from my iPhone?" }]
     },
     "expectedOutput": {
-      "idealAnswer": "Open Messages, start a new message, enter the contact, type the text, and tap the blue send arrow.",
+      "idealAnswer": "1. Open the Messages app.\n2. Tap the new message button in the top-right corner.\n3. Type the contact's name or phone number in the To field.\n4. Tap the message box, type your message, then tap the blue send arrow. Your message appears in a bubble.",
       "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-messages", "difficulty": "easy" }
@@ -148,7 +148,7 @@
       "messages": [{ "role": "user", "content": "Book my train ticket to Munich for tomorrow." }]
     },
     "expectedOutput": {
-      "idealAnswer": "Say that booking travel is outside the support scope and redirect to phone help the assistant can provide.",
+      "idealAnswer": "I can only help with your iPhone, not with booking train tickets. Is there anything on your phone I can help you with?",
       "expectedBehavior": "defer_question"
     },
     "metadata": { "category": "out-of-scope", "difficulty": "easy" }
@@ -159,7 +159,7 @@
       "messages": [{ "role": "user", "content": "My phone is not working." }]
     },
     "expectedOutput": {
-      "idealAnswer": "Ask Dad what exactly is not working, for example calls, Wi-Fi, or a specific app, before giving any steps.",
+      "idealAnswer": "What exactly is not working: calls, Wi-Fi, or a specific app?",
       "expectedBehavior": "ask_follow_up"
     },
     "metadata": { "category": "vague", "difficulty": "medium" }
@@ -170,7 +170,7 @@
       "messages": [{ "role": "user", "content": "The thing I always use disappeared from my screen." }]
     },
     "expectedOutput": {
-      "idealAnswer": "Ask Dad which app or icon disappeared before explaining how to find it again.",
+      "idealAnswer": "Which app or icon disappeared from your screen?",
       "expectedBehavior": "ask_follow_up"
     },
     "metadata": { "category": "vague", "difficulty": "medium" }
