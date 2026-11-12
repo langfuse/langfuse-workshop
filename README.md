@@ -53,7 +53,7 @@ The sample app is a small web chat where Dad opens the chat to get iPhone help. 
 | 02 | [Tracing](./docs/learner/02-tracing.md) | [Instructor notes](./docs/instructor/02-tracing.md) | `checkpoint/02-tracing` | Log every agent step: generations, agent root, tool spans. |
 | 03 | [Prompt Management](./docs/learner/03-prompt-management.md) | [Instructor notes](./docs/instructor/03-prompt-management.md) | `checkpoint/03-prompt-management` | Move the system prompt into Langfuse. |
 | 04 | [Monitoring](./docs/learner/04-monitoring.md) | [Instructor notes](./docs/instructor/04-monitoring.md) | `checkpoint/04-monitoring` | Make sense of production traces: dashboards, error analysis, and signals. |
-| 05 | [Dataset](./docs/learner/05-dataset.md) | [Instructor notes](./docs/instructor/05-dataset.md) | `checkpoint/05-dataset` | Turn product scope into reusable examples. |
+| 05 | [Build eval datasets](./docs/learner/05-dataset.md) | [Instructor notes](./docs/instructor/05-dataset.md) | `checkpoint/05-dataset` | Turn product scope into reusable examples. |
 | 06 | [Experiments](./docs/learner/06-experiments.md) | [Instructor notes](./docs/instructor/06-experiments.md) | `checkpoint/06-experiments` | Run the agent against the dataset and score every item. |
 | 07 | [Evaluation](./docs/learner/07-evaluation.md) | [Instructor notes](./docs/instructor/07-evaluation.md) | `checkpoint/07-evaluation` | Change one thing, rerun the dataset, compare runs. |
 | 08 | [Wrap-up](./docs/learner/08-wrap-up.md) | [Instructor notes](./docs/instructor/08-wrap-up.md) | `checkpoint/08-wrap-up` | Apply the loop to your own app. |

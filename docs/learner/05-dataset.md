@@ -1,9 +1,9 @@
 ---
-title: "Workshop: Build a Langfuse Dataset"
-description: "Seed a starter dataset for the support agent with realistic inputs, expected outputs, and metadata for future evaluation runs."
+title: "Workshop: Build Eval Datasets"
+description: "Decide what your eval dataset should cover, design the item shape, and seed it into Langfuse for experiments."
 ---
 
-# 05 Dataset
+# 05 Build eval datasets
 
 ## Why build datasets
 
@@ -30,32 +30,37 @@ DATASET_NAME=dad-it-support-workshop
 
 ## Goal
 
-Create a first dataset that captures the kinds of requests Specs has to handle.
+Create a first eval dataset that captures the kinds of requests Specs has to handle.
 
-1. **Understand the dimensions of cases** the dataset should represent.
-2. **Understand the item shape**: every dataset item has the same three fields, and we want ours to match the agent's actual input.
+1. **Decide on the goal** for your eval dataset.
+2. **Design the item shape**: every dataset item has the same three fields, and we want ours to match the agent's actual input.
 3. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
 
-## Step 1: Understand the dimensions of cases the dataset should represent
+## Step 1: Decide on the goal for your eval dataset
 
-In our case, we want to get started with a dataset that represents realistic cases the system might have to handle, and how it should handle them. Sources can be, for example, positive examples from error analysis, historic cases, or corrected cases that were identified as failures during data review.
+Build your eval dataset from what you expect your system to hit in production, and from what is important to you: the things you want to evaluate to make sure the system works. A previous error analysis is a good place to start.
 
-The starter dataset we use covers:
+For Specs, two things matter most:
+
+- **The answers are correct.**
+- **The agent behaves appropriately**: it knows when to reply, when to defer a question, and when to ask a follow-up first. Error analysis showed that out-of-scope requests often get answered anyway.
+
+On top of that, the dataset should cover the shapes of input we expect Specs to handle in production, at least the ones we have seen so far. It mixes cases that already work well, for example traces that passed error analysis, with cases that caused problems in the past and cases that must be handled correctly.
+
+The starter dataset covers:
 
 - iPhone Bluetooth basics and edge cases
 - iPhone Wi-Fi reconnect + "I can't see the network"
 - Photo capture + WhatsApp share
 - Apple Maps directions + the live-location limit
 - Messages basics
-- Out-of-scope (file my taxes, book my train), to cover the failure mode we observed in how out-of-scope requests were handled
+- Out-of-scope requests (file my taxes, book my train), the failure mode error analysis found
 - Limitation cases (passwords, live location)
 - Vague requests that need a clarifying question first ("My phone is not working.")
 
-Every item is also labelled with the behavior we expect from Specs: `reply` (answer directly), `defer_question` (decline or redirect an out-of-scope request), or `ask_follow_up` (ask a clarifying question before answering).
+If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch. For more on choosing what goes into a dataset, see the Academy page on [building datasets](https://langfuse.com/academy/datasets).
 
-If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch.
-
-## Step 2: Read the item shape
+## Step 2: Design the item shape
 
 Dataset items in Langfuse follow a consistent shape: three fields, one required, two optional:
 
@@ -65,7 +70,7 @@ Dataset items in Langfuse follow a consistent shape: three fields, one required,
 | `expectedOutput` | optional | What a good answer would look like. Free-form: used by evaluators to compare actual vs expected. |
 | `metadata` | optional | Tags or other fields for filtering and grouping (`category`, `difficulty`, etc.). |
 
-For us, the conceptual shape of one item is:
+In our case, the conceptual shape of one item is:
 
 ```json
 {
@@ -78,10 +83,12 @@ For us, the conceptual shape of one item is:
 }
 ```
 
-The two fields inside `expectedOutput` answer two different evaluator questions:
+The two fields inside `expectedOutput` match the two evaluation questions from Step 1:
 
-- **`idealAnswer`** is the reply we want, written the way the prompt asks for it: a short numbered list of what to tap and what Dad should see, one short sentence for an out-of-scope request, or one clarifying question when the request is vague. It's what the LLM-as-a-judge `correctness` callback in chapter 06 reads to catch answers that got worse. If the ideal answers don't match the prompt, the judge ends up scoring the wrong target. Keep them to what is actually required: the judge treats every fact in `idealAnswer` as something the answer must include.
-- **`expectedBehavior`** is one of `reply`, `defer_question`, or `ask_follow_up`. In chapter 06 a small decision model labels each answer with one of those three values, and the `behavior_match` callback compares it with `expectedBehavior` by exact match.
+- **`idealAnswer`**: is the answer correct? This is the reply we want, written the way the prompt asks for it, with only the steps that matter.
+- **`expectedBehavior`**: did Specs behave appropriately? One of `reply`, `defer_question`, or `ask_follow_up`.
+
+In chapter 06 you will see how each of these is evaluated.
 
 `metadata` lets us slice runs by category or difficulty later when comparing experiment runs side by side.
 

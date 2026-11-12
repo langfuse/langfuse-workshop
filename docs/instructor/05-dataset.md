@@ -1,11 +1,11 @@
 ---
-title: "Workshop: Instructor Notes for Datasets"
+title: "Workshop: Instructor Notes for Build Eval Datasets"
 description: "Facilitator notes for framing datasets as product scope, seeding curated examples into Langfuse, and connecting items back to monitoring."
 ---
 
-# 05 Dataset
+# 05 Build eval datasets
 
-Learner guide: [05 Dataset](../learner/05-dataset.md)
+Learner guide: [05 Build eval datasets](../learner/05-dataset.md)
 
 ## Instructor notes
 
