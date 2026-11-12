@@ -49,6 +49,9 @@ The starter dataset covers:
 - Messages basics
 - Out-of-scope (file my taxes, book my train)
 - Limitation cases (passwords, live location)
+- Vague requests that need a clarifying question first ("My phone is not working.")
+
+Every item is also labelled with the behavior we expect from Specs: `reply` (answer directly), `defer_question` (decline or redirect an out-of-scope request), or `ask_follow_up` (ask a clarifying question before answering).
 
 If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch.
 
@@ -69,7 +72,7 @@ For us, the conceptual shape of one item is:
   "input": "How do I turn Bluetooth on on my iPhone?",
   "expectedOutput": {
     "idealAnswer": "Open Settings, tap Bluetooth, and turn the Bluetooth switch on.",
-    "expectedKeywords": ["Settings", "Bluetooth", "switch", "on"]
+    "expectedBehavior": "reply"
   },
   "metadata": { "category": "iphone-bluetooth", "difficulty": "easy" }
 }
@@ -78,7 +81,7 @@ For us, the conceptual shape of one item is:
 The two fields inside `expectedOutput` answer two different evaluator questions:
 
 - **`idealAnswer`** is the human-readable reference reply. It's what the LLM-as-a-judge `correctness` callback in chapter 06 reads to decide whether the meaning matches.
-- **`expectedKeywords`** is a small list of strings the answer *must* contain to be considered "covered the steps." In chapter 06 the experiment script uses it for a deterministic `keyword_overlap` callback — fast, cheap, and no model call required.
+- **`expectedBehavior`** is one of `reply`, `defer_question`, or `ask_follow_up`. In chapter 06 a small decision model labels each answer with one of those three values, and the `behavior_match` callback compares it with `expectedBehavior` by exact match.
 
 `metadata` lets us slice runs by category or difficulty later when comparing experiment runs side by side.
 
@@ -99,13 +102,13 @@ For this workshop we use the programmatic path because we already have a curated
 npm run dataset:seed
 ```
 
-Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 14 items and 0 experiment runs (so far):
+Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 16 items and 0 experiment runs (so far):
 
-![Datasets list view in Langfuse — dad-it-support-workshop with 14 items and no runs yet.](../images/datasets/05-dataset-list.png)
+![Datasets list view in Langfuse — dad-it-support-workshop with its seeded items and no runs yet.](../images/datasets/05-dataset-list.png)
 
 Click into the dataset and switch to the **Items** tab. You should see every seeded item with input, expected output, and metadata columns:
 
-![Items view of the dad-it-support-workshop dataset — all 14 rows with messages input, ideal answer + expected keywords, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
+![Items view of the dad-it-support-workshop dataset — every row with messages input, ideal answer + expected behavior, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
 
 ## How to verify you are done
 

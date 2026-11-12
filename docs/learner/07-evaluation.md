@@ -22,14 +22,14 @@ Complementary materials:
 git checkout checkpoint/07-evaluation
 ```
 
-Your app is traced, monitored, has a hosted dataset, and at least one experiment run with both `keyword_overlap` and `correctness` scores. Now you make a change to the app and rerun the experiment to see whether it helped or hurt.
+Your app is traced, monitored, has a hosted dataset, and at least one experiment run with both `behavior_match` and `correctness` scores. Now you make a change to the app and rerun the experiment to see whether it helped or hurt.
 
 Look at your first experiment run before making changes. Open the dataset → **Experiments** tab and check the averages:
 
 - `correctness` average — what fraction of items did the judge mark as actually correct?
-- `keyword_overlap` average — what fraction covered the expected steps?
+- `behavior_match` average — how often did Specs reply, defer, or ask a follow-up when the dataset expected it to?
 
-Open the items where either score is low and read the agent's answer. A typical finding at this stage: the agent skips a step, refuses something it shouldn't, or gives generic advice instead of the iPhone-specific instructions. Whatever you see is the *problem you're about to try to fix*.
+Open the items where either score is low and read the agent's answer. A typical finding at this stage: the agent walks Dad through an out-of-scope request instead of deferring, answers a vague request without asking what is wrong, or gives generic advice instead of the iPhone-specific instructions. Whatever you see is the *problem you're about to try to fix*.
 
 ## What you could change
 
@@ -44,7 +44,7 @@ The shape is always the same: change *one* thing (or a configuration of multiple
 
 ## Goal
 
-Change something in the prompt and improve the experiment results — measured by `correctness` and `keyword_overlap` going up across the dataset.
+Change something in the prompt and improve the experiment results — measured by `correctness` and `behavior_match` going up across the dataset.
 
 
 Three passes:
@@ -55,11 +55,13 @@ Three passes:
 
 ## Step 1 — Change the prompt
 
-The change you make should be informed by what you saw in run 1 — for example, items where `correctness` was low because the agent danced around an out-of-scope question instead of refusing it cleanly. A concrete edit that addresses that:
+The change you make should be informed by what you saw in run 1 — for example, items where `behavior_match` expected `defer_question` but the agent danced around an out-of-scope question instead of refusing it cleanly. A concrete edit that addresses that:
 
 > Add a rule that says: *"If a request is outside iPhone help (taxes, travel booking, anything that needs live account access), say so directly in one short sentence — what you can't help with and what you can — then stop. Do not attempt to answer the request."*
 
 That makes the out-of-scope behaviour explicit instead of letting the model improvise.
+
+If `behavior_match` also failed on the vague items, add a second rule: *"If you can't tell what Dad needs, ask one short clarifying question before giving any steps."*
 
 Two ways to make the change:
 
@@ -87,13 +89,13 @@ Either way you end up with a new prompt version, and the next `runSupportConvers
 npm run dataset:run
 ```
 
-You now have two runs under the same dataset, each linked to a different prompt version. The same `keyword_overlap` and `correctness` callback evaluators from step 06 score the new run automatically inside `runExperiment`.
+You now have two runs under the same dataset, each linked to a different prompt version. The same `behavior_match` and `correctness` callback evaluators from step 06 score the new run automatically inside `runExperiment`.
 
 ## Step 3 — Compare
 
 In Langfuse:
 
-- Dataset → **Experiments** tab → both rows visible with `keyword_overlap` and `correctness` averages.
+- Dataset → **Experiments** tab → both rows visible with `behavior_match` and `correctness` averages.
 - **Chart view** → per-run averages side by side.
 - Add the new run as 'Compare with' in the sidebar
 
@@ -108,7 +110,7 @@ Things to look for:
 ## How to verify you are done
 
 - Two runs appear under the dataset, linked to different prompt versions.
-- Both scores (`keyword_overlap`, `correctness`) have averages you can compare.
+- Both scores (`behavior_match`, `correctness`) have averages you can compare.
 - The console summary from `npm run dataset:run` already lists both scores for the new run.
 
 ## Wrap-up

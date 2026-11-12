@@ -11,7 +11,7 @@ Learner guide: [05 Dataset](../learner/05-dataset.md)
 
 - Frame the dataset as product scope written down: expected user inputs, expected behavior, and metadata for slicing.
 - The code path is intentionally simple: seed curated JSON into Langfuse, then inspect the hosted dataset.
-- Call out why `expectedOutput` has two fields: `idealAnswer` feeds the `correctness` LLM-as-a-judge callback, and `expectedKeywords` feeds the deterministic `keyword_overlap` callback in the next chapter.
+- Call out why `expectedOutput` has two fields: `idealAnswer` feeds the `correctness` LLM-as-a-judge callback, and `expectedBehavior` (`reply`, `defer_question`, or `ask_follow_up`) feeds the `behavior_match` callback in the next chapter.
 - Connect this chapter back to monitoring: good dataset items often come from surprising production traces.
 
 ## Demo rhythm

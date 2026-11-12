@@ -60,8 +60,8 @@ Canonical progression:
 - `03-prompt-management`: learners replace the code-only prompt path with a Langfuse-managed prompt plus local fallback.
 - `04-monitoring`: starts from the traced app and stable message-array trace shape; this step is mostly evaluator design, variable mapping, and Langfuse UI setup.
 - `05-dataset`: adds a starter dataset that matches the app scope and uses message-array inputs plus expected outputs.
-- `06-experiments`: runs the app against the Langfuse dataset with the SDK experiment runner and two `runExperiment` callback evaluators — deterministic `keyword_overlap` plus an in-script LLM-as-a-judge `correctness` score. Platform evaluators are optional bonus only (they need existing experiment data to configure).
-- `07-evaluation`: changes the prompt, reruns the same dataset, and compares the same `keyword_overlap` + `correctness` callback scores side by side.
+- `06-experiments`: runs the app against the Langfuse dataset with the SDK experiment runner and two `runExperiment` callback evaluators — `behavior_match` (OpenAI Decisions API label plus deterministic exact match against `expectedBehavior`) plus an in-script LLM-as-a-judge `correctness` score. Platform evaluators are optional bonus only (they need existing experiment data to configure).
+- `07-evaluation`: changes the prompt, reruns the same dataset, and compares the same `behavior_match` + `correctness` callback scores side by side.
 - `08-wrap-up`: recaps the mental model and points to next steps.
 
 What makes the checkpoints stitchable:
@@ -69,7 +69,7 @@ What makes the checkpoints stitchable:
 - The OpenAI SDK is already in place before tracing starts, so step 2 is only about observability.
 - Prompt management falls back to the local prompt if the Langfuse prompt is absent.
 - Monitoring depends on stable message arrays on the agent/generation observations and the root `answer` field, not provider-specific internals.
-- Dataset items carry both `idealAnswer` and `expectedKeywords`, which feed the step-06 `correctness` and `keyword_overlap` callback evaluators.
+- Dataset items carry both `idealAnswer` and `expectedBehavior`, which feed the step-06 `correctness` and `behavior_match` callback evaluators.
 - Dataset and experiment scripts reuse the same app logic as the web UI; experiment scores are produced by `runExperiment` callbacks in the runner process.
 
 Recommended jump patterns:
