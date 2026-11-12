@@ -122,7 +122,7 @@ Ask one question, then in Langfuse:
 - Open the trace, click the OpenAI generation. It should show a **Prompt** badge linking to `dad-it-support-agent` at the version you published.
 - In the Prompts view for `dad-it-support-agent`, scroll to "Used in" and your trace appears.
 
-![A traced openai-chat-completion with the Prompt badge in the top-right linking back to dad-it-support-agent · v1.](../images/prompt-management/03-prompt-management-prompt-badge.png)
+![A traced OpenAI.chat generation with the prompt badge in its header linking back to dad-it-support-agent - v1.](../images/prompt-management/03-prompt-management-prompt-badge.png)
 
 ## Wrap-up
 
