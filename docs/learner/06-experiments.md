@@ -11,9 +11,9 @@ A trace tells you about *one* turn. An experiment tells you about behavior *acro
 
 1. **Pulls each item from the dataset.**
 2. **Runs the item's input through the agent**: same `runSupportConversation(...)` the web app uses, so the trace shape is the same as production.
-3. **Scores the actual output against the expected output** with one or more evaluators.
+3. **Scores the actual output** with one or more evaluators, either against the expected output or on a reference-free quality criterion.
 
-Why not reuse the monitoring evaluators? Live production traffic has no reference answer, so monitoring uses judges that don't need one: user disagreement and all caps read only the conversation. A dataset has expected outputs, so experiments can compare each answer against what it should have been. That is why two of the three evaluators here read a field from `expectedOutput`:
+Two of the three evaluators here read a field from `expectedOutput`:
 
 - **`behavior_match`** (decision model + deterministic match): *did Specs reply, defer, or ask a follow-up when we expected it to?* The OpenAI Decisions API picks one of three fixed labels, and the script compares that label with `expectedBehavior`.
 - **`correctness`** (LLM-as-a-judge regression check): *did a change make answers worse?* A semantic-equivalence check against `idealAnswer`: paraphrases pass, missing required detail or a contradicted fact fails. A prompt fix that makes the agent refuse too much, or drop a step, shows up here.
@@ -158,23 +158,6 @@ This first run is your **baseline experiment**. It uses the production `dad-it-s
 - Every item has a trace and all three scores attached.
 - The console summary printed `behavior_match`, `short_reply`, and `correctness`.
 - Trace shape matches a normal production trace.
-
-## Optional bonus: Langfuse Platform evaluators on experiment runs
-
-Once you have at least one experiment run, you can also attach Langfuse Platform evaluators (for example **Check Correctness** from the Template Gallery) so Langfuse scores future runs asynchronously in the UI. That path is useful when you want managed judges shared across the team, but it needs existing experiment observations to preview variable mapping, which is why this workshop starts with callbacks.
-
-If you try the bonus later:
-
-1. Open **Evaluators → New Evaluator** and pick **Check Correctness**.
-2. Filter for observations created by experiments.
-3. Map `output` → **Output**, and `expected_output` → **Expected Output → idealAnswer**.
-4. Save and execute the evaluator, then rerun `npm run dataset:run`.
-
-![Filter for observations created by experiments in the evaluator setup panel.](../images/experiments/correctness-experiment-observation-filter.png)
-
-![Map the Correctness evaluator variables to the experiment output and expected ideal answer.](../images/experiments/correctness-variable-mapping.png)
-
-See the [LLM-as-a-Judge docs](https://langfuse.com/docs/evaluation/evaluation-methods/llm-as-a-judge) and the [Experiments via SDK docs](https://langfuse.com/docs/evaluation/experiments/experiments-via-sdk) for the full platform vs SDK picture.
 
 ## Wrap-up
 
