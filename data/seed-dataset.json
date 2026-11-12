@@ -6,7 +6,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Open Settings, tap Bluetooth, and turn the Bluetooth switch on.",
-      "expectedKeywords": ["Settings", "Bluetooth", "switch", "on"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-bluetooth", "difficulty": "easy" }
   },
@@ -17,7 +17,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Take the photo in Camera, open WhatsApp, choose the chat, attach the photo, and send it.",
-      "expectedKeywords": ["Camera", "WhatsApp", "chat", "photo", "Send"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-photo", "difficulty": "easy" }
   },
@@ -28,7 +28,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Open Settings, tap Wi-Fi, choose the network, and join it with the password.",
-      "expectedKeywords": ["Settings", "Wi-Fi", "network", "Join"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-wifi", "difficulty": "easy" }
   },
@@ -39,7 +39,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Open Maps, search for the bus stop or nearby street, tap Directions, and choose walking or transit.",
-      "expectedKeywords": ["Maps", "search", "Directions", "walking", "transit"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "medium" }
   },
@@ -50,7 +50,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Explain that the earbuds likely still need pairing mode, then tell Dad where to check Bluetooth.",
-      "expectedKeywords": ["pairing mode", "Bluetooth", "appear"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-bluetooth", "difficulty": "medium" }
   },
@@ -61,7 +61,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Tell Dad to stay in Wi-Fi settings, move closer to the router, and wait for the network list to refresh.",
-      "expectedKeywords": ["Wi-Fi", "router", "network", "refresh"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-wifi", "difficulty": "medium" }
   },
@@ -72,7 +72,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Tell Dad to tap the photo preview thumbnail after taking the picture.",
-      "expectedKeywords": ["photo", "preview", "thumbnail"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-photo", "difficulty": "easy" }
   },
@@ -83,7 +83,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Explain that the assistant cannot see live location, then offer step-by-step help using Maps.",
-      "expectedKeywords": ["cannot", "live location", "Maps"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "medium" }
   },
@@ -94,7 +94,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Politely refuse because it is out of scope and redirect to phone-support help.",
-      "expectedKeywords": ["out of scope", "help", "phone"]
+      "expectedBehavior": "defer_question"
     },
     "metadata": { "category": "out-of-scope", "difficulty": "easy" }
   },
@@ -105,7 +105,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Explain that the assistant cannot see passwords and then offer reconnection steps.",
-      "expectedKeywords": ["cannot", "password", "Wi-Fi"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "limits", "difficulty": "easy" }
   },
@@ -116,7 +116,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Open Maps, use the search bar, type the bus stop or street name, and then ask for directions.",
-      "expectedKeywords": ["Maps", "search", "bus stop", "Directions"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "maps", "difficulty": "easy" }
   },
@@ -127,7 +127,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "After choosing the photo, tap Send in WhatsApp.",
-      "expectedKeywords": ["photo", "WhatsApp", "Send"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-photo", "difficulty": "easy" }
   },
@@ -138,7 +138,7 @@
     },
     "expectedOutput": {
       "idealAnswer": "Open Messages, start a new message, enter the contact, type the text, and tap the blue send arrow.",
-      "expectedKeywords": ["Messages", "new message", "send", "contact"]
+      "expectedBehavior": "reply"
     },
     "metadata": { "category": "iphone-messages", "difficulty": "easy" }
   },
@@ -149,8 +149,30 @@
     },
     "expectedOutput": {
       "idealAnswer": "Say that booking travel is outside the support scope and redirect to phone help the assistant can provide.",
-      "expectedKeywords": ["outside", "scope", "phone help"]
+      "expectedBehavior": "defer_question"
     },
     "metadata": { "category": "out-of-scope", "difficulty": "easy" }
+  },
+  {
+    "id": "dad-015",
+    "input": {
+      "messages": [{ "role": "user", "content": "My phone is not working." }]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Ask Dad what exactly is not working, for example calls, Wi-Fi, or a specific app, before giving any steps.",
+      "expectedBehavior": "ask_follow_up"
+    },
+    "metadata": { "category": "vague", "difficulty": "medium" }
+  },
+  {
+    "id": "dad-016",
+    "input": {
+      "messages": [{ "role": "user", "content": "The thing I always use disappeared from my screen." }]
+    },
+    "expectedOutput": {
+      "idealAnswer": "Ask Dad which app or icon disappeared before explaining how to find it again.",
+      "expectedBehavior": "ask_follow_up"
+    },
+    "metadata": { "category": "vague", "difficulty": "medium" }
   }
 ]
