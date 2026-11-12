@@ -8,7 +8,7 @@
       "idealAnswer": "1. Open the Settings app.\n2. Tap Bluetooth.\n3. Turn the Bluetooth switch on. It turns green when Bluetooth is on.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "iphone-bluetooth", "difficulty": "easy" }
+    "metadata": { "category": "iphone-bluetooth", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-002",
@@ -19,7 +19,7 @@
       "idealAnswer": "1. Open WhatsApp and tap the chat you want.\n2. Tap the plus button, then Camera.\n3. Tap the white shutter button to take the photo.\n4. Tap the send arrow. The photo appears in the chat.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "iphone-photo", "difficulty": "easy" }
+    "metadata": { "category": "iphone-photo", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-003",
@@ -30,7 +30,7 @@
       "idealAnswer": "1. Open Settings and tap Wi-Fi.\n2. Make sure the Wi-Fi switch is on. It shows green.\n3. Tap your home network name.\n4. Enter the Wi-Fi password and tap Join. A check mark appears next to the network name.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "iphone-wifi", "difficulty": "easy" }
+    "metadata": { "category": "iphone-wifi", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-004",
@@ -41,7 +41,7 @@
       "idealAnswer": "1. Open Maps.\n2. Type the bus stop name or a nearby street in the search bar.\n3. Tap Directions.\n4. Choose Walking or Transit. Maps shows the route on the map.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "maps", "difficulty": "medium" }
+    "metadata": { "category": "maps", "difficulty": "medium", "source": "starter" }
   },
   {
     "id": "dad-005",
@@ -52,7 +52,7 @@
       "idealAnswer": "Your earbuds probably still need to be in pairing mode.\n1. Put the earbuds in pairing mode. Their instructions say how, often by holding a button on the case.\n2. Open Settings and tap Bluetooth.\n3. Wait for the earbuds' name to appear in the list, then tap it.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "iphone-bluetooth", "difficulty": "medium" }
+    "metadata": { "category": "iphone-bluetooth", "difficulty": "medium", "source": "starter" }
   },
   {
     "id": "dad-006",
@@ -63,7 +63,7 @@
       "idealAnswer": "1. Stay on the Wi-Fi screen in Settings.\n2. Move closer to your router.\n3. Wait a moment. The list of networks refreshes and your home network name should appear.\n4. Tap it and enter the password if asked.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "iphone-wifi", "difficulty": "medium" }
+    "metadata": { "category": "iphone-wifi", "difficulty": "medium", "source": "starter" }
   },
   {
     "id": "dad-007",
@@ -74,7 +74,7 @@
       "idealAnswer": "1. Stay in the Camera app right after taking the photo.\n2. Tap the small picture in the bottom-left corner. Your photo opens full screen.\n3. Tap Done to go back to the camera.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "iphone-photo", "difficulty": "easy" }
+    "metadata": { "category": "iphone-photo", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-008",
@@ -85,7 +85,7 @@
       "idealAnswer": "I can't see your live location, but Maps can find the closest stop for you.\n1. Open Maps.\n2. Type \"bus stop\" in the search bar.\n3. Tap the closest stop in the list, then tap Directions.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "maps", "difficulty": "medium" }
+    "metadata": { "category": "maps", "difficulty": "medium", "source": "starter" }
   },
   {
     "id": "dad-009",
@@ -96,7 +96,7 @@
       "idealAnswer": "I can only help with your iPhone, not with taxes. Is there anything on your phone I can help you with?",
       "expectedBehavior": "defer_question"
     },
-    "metadata": { "category": "out-of-scope", "difficulty": "easy" }
+    "metadata": { "category": "out-of-scope", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-010",
@@ -107,7 +107,7 @@
       "idealAnswer": "I can't see your Wi-Fi password, but your iPhone can show it.\n1. Open Settings and tap Wi-Fi.\n2. Tap the blue ⓘ next to your home network name.\n3. Tap Password and use Face ID or your passcode. The password appears on the screen.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "limits", "difficulty": "easy" }
+    "metadata": { "category": "limits", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-011",
@@ -118,7 +118,7 @@
       "idealAnswer": "1. Open Maps.\n2. Tap the search bar at the bottom of the screen.\n3. Type the bus stop name or the street name. Matching places appear in a list.\n4. Tap the bus stop, then tap Directions.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "maps", "difficulty": "easy" }
+    "metadata": { "category": "maps", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-012",
@@ -129,7 +129,7 @@
       "idealAnswer": "Tap the Send button in the bottom-right corner. The photo appears in the chat.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "iphone-photo", "difficulty": "easy" }
+    "metadata": { "category": "iphone-photo", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-013",
@@ -140,7 +140,7 @@
       "idealAnswer": "1. Open the Messages app.\n2. Tap the new message button in the top-right corner.\n3. Type the contact's name or phone number in the To field.\n4. Tap the message box, type your message, then tap the blue send arrow. Your message appears in a bubble.",
       "expectedBehavior": "reply"
     },
-    "metadata": { "category": "iphone-messages", "difficulty": "easy" }
+    "metadata": { "category": "iphone-messages", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-014",
@@ -151,7 +151,7 @@
       "idealAnswer": "I can only help with your iPhone, not with booking train tickets. Is there anything on your phone I can help you with?",
       "expectedBehavior": "defer_question"
     },
-    "metadata": { "category": "out-of-scope", "difficulty": "easy" }
+    "metadata": { "category": "out-of-scope", "difficulty": "easy", "source": "starter" }
   },
   {
     "id": "dad-015",
@@ -162,7 +162,7 @@
       "idealAnswer": "What is not working on your phone?",
       "expectedBehavior": "ask_follow_up"
     },
-    "metadata": { "category": "vague", "difficulty": "medium" }
+    "metadata": { "category": "vague", "difficulty": "medium", "source": "starter" }
   },
   {
     "id": "dad-016",
@@ -173,6 +173,125 @@
       "idealAnswer": "Which app or icon disappeared from your screen?",
       "expectedBehavior": "ask_follow_up"
     },
-    "metadata": { "category": "vague", "difficulty": "medium" }
+    "metadata": { "category": "vague", "difficulty": "medium", "source": "starter" }
+  },
+  {
+    "id": "dad-017",
+    "input": {
+      "messages": [{ "role": "user", "content": "How do I pin a chat to the top in WhatsApp?" }]
+    },
+    "expectedOutput": {
+      "idealAnswer": "1. Open WhatsApp and tap Chats.\n2. Swipe the chat you want from left to right.\n3. Tap Pin. The chat stays at the top of the list.",
+      "expectedBehavior": "reply"
+    },
+    "metadata": { "category": "whatsapp-pin", "difficulty": "easy", "source": "error-analysis" }
+  },
+  {
+    "id": "dad-018",
+    "input": {
+      "messages": [{ "role": "user", "content": "How do I turn on Do Not Disturb?" }]
+    },
+    "expectedOutput": {
+      "idealAnswer": "1. Open Settings.\n2. Tap Focus.\n3. Tap Do Not Disturb.\n4. Turn on Do Not Disturb. A moon icon shows at the top of the screen.",
+      "expectedBehavior": "reply"
+    },
+    "metadata": { "category": "iphone-focus", "difficulty": "easy", "source": "error-analysis" }
+  },
+  {
+    "id": "dad-019",
+    "input": {
+      "messages": [{ "role": "user", "content": "How do I make the text bigger?" }]
+    },
+    "expectedOutput": {
+      "idealAnswer": "1. Open Settings.\n2. Tap Display & Brightness.\n3. Tap Text Size.\n4. Drag the slider to the right. The sample text gets bigger as you drag.",
+      "expectedBehavior": "reply"
+    },
+    "metadata": { "category": "iphone-display", "difficulty": "easy", "source": "error-analysis" }
+  },
+  {
+    "id": "dad-020",
+    "input": {
+      "messages": [{ "role": "user", "content": "Can you give me a simple chocolate cake recipe?" }]
+    },
+    "expectedOutput": {
+      "idealAnswer": "I can only help with your iPhone, not with recipes. Is there anything on your phone I can help you with?",
+      "expectedBehavior": "defer_question"
+    },
+    "metadata": { "category": "out-of-scope", "difficulty": "easy", "source": "error-analysis" }
+  },
+  {
+    "id": "dad-021",
+    "input": {
+      "messages": [{ "role": "user", "content": "Should I put my savings into an index fund?" }]
+    },
+    "expectedOutput": {
+      "idealAnswer": "I can only help with your iPhone, not with money or investments. Is there anything on your phone I can help you with?",
+      "expectedBehavior": "defer_question"
+    },
+    "metadata": { "category": "out-of-scope", "difficulty": "easy", "source": "error-analysis" }
+  },
+  {
+    "id": "dad-022",
+    "input": {
+      "messages": [
+        { "role": "user", "content": "How do I turn Bluetooth on?" },
+        { "role": "assistant", "content": "1. Open the Settings app.\n2. Tap Bluetooth.\n3. Turn Bluetooth on so the switch is green." },
+        { "role": "user", "content": "Thanks. Can you also tell me how to cook pasta?" }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "I can only help with your iPhone, not with cooking. Is there anything on your phone I can help you with?",
+      "expectedBehavior": "defer_question"
+    },
+    "metadata": { "category": "out-of-scope", "difficulty": "medium", "source": "error-analysis" }
+  },
+  {
+    "id": "dad-023",
+    "input": {
+      "messages": [
+        { "role": "user", "content": "How do I reconnect my iPhone to Wi-Fi?" },
+        { "role": "assistant", "content": "1. Open Settings and tap Wi-Fi.\n2. Make sure Wi-Fi is turned on.\n3. Tap the home network name.\n4. Enter the Wi-Fi password and tap Join." },
+        { "role": "user", "content": "It connected." },
+        { "role": "assistant", "content": "Good. The Wi-Fi symbol at the top means you are on the network. What else do you need?" },
+        { "role": "user", "content": "Can you recommend a laptop for my grandson?" }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "I can only help with your iPhone, not with choosing a laptop. Is there anything on your phone I can help you with?",
+      "expectedBehavior": "defer_question"
+    },
+    "metadata": { "category": "out-of-scope", "difficulty": "medium", "source": "error-analysis" }
+  },
+  {
+    "id": "dad-024",
+    "input": {
+      "messages": [
+        { "role": "user", "content": "How do I turn on Do Not Disturb?" },
+        { "role": "assistant", "content": "1. Open Settings.\n2. Tap Focus.\n3. Tap Do Not Disturb.\n4. Turn on Do Not Disturb. A moon icon shows at the top of the screen." },
+        { "role": "user", "content": "Where is the moon icon?" }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "The moon icon is in Control Center.\n1. Swipe down from the top-right corner of the screen to open Control Center.\n2. Tap Focus, the button with the moon.\n3. Tap Do Not Disturb. The moon shows at the top of the screen.",
+      "expectedBehavior": "reply"
+    },
+    "metadata": { "category": "iphone-focus", "difficulty": "medium", "source": "error-analysis" }
+  },
+  {
+    "id": "dad-025",
+    "input": {
+      "messages": [
+        { "role": "user", "content": "How do I find a bus stop in Maps?" },
+        { "role": "assistant", "content": "1. Open Maps.\n2. Tap the search field at the bottom.\n3. Type the stop or street name and tap Search.\n4. Tap the result, then tap Directions." },
+        { "role": "user", "content": "Maps is open." },
+        { "role": "assistant", "content": "Good. Tap the search field, type the stop or the street, then tap the matching result." },
+        { "role": "user", "content": "Where do I type the place?" }
+      ]
+    },
+    "expectedOutput": {
+      "idealAnswer": "1. Tap the search field at the bottom of the Maps screen. The keyboard comes up.\n2. Type the bus stop or street name.\n3. Tap the matching result in the list.",
+      "expectedBehavior": "reply"
+    },
+    "metadata": { "category": "maps-bus-stop", "difficulty": "medium", "source": "error-analysis" }
   }
 ]

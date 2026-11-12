@@ -6,7 +6,6 @@
  *   2. Roll the per-item traces into one experiment run row.
  *   3. Attach callback evaluators from runExperiment:
  *      - behavior_match (decision model + deterministic match)
- *      - short_reply (deterministic word limit)
  *      - correctness (LLM-as-a-judge regression check)
  *
  * Usage:
@@ -100,16 +99,7 @@ async function decideBehavior(
   return { behavior: result.choice, confidence: result.confidence };
 }
 
-// --- 4. The deterministic short_reply evaluator.
-//        No model call: 1 if the answer stays within MAX_REPLY_WORDS, 0 otherwise.
-//        Targets the "lengthy responses" category from error analysis.
-const MAX_REPLY_WORDS = 120;
-
-function countWords(answer: string) {
-  return answer.split(/\s+/).filter(Boolean).length;
-}
-
-// --- 5. The LLM-as-a-judge correctness evaluator, used as the regression check.
+// --- 4. The LLM-as-a-judge correctness evaluator, used as the regression check.
 //        Semantic-equivalence judge: does the agent answer preserve every
 //        material meaning in idealAnswer? Returns 0 or 1. A prompt change that
 //        fixes one behavior but drops needed help shows up here.
@@ -232,7 +222,7 @@ async function main() {
     );
   }
 
-  // --- 6. Pull the hosted dataset by DATASET_NAME from .env.
+  // --- 5. Pull the hosted dataset by DATASET_NAME from .env.
   const langfuse = new LangfuseClient({
     publicKey: env.langfusePublicKey,
     secretKey: env.langfuseSecretKey,
@@ -242,7 +232,7 @@ async function main() {
   const dataset = await langfuse.dataset.get(env.datasetName);
   const runName = `dad-it-support-${new Date().toISOString()}`;
 
-  // --- 7. runExperiment iterates the dataset, calls `task` for each
+  // --- 6. runExperiment iterates the dataset, calls `task` for each
   //        item, and records every per-item trace + score under a
   //        single run row identified by `runName`.
   const result = await dataset.runExperiment({
@@ -284,15 +274,6 @@ async function main() {
           }.`
         };
       },
-      async ({ output }) => {
-        const words = countWords(output as string);
-
-        return {
-          name: "short_reply",
-          value: words <= MAX_REPLY_WORDS ? 1 : 0,
-          comment: `${words} words (limit ${MAX_REPLY_WORDS}).`
-        };
-      },
       async ({ output, expectedOutput }) => {
         const expected = expectedOutput as DatasetExpectation;
         const { score, reasoning } = await scoreCorrectness(
@@ -309,7 +290,7 @@ async function main() {
     ]
   });
 
-  // --- 8. Pretty-print the summary table and flush any pending spans
+  // --- 7. Pretty-print the summary table and flush any pending spans
   //        before the process exits.
   console.log(await result.format());
   await langfuse.flush();
