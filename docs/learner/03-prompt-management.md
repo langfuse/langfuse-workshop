@@ -48,7 +48,7 @@ The most direct way to create a prompt is to add it manually in the UI — it's 
 5. **Label** the version `production` (matching `LANGFUSE_PROMPT_LABEL` in your `.env`).
 6. **Save**.
 
-![Creating the dad-it-support-agent prompt in Langfuse.](../images/prompt-management/03-prompt-management-new-prompt-form.png)
+![The published dad-it-support-agent prompt in Langfuse — version 1 with the production and latest labels.](../images/prompt-management/03-prompt-management-published-prompt.png)
 
 > 💡 *Alternative — publish via script.* `scripts/publish-prompt.ts` pushes the `SYSTEM_PROMPT` constant up to Langfuse (`npm run prompt:publish`). Same outcome.
 
