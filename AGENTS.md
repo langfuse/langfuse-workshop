@@ -24,11 +24,11 @@ What to propagate:
 
 | Change type | Propagate to checkpoints? | How |
 | --- | --- | --- |
-| Shared tooling / config present on every milestone (`package.json` scripts, root tooling, env loading helpers used before a step diverges) | Yes — every tag that still has the old state | Checkout each tag, apply the same change, commit, force-move the tag, push |
-| `docs/` or `README.md` | Yes — every tag | `./scripts/sync-checkpoint-docs.sh --push` after the change is on the source branch/`main` |
-| `AGENTS.md` | Yes — every tag | Included in `./scripts/sync-checkpoint-docs.sh` |
+| Shared tooling / config present on every milestone (`package.json` scripts, root tooling, env loading helpers used before a step diverges) | Yes: every tag that still has the old state | Checkout each tag, apply the same change, commit, force-move the tag, push |
+| `docs/` or `README.md` | Yes: every tag | `./scripts/sync-checkpoint-docs.sh --push` after the change is on the source branch/`main` |
+| `AGENTS.md` | Yes: every tag | Included in `./scripts/sync-checkpoint-docs.sh` |
 | Milestone-only app code (for example tracing wrappers that only exist from `02-tracing` onward) | Only tags that already contain that code path | Patch those tags; do not invent the feature on earlier milestones |
-| Docs-only clarification with no app impact | Yes — all tags via the docs sync script | Keep milestone app trees unchanged |
+| Docs-only clarification with no app impact | Yes: all tags via the docs sync script | Keep milestone app trees unchanged |
 
 Do not stop at a PR to `main` when checkpoints still carry the old shared state. Document force-moved tag tips in the PR when you update them.
 
@@ -60,7 +60,7 @@ Canonical progression:
 - `03-prompt-management`: learners replace the code-only prompt path with a Langfuse-managed prompt plus local fallback.
 - `04-monitoring`: starts from the traced app and stable message-array trace shape. The overview introduces dashboards, error analysis, and production signals. Error analysis seeds 20 traces with `npm run langfuse:seed:error-analysis` (7 ordinary one-turn answers and 13 single-failure traces: out-of-scope replies, impersonation, and lengthy responses), then an annotation queue with open coding (Text) and pass/fail (Categorical), and Halo clusters the notes, creates the category scores, and builds the frequency dashboard. Capturing signals is the evaluator setup: learners add the OpenAI connection, then variable mapping and Langfuse UI, on those message-array observations.
 - `05-dataset`: adds a starter dataset that matches the app scope and uses message-array inputs plus expected outputs.
-- `06-experiments`: runs the app against the Langfuse dataset with the SDK experiment runner and two `runExperiment` callback evaluators — deterministic `keyword_overlap` plus an in-script LLM-as-a-judge `correctness` score. Platform evaluators are optional bonus only (they need existing experiment data to configure).
+- `06-experiments`: runs the app against the Langfuse dataset with the SDK experiment runner and two `runExperiment` callback evaluators: deterministic `keyword_overlap` plus an in-script LLM-as-a-judge `correctness` score. Platform evaluators are optional bonus only (they need existing experiment data to configure).
 - `07-evaluation`: changes the prompt, reruns the same dataset, and compares the same `keyword_overlap` + `correctness` callback scores side by side.
 - `08-wrap-up`: recaps the mental model and points to next steps.
 

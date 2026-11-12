@@ -46,7 +46,7 @@ Use the OpenAI connection you just added. When the wizard asks you to pick a mod
 
 ![Pick the evaluator model in the Set up evaluator wizard. Choose 5.6 Luna.](../../images/monitoring/default-evaluation-model.png)
 
-## Step 1 — Wire the judge-based monitor (Langfuse UI)
+## Step 1: Wire the judge-based monitor (Langfuse UI)
 
 Langfuse ships a published **Detect User Disagreement** template. It is an LLM-as-a-judge evaluator that reads variables from observations.
 
@@ -78,7 +78,7 @@ Pick **Detect User Disagreement** for the mapping in this step.
 
 The rule scores observations that arrive after you execute it. The seeded batch is already in the project, so it is the sample for mapping and testing. New turns are what receive the live score. The same evaluator can be run on historical observations with [batch evaluation](https://langfuse.com/docs/evaluation/get-started/online).
 
-## Step 2 — Add a code evaluator for all-caps frustration
+## Step 2: Add a code evaluator for all-caps frustration
 
 The monitor above uses LLM-as-a-judge because it needs semantic judgment. This one does not. We just want a cheap deterministic check for a user message that contains a long run of capital letters, indicating a user might be upset from the interaction with our system.
 
@@ -102,8 +102,8 @@ npm run dev
 
 Send two turns that should each light up one monitor. These have to be new turns, sent after both evaluators are executing:
 
-1. **Disagreement** — ask a normal question, then reply with "No, that menu isn't there"
-2. **All caps** — "THIS STILL ISNT WORKING"
+1. **Disagreement**: ask a normal question, then reply with "No, that menu isn't there"
+2. **All caps**: "THIS STILL ISNT WORKING"
 
 In Langfuse, wait for the evaluators to run (refresh after a few seconds), then filter for traces with the respective evaluator score:
 
@@ -126,7 +126,7 @@ The all-caps signal is a rougher clue that the conversation might be going sidew
 
 Open a few traces already in the project and compare them with the two turns you just scored. As further production turns arrive, the same evaluators score them.
 
-## Bonus — Conversation signals with decision models
+## Bonus: Conversation signals with decision models
 
 A [decision model](https://langfuse.com/docs/evaluation/evaluation-methods/decision-models) returns a typed answer for each question instead of free-form text, so it is the cheaper evaluator when you do not need written reasoning.
 

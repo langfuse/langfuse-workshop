@@ -34,17 +34,17 @@ git checkout checkpoint/08-wrap-up
 - Make sense of a pile of production traces: read failures, and detect disagreement and all-caps frustration automatically.
 - Turn product scope into a starter dataset of realistic examples.
 - Run experiments on the same agent code with no parallel implementation.
-- Compare runs after changes and decide which setup is better — by score and by reading individual outputs.
+- Compare runs after changes and decide which setup is better: by score and by reading individual outputs.
 
 
 ## Bigger picture
 
 Langfuse in this workshop is a *shared surface*, not just observability:
 
-- understanding behavior — every interaction is inspectable
-- collecting representative examples — production seeds datasets
-- comparing changes — every prompt or code change has a baseline
-- improving systems continuously — the loop closes back on itself
+- understanding behavior: every interaction is inspectable
+- collecting representative examples: production seeds datasets
+- comparing changes: every prompt or code change has a baseline
+- improving systems continuously: the loop closes back on itself
 
 ## How to work on your own application
 
