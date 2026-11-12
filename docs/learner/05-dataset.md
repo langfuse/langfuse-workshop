@@ -35,8 +35,6 @@ Seed a first dataset that captures the kinds of requests we expect Specs to hand
 1. **Understand the item shape** — every dataset item has the same three fields, and we want ours to match the agent's actual input.
 2. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
 
-![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
-
 ## Step 1 — Read the item shape
 
 Dataset items in Langfuse follow a consistent shape — three fields, one required, two optional:
