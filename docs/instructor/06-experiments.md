@@ -10,12 +10,12 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 ## Instructor notes
 
 - The key idea is reuse: the experiment runner calls the same `runSupportConversation(...)` as the web app.
-- Explain why these evaluators differ from the monitoring ones: production traffic has no reference answer, so 4.2 uses judges that read only the conversation (user disagreement, all caps). A dataset has expected outputs, so both experiment evaluators compare against a field in `expectedOutput`.
-- Contrast `behavior_match` (a Decisions API label plus a deterministic exact match) with LLM-as-a-judge scoring (`correctness`): both as **callbacks** on `runExperiment`.
+- Explain why these evaluators differ from the monitoring ones: production traffic has no reference answer, so 4.2 uses judges that read only the conversation (user disagreement, all caps). A dataset has expected outputs, so `behavior_match` and `correctness` compare against a field in `expectedOutput`. `short_reply` is the reference-free one, the experiment twin of the all-caps code evaluator.
+- Walk through the three roles: `behavior_match` (Decisions API label plus exact match) and `short_reply` (word count, no model) check whether a change fixed the failure categories from error analysis; `correctness` (LLM-as-a-judge) is the regression check that catches a fix making answers worse. All three are **callbacks** on `runExperiment`.
 - Point at the semantic-equivalence judge prompt in `scripts/run-dataset.ts`: expected output is the source of truth; paraphrases pass; missing material meaning fails.
 - Call out why this chapter avoids Langfuse Platform evaluators as the primary path: configuring one needs existing experiment data to preview mappings, which blocks a clean first run.
 - The correctness judge uses the learner's `OPENAI_API_KEY` / `OPENAI_MODEL`. `behavior_match` uses the same key with `gpt-6-luna` on the Decisions API. Session 4's Langfuse default evaluator model is **not** required here.
-- Emphasize that both scores should appear in the console summary when `npm run dataset:run` finishes.
+- Emphasize that all three scores should appear in the console summary when `npm run dataset:run` finishes.
 - Keep concurrency at one for workshops so traces and the final run summary are easy to follow.
 - Before running the dataset, confirm both the OpenAI and Langfuse credentials point to active projects. The runner can finish with exit code 0 after skipping every item, so always check that the console prints experiment results rather than only SDK errors.
 - Optional bonus only if you have time: show that Platform evaluators can still target experiment observations after the first run exists.
@@ -23,16 +23,16 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 ## Demo rhythm
 
 1. Skim the numbered sections in `scripts/run-dataset.ts`.
-2. Point out both callback evaluators in the `evaluators` array.
+2. Point out the three callback evaluators in the `evaluators` array.
 3. Run `npm run dataset:run`.
-4. Open the run table, per-item traces, and chart view: both scores should already be present.
+4. Open the run table, per-item traces, and chart view: all three scores should already be present.
 5. (Optional) Mention Platform evaluators / **Check Correctness** as a later add-on once experiment data exists.
 
 ## Watch for
 
 - Learners trying to set up **Check Correctness** in the UI before the first run. Redirect them to the script callbacks; platform setup is bonus-only.
 - Do not use `expectedBehavior` as the correctness reference. That field belongs to `behavior_match`; correctness uses `idealAnswer`.
-- Expect a first-run `behavior_match` around 0.75. The current prompt walks Dad through the out-of-scope requests instead of deferring, and never asks a follow-up on the vague items. That gap is what step 07 fixes.
+- Expect a first run around `behavior_match` 0.75–0.88, `short_reply` 0.25, `correctness` 0.69. The current prompt walks Dad through the out-of-scope requests instead of deferring, rarely asks a follow-up on the vague items, and writes long answers. That gap is what step 07 fixes.
 - Missing `behavior_match` usually means the Decisions call failed, for example because the OpenAI key has no access to `gpt-6-luna`. Check the terminal error.
 - `401 The project you are requesting has been archived` followed by `No experiment results to display` means the OpenAI key belongs to an archived project. Replace `OPENAI_API_KEY` locally with a key from an active project, then rerun.
 - Missing `correctness` in the console usually means the judge call failed (bad key, model, or JSON parse). Check the terminal error rather than refreshing Langfuse for a pending platform score.

@@ -80,7 +80,7 @@ For us, the conceptual shape of one item is:
 
 The two fields inside `expectedOutput` answer two different evaluator questions:
 
-- **`idealAnswer`** is the human-readable reference reply. It's what the LLM-as-a-judge `correctness` callback in chapter 06 reads to decide whether the meaning matches.
+- **`idealAnswer`** is the human-readable reference reply. It's what the LLM-as-a-judge `correctness` callback in chapter 06 reads to catch answers that got worse.
 - **`expectedBehavior`** is one of `reply`, `defer_question`, or `ask_follow_up`. In chapter 06 a small decision model labels each answer with one of those three values, and the `behavior_match` callback compares it with `expectedBehavior` by exact match.
 
 `metadata` lets us slice runs by category or difficulty later when comparing experiment runs side by side.
