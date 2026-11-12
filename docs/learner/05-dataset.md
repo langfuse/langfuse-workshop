@@ -32,10 +32,27 @@ DATASET_NAME=dad-it-support-workshop
 
 Create a first dataset that captures the kinds of requests Specs has to handle.
 
-1. **Understand the item shape** — every dataset item has the same three fields, and we want ours to match the agent's actual input.
-2. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
+1. **Understand the dimensions of cases** the dataset should represent.
+2. **Understand the item shape** — every dataset item has the same three fields, and we want ours to match the agent's actual input.
+3. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
 
-## Step 1 — Read the item shape
+## Step 1 — Understand the dimensions of cases the dataset should represent
+
+These can be for example positive examples from error analysis, historic cases, or corrected cases that were identified with failures during data review.
+
+The starter dataset covers:
+
+- iPhone Bluetooth basics and edge cases
+- iPhone Wi-Fi reconnect + "I can't see the network"
+- Photo capture + WhatsApp share
+- Apple Maps directions + the live-location limit
+- Messages basics
+- Out-of-scope (file my taxes, book my train)
+- Limitation cases (passwords, live location)
+
+If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch.
+
+## Step 2 — Read the item shape
 
 Dataset items in Langfuse follow a consistent shape — three fields, one required, two optional:
 
@@ -67,7 +84,7 @@ The two fields inside `expectedOutput` answer two different evaluator questions:
 
 If you look at the actual JSON in `data/seed-dataset.json`, the `input` is the full `{ messages: [...] }` shape that `/api/chat` accepts, plus an `id` field for the dataset row. We've simplified the example above to show *what an item is*; the on-disk format is what the experiment script (step 06) can feed straight into `runSupportConversation(...)` without rewriting inputs.
 
-## Step 2 — Seed the dataset
+## Step 3 — Seed the dataset
 
 You have several options for getting items into a Langfuse dataset:
 
@@ -89,18 +106,6 @@ Open Langfuse → **Datasets**. The list view should show the new `dad-it-suppor
 Click into the dataset and switch to the **Items** tab. You should see every seeded item with input, expected output, and metadata columns:
 
 ![Items view of the dad-it-support-workshop dataset — all 14 rows with messages input, ideal answer + expected keywords, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
-
-## What the starter dataset covers
-
-- iPhone Bluetooth basics and edge cases
-- iPhone Wi-Fi reconnect + "I can't see the network"
-- Photo capture + WhatsApp share
-- Apple Maps directions + the live-location limit
-- Messages basics
-- Out-of-scope (file my taxes, book my train)
-- Limitation cases (passwords, live location)
-
-If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch.
 
 ## How to verify you are done
 
