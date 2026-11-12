@@ -48,7 +48,7 @@ The most direct way to create a prompt is to add it manually in the UI — it's 
 5. **Label** the version `production` (matching `LANGFUSE_PROMPT_LABEL` in your `.env`).
 6. **Save**.
 
-![Creating the dad-it-support-agent prompt in Langfuse.](../images/prompt-management/03-prompt-management-new-prompt-form.png)
+![The published dad-it-support-agent prompt in Langfuse — version 1 with the production and latest labels.](../images/prompt-management/03-prompt-management-published-prompt.png)
 
 > 💡 *Alternative — publish via script.* `scripts/publish-prompt.ts` pushes the `SYSTEM_PROMPT` constant up to Langfuse (`npm run prompt:publish`). Same outcome.
 
@@ -100,7 +100,7 @@ Without this change the model keeps receiving the local constant — the Prompt 
 
 ```ts
 const openai = observeOpenAI(
-  new OpenAI(chatClientOptions()),
+  new OpenAI({ apiKey: env.openaiApiKey }),
   langfusePrompt ? { langfusePrompt } : undefined
 );
 ```
@@ -122,7 +122,7 @@ Ask one question, then in Langfuse:
 - Open the trace, click the OpenAI generation. It should show a **Prompt** badge linking to `dad-it-support-agent` at the version you published.
 - In the Prompts view for `dad-it-support-agent`, scroll to "Used in" and your trace appears.
 
-![A traced openai-chat-completion with the Prompt badge in the top-right linking back to dad-it-support-agent · v1.](../images/prompt-management/03-prompt-management-prompt-badge.png)
+![A traced OpenAI.chat generation with the prompt badge in its header linking back to dad-it-support-agent - v1.](../images/prompt-management/03-prompt-management-prompt-badge.png)
 
 ## Wrap-up
 
