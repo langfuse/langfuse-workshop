@@ -102,7 +102,7 @@ async function decideBehavior(
 // --- 4. The LLM-as-a-judge correctness evaluator.
 //        Semantic-equivalence judge: does the agent answer preserve every
 //        material meaning in idealAnswer? Returns 0 or 1.
-//        Runs as a runExperiment callback so scores land with the run —
+//        Runs as a runExperiment callback so scores land with the run:
 //        no Langfuse Platform evaluator setup required first.
 const CORRECTNESS_PROMPT = `You are an expert semantic-equivalence evaluator for AI systems.
 You will receive an actual assistant output and an expected output.

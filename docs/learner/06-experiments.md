@@ -10,13 +10,13 @@ description: "Run the support agent across the Langfuse dataset, score every ite
 A trace tells you about *one* turn. An experiment tells you about behavior *across the dataset*. Every experiment run does the same three things:
 
 1. **Pulls each item from the dataset.**
-2. **Runs the item's input through the agent** — same `runSupportConversation(...)` the web app uses, so the trace shape is the same as production.
+2. **Runs the item's input through the agent**: same `runSupportConversation(...)` the web app uses, so the trace shape is the same as production.
 3. **Scores the actual output against the expected output** with one or more evaluators.
 
 Different evaluators answer different questions. For this workshop we use two that give a quick first read on answer quality:
 
-- **`behavior_match`** (decision model + deterministic match) — *did Specs reply, defer, or ask a follow-up when we expected it to?* The OpenAI Decisions API picks one of three fixed labels, and the script compares that label with `expectedBehavior`.
-- **`correctness`** (LLM-as-a-judge) — *does the answer preserve the material meaning of the ideal answer?* A semantic-equivalence check: paraphrases pass, missing required detail or a contradicted fact fails.
+- **`behavior_match`** (decision model + deterministic match): *did Specs reply, defer, or ask a follow-up when we expected it to?* The OpenAI Decisions API picks one of three fixed labels, and the script compares that label with `expectedBehavior`.
+- **`correctness`** (LLM-as-a-judge): *does the answer preserve the material meaning of the ideal answer?* A semantic-equivalence check: paraphrases pass, missing required detail or a contradicted fact fails.
 
 Both scores are **callback evaluators** inside `runExperiment`. They run in your process right after each item finishes, so the console summary and the Langfuse run already include both scores when the script exits. We intentionally avoid Langfuse Platform evaluators in this chapter: configuring one needs existing experiment data to preview and map variables, which creates a chicken-and-egg problem before your first run.
 
@@ -41,7 +41,7 @@ By the end of this chapter:
 2. Every item gets a **`behavior_match`** score (decision model + deterministic match) and a **`correctness`** score (LLM-as-a-judge), both from `runExperiment` callbacks.
 3. The two scores plus the per-item traces are visible in Langfuse and ready to compare against future runs.
 
-## Step 1 — Understand the run script
+## Step 1: Understand the run script
 
 Open `scripts/run-dataset.ts`. The file is annotated with numbered comments (`// --- 1. Boot the OpenTelemetry SDK ...`, `// --- 3. The behavior_match evaluator ...`, etc.) so you can read it section by section. At a high level:
 
@@ -50,9 +50,9 @@ Open `scripts/run-dataset.ts`. The file is annotated with numbered comments (`//
 - Uses `dataset.runExperiment(...)` to roll all per-item traces into a single run row.
 - Attaches `behavior_match` and `correctness` as callback evaluators on that same call.
 
-The traces produced are the same shape as production traces — same `dad-it-support-chat-turn` root, same OpenAI generation, same tool spans. No extra Langfuse UI setup is required for either score.
+The traces produced are the same shape as production traces: same `dad-it-support-chat-turn` root, same OpenAI generation, same tool spans. No extra Langfuse UI setup is required for either score.
 
-### `dataset.runExperiment(...)` — the moving parts
+### `dataset.runExperiment(...)`: the moving parts
 
 The whole run is one call to `runExperiment`. The shape boils down to:
 
@@ -86,11 +86,11 @@ await dataset.runExperiment({
 
 Three things to understand:
 
-- **`task`** is *your application logic* — we call straight into `runSupportConversation(...)`, which means every trace this script produces looks identical to a production trace.
+- **`task`** is *your application logic*: we call straight into `runSupportConversation(...)`, which means every trace this script produces looks identical to a production trace.
 - **`evaluators`** is a list of callbacks. Each evaluator runs after `task` returns and attaches a score to the item trace. Here we use one behavior check and one LLM-as-a-judge check.
 - **`runName`** groups every per-item trace into one row in the Langfuse Experiments view. Pick a name that changes per run (we include the timestamp) so two runs don't collide.
 
-## Step 2 — Review the `behavior_match` evaluator
+## Step 2: Review the `behavior_match` evaluator
 
 `behavior_match` has two parts:
 
@@ -105,9 +105,9 @@ Why split it this way?
 
 Low-confidence labels are worth reading by hand. They usually mean the answer mixes behaviors, for example declining an out-of-scope request and then walking Dad through it anyway.
 
-## Step 3 — Review the `correctness` LLM-as-a-judge callback
+## Step 3: Review the `correctness` LLM-as-a-judge callback
 
-The second callback in `evaluators` calls OpenAI with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint — paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
+The second callback in `evaluators` calls OpenAI with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint: paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
 
 Why run the judge as a callback instead of a Langfuse Platform evaluator?
 
@@ -115,20 +115,20 @@ Why run the judge as a callback instead of a Langfuse Platform evaluator?
 - The judge prompt and model live next to the experiment runner in git.
 - Both scores appear in the script's printed summary as soon as the run finishes.
 
-The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env` — the same credentials the agent already uses. `behavior_match` uses the same `OPENAI_API_KEY`, with `gpt-6-luna` fixed in the script. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
+The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env`: the same credentials the agent already uses. `behavior_match` uses the same `OPENAI_API_KEY`, with `gpt-6-luna` fixed in the script. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
 
-## Step 4 — Run the dataset
+## Step 4: Run the dataset
 
 ```bash
 npm run dataset:run
 ```
 
-The script finishes by printing a formatted run summary in the console. Item-level traces and both scores show up in Langfuse as the run executes. Because the evaluators are callbacks, you should already see `behavior_match` and `correctness` in that console summary — not as a later async fill-in.
+The script finishes by printing a formatted run summary in the console. Item-level traces and both scores show up in Langfuse as the run executes. Because the evaluators are callbacks, you should already see `behavior_match` and `correctness` in that console summary, not as a later async fill-in.
 
 ## What to inspect in Langfuse
 
 - The new **Run** under your dataset → one row per item with **two** scores: `behavior_match` and `correctness`, plus a trace link.
-- **Item-level traces** — identical shape to production traces.
+- **Item-level traces**: identical shape to production traces.
 - The dataset's **chart view** → per-run averages for both scores, ready for side-by-side comparison after future changes.
 
 ![Experiment Results](../images/experiments/experiment-results.png)
@@ -140,9 +140,9 @@ The script finishes by printing a formatted run summary in the console. Item-lev
 - The console summary printed both `behavior_match` and `correctness`.
 - Trace shape matches a normal production trace.
 
-## Optional bonus — Langfuse Platform evaluators on experiment runs
+## Optional bonus: Langfuse Platform evaluators on experiment runs
 
-Once you have at least one experiment run, you can also attach Langfuse Platform evaluators (for example **Check Correctness** from the Template Gallery) so Langfuse scores future runs asynchronously in the UI. That path is useful when you want managed judges shared across the team — but it needs existing experiment observations to preview variable mapping, which is why this workshop starts with callbacks.
+Once you have at least one experiment run, you can also attach Langfuse Platform evaluators (for example **Check Correctness** from the Template Gallery) so Langfuse scores future runs asynchronously in the UI. That path is useful when you want managed judges shared across the team, but it needs existing experiment observations to preview variable mapping, which is why this workshop starts with callbacks.
 
 If you try the bonus later:
 
@@ -161,7 +161,7 @@ See the [LLM-as-a-Judge docs](https://langfuse.com/docs/evaluation/evaluation-me
 
 The two scoring approaches give you two angles on the same run: **behavior match** for "did Specs reply, defer, or ask a follow-up when it should?" and **correctness** for "is the answer actually right?" Both run as callbacks on `runExperiment`, so the first workshop run is fully scored without platform evaluator setup.
 
-The [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`) knows the recommended evaluator shapes and setup patterns — this walkthrough exists so you see what the skill is doing under the hood.
+The [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`) knows the recommended evaluator shapes and setup patterns: this walkthrough exists so you see what the skill is doing under the hood.
 
 ## End state
 

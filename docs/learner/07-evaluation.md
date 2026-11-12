@@ -7,7 +7,7 @@ description: "Change one prompt rule, rerun the same dataset, and compare Langfu
 
 ## Why evaluate changes with experiments
 
-If you change anything about your AI app — a prompt, a model, the context you pass, even the agent architecture — you want to know whether the change actually made the system better. Eyeballing one or two outputs feels good but doesn't generalize. Rerunning the same dataset against the new version and comparing scores against the old run is the closest thing to a measurement.
+If you change anything about your AI app, a prompt, a model, the context you pass, even the agent architecture, you want to know whether the change actually made the system better. Eyeballing one or two outputs feels good but doesn't generalize. Rerunning the same dataset against the new version and comparing scores against the old run is the closest thing to a measurement.
 
 This is also what lets you close the loop and **ship with confidence**: when the new run's averages go up (and you read enough individual items to be sure the score reflects reality), you have evidence to deploy the change.
 
@@ -26,8 +26,8 @@ Your app is traced, monitored, has a hosted dataset, and at least one experiment
 
 Look at your first experiment run before making changes. Open the dataset → **Experiments** tab and check the averages:
 
-- `correctness` average — what fraction of items did the judge mark as actually correct?
-- `behavior_match` average — how often did Specs reply, defer, or ask a follow-up when the dataset expected it to?
+- `correctness` average: what fraction of items did the judge mark as actually correct?
+- `behavior_match` average: how often did Specs reply, defer, or ask a follow-up when the dataset expected it to?
 
 Open the items where either score is low and read the agent's answer. A typical finding at this stage: the agent walks Dad through an out-of-scope request instead of deferring, answers a vague request without asking what is wrong, or gives generic advice instead of the iPhone-specific instructions. Whatever you see is the *problem you're about to try to fix*.
 
@@ -35,29 +35,29 @@ Open the items where either score is low and read the agent's answer. A typical 
 
 This chapter is framed around prompt iteration because changing the prompt is the lowest-friction lever. The same workflow applies if you change:
 
-- **The model** — try a stronger or cheaper one and rerun.
-- **The context** — add or remove fields from the system prompt or tool results.
-- **The agent architecture** — add a tool, change tool ordering, change retries.
-- **The prompt** — what we'll do here.
+- **The model**: try a stronger or cheaper one and rerun.
+- **The context**: add or remove fields from the system prompt or tool results.
+- **The agent architecture**: add a tool, change tool ordering, change retries.
+- **The prompt**: what we'll do here.
 
 The shape is always the same: change *one* thing (or a configuration of multiple variables), rerun the dataset, compare runs side by side.
 
 ## Goal
 
-Change something in the prompt and improve the experiment results — measured by `correctness` and `behavior_match` going up across the dataset.
+Change something in the prompt and improve the experiment results: measured by `correctness` and `behavior_match` going up across the dataset.
 
 
 Three passes:
 
-1. **Change one thing** — swap the prompt variant or edit in the Langfuse UI.
+1. **Change one thing**: swap the prompt variant or edit in the Langfuse UI.
 2. **Rerun the dataset** against the new prompt.
 3. **Compare runs** side by side and decide whether to ship.
 
-## Step 1 — Change the prompt
+## Step 1: Change the prompt
 
-The change you make should be informed by what you saw in run 1 — for example, items where `behavior_match` expected `defer_question` but the agent danced around an out-of-scope question instead of refusing it cleanly. A concrete edit that addresses that:
+The change you make should be informed by what you saw in run 1, for example, items where `behavior_match` expected `defer_question` but the agent danced around an out-of-scope question instead of refusing it cleanly. A concrete edit that addresses that:
 
-> Add a rule that says: *"If a request is outside iPhone help (taxes, travel booking, anything that needs live account access), say so directly in one short sentence — what you can't help with and what you can — then stop. Do not attempt to answer the request."*
+> Add a rule that says: *"If a request is outside iPhone help (taxes, travel booking, anything that needs live account access), say so directly in one short sentence, what you can't help with and what you can, then stop. Do not attempt to answer the request."*
 
 That makes the out-of-scope behaviour explicit instead of letting the model improvise.
 
@@ -65,25 +65,25 @@ If `behavior_match` also failed on the vague items, add a second rule: *"If you 
 
 Two ways to make the change:
 
-**Option A — Langfuse-side (create a new version in the UI, recommended):**
+**Option A: Langfuse-side (create a new version in the UI, recommended):**
 
-Prompts → `dad-it-support-agent` → create a new version or draft → add the rule above into the **Rules** section → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
+Prompts → `dad-it-support-agent` → create a new version or draft → add the sentence above to the prompt → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
 
-![Review Prompt Changes in Langfuse — side-by-side diff between v1 and the draft with the new out-of-scope rule highlighted, ready to save as a new version and promote to production.](../images/evaluate-a-change/07-evaluate-a-change-prompt-diff.png)
+![Review Prompt Changes in Langfuse: side-by-side diff between v1 and the draft with the new out-of-scope rule highlighted, ready to save as a new version and promote to production.](../images/evaluate-a-change/07-evaluate-a-change-prompt-diff.png)
 
-**Option B — Code-side (edit `src/server/support-agent.ts` and republish):**
+**Option B: Code-side (edit `src/server/support-agent.ts` and republish):**
 
-Open `src/server/support-agent.ts`, add the same rule into the `SYSTEM_PROMPT` constant's Rules block, then publish:
+Open `src/server/support-agent.ts`, add the same sentence to the `SYSTEM_PROMPT` constant, then publish:
 
 ```bash
 npm run prompt:publish
 ```
 
-The repo also ships a `gentler` variant you can switch to as-is (`WORKSHOP_PROMPT_VARIANT=gentler npm run prompt:publish`) — useful if you just want to see *any* prompt change rather than design your own.
+The repo also ships a `gentler` variant you can switch to as-is (`WORKSHOP_PROMPT_VARIANT=gentler npm run prompt:publish`): useful if you just want to see *any* prompt change rather than design your own.
 
 Either way you end up with a new prompt version, and the next `runSupportConversation(...)` call uses it.
 
-## Step 2 — Rerun the dataset
+## Step 2: Rerun the dataset
 
 ```bash
 npm run dataset:run
@@ -91,7 +91,7 @@ npm run dataset:run
 
 You now have two runs under the same dataset, each linked to a different prompt version. The same `behavior_match` and `correctness` callback evaluators from step 06 score the new run automatically inside `runExperiment`.
 
-## Step 3 — Compare
+## Step 3: Compare
 
 In Langfuse:
 
@@ -115,9 +115,9 @@ Things to look for:
 
 ## Wrap-up
 
-Closing the loop — change → rerun → compare → decide — is what makes prompt or model changes go from gut calls to engineering decisions. Every future change has a free baseline to measure against.
+Closing the loop, change → rerun → compare → decide, is what makes prompt or model changes go from gut calls to engineering decisions. Every future change has a free baseline to measure against.
 
-The [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`) bumps prompt versions, links runs to versions, and produces a comparison chart automatically — this walkthrough exists so you see what the skill is doing under the hood.
+The [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`) bumps prompt versions, links runs to versions, and produces a comparison chart automatically: this walkthrough exists so you see what the skill is doing under the hood.
 
 ## End state
 

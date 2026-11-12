@@ -33,10 +33,10 @@ DATASET_NAME=dad-it-support-workshop
 Create a first dataset that captures the kinds of requests Specs has to handle.
 
 1. **Understand the dimensions of cases** the dataset should represent.
-2. **Understand the item shape** — every dataset item has the same three fields, and we want ours to match the agent's actual input.
+2. **Understand the item shape**: every dataset item has the same three fields, and we want ours to match the agent's actual input.
 3. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
 
-## Step 1 — Understand the dimensions of cases the dataset should represent
+## Step 1: Understand the dimensions of cases the dataset should represent
 
 These can be for example positive examples from error analysis, historic cases, or corrected cases that were identified with failures during data review.
 
@@ -55,14 +55,14 @@ Every item is also labelled with the behavior we expect from Specs: `reply` (ans
 
 If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch.
 
-## Step 2 — Read the item shape
+## Step 2: Read the item shape
 
-Dataset items in Langfuse follow a consistent shape — three fields, one required, two optional:
+Dataset items in Langfuse follow a consistent shape: three fields, one required, two optional:
 
 | Field | Required | Purpose |
 | --- | --- | --- |
 | `input` | yes | What you'd feed the agent. For us, the same `{ messages: [...] }` shape `/api/chat` accepts. |
-| `expectedOutput` | optional | What a good answer would look like. Free-form — used by evaluators to compare actual vs expected. |
+| `expectedOutput` | optional | What a good answer would look like. Free-form: used by evaluators to compare actual vs expected. |
 | `metadata` | optional | Tags or other fields for filtering and grouping (`category`, `difficulty`, etc.). |
 
 For us, the conceptual shape of one item is:
@@ -87,14 +87,14 @@ The two fields inside `expectedOutput` answer two different evaluator questions:
 
 If you look at the actual JSON in `data/seed-dataset.json`, the `input` is the full `{ messages: [...] }` shape that `/api/chat` accepts, plus an `id` field for the dataset row. We've simplified the example above to show *what an item is*; the on-disk format is what the experiment script (step 06) can feed straight into `runSupportConversation(...)` without rewriting inputs.
 
-## Step 3 — Seed the dataset
+## Step 3: Seed the dataset
 
 You have several options for getting items into a Langfuse dataset:
 
 - **Add items manually** in the UI (Datasets → New item).
 - **Upload a CSV / JSON** file via the UI.
-- **Turn live production traces** into dataset items directly from the Trace view — this is the most powerful path once you have monitoring catching interesting traces.
-- **Programmatic seeding** via the SDK / CLI — best for an initial bulk load like ours.
+- **Turn live production traces** into dataset items directly from the Trace view: this is the most powerful path once you have monitoring catching interesting traces.
+- **Programmatic seeding** via the SDK / CLI: best for an initial bulk load like ours.
 
 For this workshop we use the programmatic path because we already have a curated JSON file:
 
@@ -104,11 +104,11 @@ npm run dataset:seed
 
 Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 16 items and 0 experiment runs (so far):
 
-![Datasets list view in Langfuse — dad-it-support-workshop with its seeded items and no runs yet.](../images/datasets/05-dataset-list.png)
+![Datasets list view in Langfuse: dad-it-support-workshop with its seeded items and no runs yet.](../images/datasets/05-dataset-list.png)
 
 Click into the dataset and switch to the **Items** tab. You should see every seeded item with input, expected output, and metadata columns:
 
-![Items view of the dad-it-support-workshop dataset — every row with messages input, ideal answer + expected behavior, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
+![Items view of the dad-it-support-workshop dataset: every row with messages input, ideal answer + expected behavior, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
 
 ## How to verify you are done
 
@@ -118,7 +118,7 @@ Click into the dataset and switch to the **Items** tab. You should see every see
 
 ## Wrap-up
 
-Datasets are how you write down what your system is expected to handle. A good one gives you confidence to ship and to iterate without regressing. You can seed datasets via the [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli) or skill, build them from production traces in the UI, or maintain them in code like we did — the right approach depends on where your best examples come from.
+Datasets are how you write down what your system is expected to handle. A good one gives you confidence to ship and to iterate without regressing. You can seed datasets via the [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli) or skill, build them from production traces in the UI, or maintain them in code like we did: the right approach depends on where your best examples come from.
 
 Next we use this dataset to run experiments against the agent.
 
