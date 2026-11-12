@@ -100,7 +100,7 @@ Without this change the model keeps receiving the local constant — the Prompt 
 
 ```ts
 const openai = observeOpenAI(
-  new OpenAI(chatClientOptions()),
+  new OpenAI({ apiKey: env.openaiApiKey }),
   langfusePrompt ? { langfusePrompt } : undefined
 );
 ```
