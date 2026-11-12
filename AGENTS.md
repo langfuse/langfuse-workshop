@@ -90,4 +90,6 @@ After those files land on `main` (or on the branch you want to sync from), refre
 
 Without `--push`, the script updates local tags only. The script requires a clean working tree and force-moves the canonical checkpoint tags.
 
+The `Sync checkpoint tags` GitHub Action (`.github/workflows/sync-checkpoints.yml`) runs this script with `--push` on every push to `main` that touches `docs/`, `README.md`, or `AGENTS.md`, and can also be started by hand. When a push changes other files, it only posts a warning listing them; those still need the manual tag patches below.
+
 For shared implementation changes that are not covered by that script (for example `package.json` scripts), update each affected checkpoint tag manually: checkout the tag, apply the same change, commit, force-move the tag, and push it. Then still run the docs sync if docs or `AGENTS.md` also changed.
