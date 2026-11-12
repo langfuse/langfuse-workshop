@@ -13,19 +13,6 @@ A trace tells you about *one* turn. An experiment tells you about behavior *acro
 2. **Runs the item's input through the agent**: same `runSupportConversation(...)` the web app uses, so the trace shape is the same as production.
 3. **Scores the actual output** with one or more evaluators, either against the expected output or on a reference-free quality criterion.
 
-Two of the three evaluators here read a field from `expectedOutput`:
-
-- **`behavior_match`** (decision model + deterministic match): *did Specs reply, defer, or ask a follow-up when we expected it to?* The OpenAI Decisions API picks one of three fixed labels, and the script compares that label with `expectedBehavior`.
-- **`correctness`** (LLM-as-a-judge regression check): *did a change make answers worse?* A semantic-equivalence check against `idealAnswer`: paraphrases pass, missing required detail or a contradicted fact fails. A prompt fix that makes the agent refuse too much, or drop a step, shows up here.
-
-The third needs no reference, like the all-caps check in monitoring:
-
-- **`short_reply`** (deterministic, no model call): *did the answer stay short?* `1` if the reply has at most 120 words. It targets the lengthy responses category from error analysis.
-
-Treat this set as a **starting point**, not the finished eval suite. It covers the failures error analysis found so far, with the simplest check that catches each one. Not every category needs an offline evaluator: impersonation, for example, is rare enough here that reading traces covers it for now. As new failure categories show up in production, add an evaluator for the ones worth tracking, adjust limits like the word count, and check the judges against your own labels before you rely on them.
-
-All three scores are **callback evaluators** inside `runExperiment`. They run in your process right after each item finishes, so the console summary and the Langfuse run already include every score when the script exits. We intentionally avoid Langfuse Platform evaluators in this chapter: configuring one needs existing experiment data to preview and map variables, which creates a chicken-and-egg problem before your first run.
-
 Complementary materials:
 
 - Docs: [Experiments via SDK](https://langfuse.com/docs/evaluation/experiments/experiments-via-sdk)
@@ -47,7 +34,20 @@ By the end of this chapter:
 2. Every item gets a **`behavior_match`** score (decision model + deterministic match), a **`short_reply`** score (deterministic), and a **`correctness`** score (LLM-as-a-judge regression check), all from `runExperiment` callbacks.
 3. The three scores plus the per-item traces are visible in Langfuse and ready to compare against future runs.
 
-## Step 1: Understand the run script
+## Step 1: Choose the evaluators
+
+In 05 you decided what the dataset should evaluate: correct answers, and the right behavior (reply, defer, or ask a follow-up). Error analysis also found lengthy replies. Each of those gets one evaluator. Two of them read a field from `expectedOutput`:
+
+- **`behavior_match`** (decision model + deterministic match): *did Specs reply, defer, or ask a follow-up when we expected it to?* The OpenAI Decisions API picks one of three fixed labels, and the script compares that label with `expectedBehavior`.
+- **`correctness`** (LLM-as-a-judge regression check): *did a change make answers worse?* A semantic-equivalence check against `idealAnswer`: paraphrases pass, missing required detail or a contradicted fact fails. A prompt fix that makes the agent refuse too much, or drop a step, shows up here.
+
+The third needs no reference, like the all-caps check in monitoring:
+
+- **`short_reply`** (deterministic, no model call): *did the answer stay short?* `1` if the reply has at most 120 words. It targets the lengthy responses category from error analysis.
+
+Treat this set as a **starting point**, not the finished eval suite. It covers the failures error analysis found so far, with the simplest check that catches each one. Not every category needs an offline evaluator: impersonation, for example, is rare enough here that reading traces covers it for now. As new failure categories show up in production, add an evaluator for the ones worth tracking, adjust limits like the word count, and check the judges against your own labels before you rely on them.
+
+## Step 2: Understand the run script
 
 Open `scripts/run-dataset.ts`. The file is annotated with numbered comments (`// --- 1. Boot the OpenTelemetry SDK ...`, `// --- 3. The behavior_match evaluator ...`, etc.) so you can read it section by section. At a high level:
 
@@ -57,6 +57,8 @@ Open `scripts/run-dataset.ts`. The file is annotated with numbered comments (`//
 - Attaches `behavior_match`, `short_reply`, and `correctness` as callback evaluators on that same call.
 
 The traces produced are the same shape as production traces: same `dad-it-support-chat-turn` root, same OpenAI generation, same tool spans. No extra Langfuse UI setup is required for any of the scores.
+
+All three scores are **callback evaluators** inside `runExperiment`. They run in your process right after each item finishes, so the console summary and the Langfuse run already include every score when the script exits. We intentionally avoid Langfuse Platform evaluators in this chapter: configuring one needs existing experiment data to preview and map variables, which creates a chicken-and-egg problem before your first run.
 
 ### `dataset.runExperiment(...)`: the moving parts
 
@@ -101,7 +103,7 @@ Three things to understand:
 - **`evaluators`** is a list of callbacks. Each evaluator runs after `task` returns and attaches a score to the item trace. Here we use a behavior check, a length check, and an LLM-as-a-judge regression check.
 - **`runName`** groups every per-item trace into one row in the Langfuse Experiments view. Pick a name that changes per run (we include the timestamp) so two runs don't collide.
 
-## Step 2: Review the `behavior_match` evaluator
+## Step 3: Review the `behavior_match` evaluator
 
 `behavior_match` has two parts:
 
@@ -116,13 +118,13 @@ Why split it this way?
 
 Low-confidence labels are worth reading by hand. They usually mean the answer mixes behaviors, for example declining an out-of-scope request and then walking Dad through it anyway.
 
-## Step 3: Review the deterministic `short_reply` evaluator
+## Step 4: Review the deterministic `short_reply` evaluator
 
 `short_reply` counts the words in the answer and scores `1` if there are at most `MAX_REPLY_WORDS` (120), `0` otherwise. The comment records the count, for example `164 words (limit 120).`
 
 It is the experiment counterpart of the all-caps code evaluator from monitoring: a plain rule, no model call, no prompt to tune. It also needs no reference answer, so it works on every item. The limit is a product decision, not a law. Change the constant if your team agrees on a different bar for "short".
 
-## Step 4: Review the `correctness` regression check
+## Step 5: Review the `correctness` regression check
 
 The last callback in `evaluators` calls OpenAI with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint: paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
 
@@ -136,7 +138,7 @@ Why run the judge as a callback instead of a Langfuse Platform evaluator?
 
 The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env`: the same credentials the agent already uses. `behavior_match` uses the same `OPENAI_API_KEY`, with `gpt-6-luna` fixed in the script. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
 
-## Step 5: Run the dataset
+## Step 6: Run the dataset
 
 ```bash
 npm run dataset:run
