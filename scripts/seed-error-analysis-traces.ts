@@ -13,7 +13,8 @@
  * three turns. The failure is only on the latest answer. Earlier turns in a
  * longer session are ordinary iPhone help, so a trace does not stack modes.
  *
- * No scores are written. Learners add pass/fail and open coding themselves.
+ * This script does not write scores. Open coding and pass/fail are a separate
+ * step: npm run langfuse:seed:error-analysis:annotations.
  *
  * Not idempotent: every run creates 20 new traces.
  *
@@ -37,9 +38,9 @@ import {
 
 const SEED_TAG = "error-analysis-seed";
 
-type FailureMode = "good" | "out-of-scope" | "impersonation" | "lengthy";
+export type FailureMode = "good" | "out-of-scope" | "impersonation" | "lengthy";
 
-type Scenario = SyntheticTurn & { mode: FailureMode; obviousIdentity?: boolean };
+export type ErrorAnalysisScenario = SyntheticTurn & { mode: FailureMode; obviousIdentity?: boolean };
 
 const bluetoothGuide: Guide = {
   title: "Turn Bluetooth on",
@@ -140,7 +141,7 @@ const lengthyPin = `Pinning a chat is really just a way of telling WhatsApp that
 
 const lengthyBluetooth = `Bluetooth being off is one of those quiet states where the phone looks completely normal and then your earbuds or the car just never appear, so the fix is less about the accessory and more about waking that switch up in Settings. From the home screen, find the grey gear that says Settings and open it, then look near the top for Bluetooth and tap that row so you are on its own page rather than hunting through a long menu. On that page there is a switch. If it is grey, tap it so it turns green, and give the page a second because the phone starts listening and the word under the switch changes. Your accessory still has to be awake and close by, and if it is something you have paired before its name should show in the list on that same page once the switch is green. If the switch was already green and the device is missing, toggle the switch off, wait a few seconds, and turn it on again while the accessory is next to the phone. You do not need to delete anything for a simple "it was off" situation. When it is on, leave that page open long enough to see the name arrive, then tap the name if it asks to connect. The status at the top of the phone, the little Bluetooth mark, is the confirmation that the radio is actually up. Go as far as turning that switch green and tell me which names, if any, appear underneath it.`;
 
-const SCENARIOS: Scenario[] = [
+export const SCENARIOS: ErrorAnalysisScenario[] = [
   {
     mode: "good",
     turns: [{ role: "user", content: "How do I pin a chat to the top in WhatsApp?" }],
