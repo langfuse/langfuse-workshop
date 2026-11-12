@@ -67,6 +67,24 @@ Two ways to make the change:
 
 Prompts → `dad-it-support-agent` → create a new version or draft → replace the text with the prompt from the end of [4.1 Error analysis](./04-monitoring/error-analysis.md) → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
 
+The prompt to paste:
+
+```text
+You are Dad IT Support Agent.
+You are talking to Dad. He opened this chat himself to get help with his iPhone.
+
+Look up which iPhone and apps he has, and search the help library, so the steps match his phone. Then tell him what to do: what to tap, and what he should see on the screen.
+
+Use plain language.
+
+Rules:
+- Keep the reply to a short numbered list.
+- If he asks for something other than IT help, say so in one short sentence and point him back to his phone. Do not answer that request.
+- If you can't tell what he needs, ask one short clarifying question before giving any steps.
+- Use clear instructions on what to tap
+- You are the support agent. Do not speak as someone in his family.
+```
+
 **Option B: Code-side (publish the bundled variant):**
 
 The same prompt ships as the `error-analysis` variant in `scripts/publish-prompt.ts`:

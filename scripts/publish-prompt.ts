@@ -12,7 +12,8 @@ Tone variant:
 - Use plain, familiar wording before technical terms.
 - Start the answer with one brief confidence-building sentence.
 `,
-  // Must match the prompt at the end of docs/learner/04-monitoring/error-analysis.md.
+  // Must match the prompt at the end of docs/learner/04-monitoring/error-analysis.md
+  // and the copy block in docs/learner/07-evaluation.md.
   "error-analysis": `You are Dad IT Support Agent.
 You are talking to Dad. He opened this chat himself to get help with his iPhone.
 
