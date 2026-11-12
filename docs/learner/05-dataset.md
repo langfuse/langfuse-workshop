@@ -80,7 +80,7 @@ For us, the conceptual shape of one item is:
 
 The two fields inside `expectedOutput` answer two different evaluator questions:
 
-- **`idealAnswer`** is the reply we want, written the way the prompt asks for it: a short numbered list of what to tap and what Dad should see, one short sentence for an out-of-scope request, or one clarifying question when the request is vague. It's what the LLM-as-a-judge `correctness` callback in chapter 06 reads to catch answers that got worse. If the ideal answers don't match the prompt, the judge ends up scoring the wrong target.
+- **`idealAnswer`** is the reply we want, written the way the prompt asks for it: a short numbered list of what to tap and what Dad should see, one short sentence for an out-of-scope request, or one clarifying question when the request is vague. It's what the LLM-as-a-judge `correctness` callback in chapter 06 reads to catch answers that got worse. If the ideal answers don't match the prompt, the judge ends up scoring the wrong target. Keep them to what is actually required: the judge treats every fact in `idealAnswer` as something the answer must include.
 - **`expectedBehavior`** is one of `reply`, `defer_question`, or `ask_follow_up`. In chapter 06 a small decision model labels each answer with one of those three values, and the `behavior_match` callback compares it with `expectedBehavior` by exact match.
 
 `metadata` lets us slice runs by category or difficulty later when comparing experiment runs side by side.

@@ -32,8 +32,9 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 ## Watch for
 
 - Learners trying to set up **Check Correctness** in the UI before the first run. Redirect them to the script callbacks; platform setup is bonus-only.
+- The ideal answers are written in the shape the step 07 prompt asks for, but only with the steps that matter. The judge treats every fact in `idealAnswer` as required, so incidental detail or one of two valid routes turns good answers into misses.
 - Do not use `expectedBehavior` as the correctness reference. That field belongs to `behavior_match`; correctness uses `idealAnswer`.
-- Expect a first run around `behavior_match` 0.75–0.88, `short_reply` 0.25, `correctness` 0.69. The current prompt walks Dad through the out-of-scope requests instead of deferring, rarely asks a follow-up on the vague items, and writes long answers. That gap is what step 07 fixes.
+- Expect a first run around `behavior_match` 0.81–0.88, `short_reply` 0.25–0.31, `correctness` 0.69. The current prompt walks Dad through the out-of-scope requests instead of deferring, rarely asks a follow-up on the vague items, and writes long answers. That gap is what step 07 fixes.
 - Missing `behavior_match` usually means the Decisions call failed, for example because the OpenAI key has no access to `gpt-6-luna`. Check the terminal error.
 - `401 The project you are requesting has been archived` followed by `No experiment results to display` means the OpenAI key belongs to an archived project. Replace `OPENAI_API_KEY` locally with a key from an active project, then rerun.
 - Missing `correctness` in the console usually means the judge call failed (bad key, model, or JSON parse). Check the terminal error rather than refreshing Langfuse for a pending platform score.

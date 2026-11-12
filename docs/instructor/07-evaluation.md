@@ -11,7 +11,7 @@ Learner guide: [07 Evaluate a Change](../learner/07-evaluation.md)
 
 - Make learners inspect run 1 before changing anything. The change should respond to evidence, not vibes.
 - Run 1 from 06 is the baseline experiment on the production prompt. The comparison is the more specific prompt from the end of 4.1 Error analysis, published with `WORKSHOP_PROMPT_VARIANT=error-analysis npm run prompt:publish` or pasted as a new version in the UI. That connects the failure categories from monitoring to a measured result.
-- Expect roughly `behavior_match` 0.75–0.88 → 1.00, `short_reply` 0.25 → 0.94, and `correctness` 0.69 → 0.75–0.94. The baseline misses taxes and the train booking (no defer) and the vague items (no follow-up question), and most of its answers run past 120 words. `short_reply` is the clearest win and the only score that doesn't move between runs of the same prompt.
+- Expect roughly `behavior_match` 0.81–0.88 → 1.00, `short_reply` 0.25–0.31 → 0.94–1.00, and `correctness` 0.69 → 0.81. The baseline misses taxes and the train booking (no defer) and the vague items (no follow-up question), and most of its answers run past 120 words. `short_reply` is the clearest win; it has no model call, so it only moves when the agent's answers do.
 - Keep the iteration deliberately small: one prompt version, one rerun, one comparison.
 - Emphasize regressions. The most useful comparison is often the item that got worse.
 - Remind learners that all three experiment scores come from `runExperiment` callbacks in `scripts/run-dataset.ts`, so a missing score usually means the script hit an OpenAI/Langfuse error: check the terminal output first.

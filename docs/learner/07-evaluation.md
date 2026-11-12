@@ -120,7 +120,7 @@ Things to look for:
 - Which items regressed (the part that makes evaluation feel useful). Check `correctness` first: it is the regression check, so a drop there means the new prompt made an answer worse even if the other scores went up.
 - Whether the prompt change shifted scope (more refusals? more confident answers? more steps per response?).
 
-For reference, test runs of this exact comparison on the 16-item dataset went from `behavior_match` 0.75–0.88 to 1.00, `short_reply` 0.25 to 0.94, and `correctness` 0.69 to 0.75–0.94. The model-based scores move between runs, so read the items that changed rather than trusting the averages alone.
+For reference, test runs of this exact comparison on the 16-item dataset went from `behavior_match` 0.81–0.88 to 1.00, `short_reply` 0.25–0.31 to 0.94–1.00, and `correctness` 0.69 to 0.81. The model-based scores move between runs, so read the items that changed rather than trusting the averages alone.
 
 ## How to verify you are done
 
