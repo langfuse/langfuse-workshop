@@ -75,12 +75,12 @@ async function decideBehavior(
             {
               value: "defer_question",
               description:
-                "Declines or redirects because the request is out of scope, without giving steps for it."
+                "Declines the request itself because it is out of scope, even if it then offers other help."
             },
             {
               value: "reply",
               description:
-                "Answers the request directly. It may mention a limitation, as long as it still gives help."
+                "Gives help with the request the user actually asked. It may mention a limitation along the way."
             },
             {
               value: "ask_follow_up",
