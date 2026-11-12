@@ -1,7 +1,6 @@
 import OpenAI from "openai";
 import type { ChatMessage, ChatRequest, ChatResponse } from "../shared/types";
 import { env } from "./env";
-import { chatClientOptions } from "./llm";
 import { getSupportContext } from "./support-data";
 import { TOOL_DEFINITIONS, executeTool } from "./tools";
 
@@ -51,7 +50,7 @@ function parseToolArguments(argumentsText: string) {
 
 export async function runSupportConversation(request: ChatRequest): Promise<ChatResponse> {
   const context = getSupportContext();
-  const openai = new OpenAI(chatClientOptions());
+  const openai = new OpenAI({ apiKey: env.openaiApiKey });
 
   const transcript: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
     { role: "system", content: SYSTEM_PROMPT },
@@ -62,7 +61,7 @@ export async function runSupportConversation(request: ChatRequest): Promise<Chat
 
   for (let attempt = 0; attempt < 6; attempt += 1) {
     const response = await openai.chat.completions.create({
-      model: env.chatModel,
+      model: env.openaiModel,
       messages: transcript,
       tools: TOOL_DEFINITIONS,
       tool_choice: "auto"
@@ -70,7 +69,7 @@ export async function runSupportConversation(request: ChatRequest): Promise<Chat
 
     const message = response.choices[0]?.message;
     if (!message) {
-      throw new Error("The model returned no assistant message.");
+      throw new Error("OpenAI returned no assistant message.");
     }
     transcript.push(message as OpenAI.Chat.Completions.ChatCompletionMessageParam);
 
@@ -107,7 +106,7 @@ export async function runSupportConversation(request: ChatRequest): Promise<Chat
     traceMeta: {
       contextId: context.id,
       contextLabel: context.label,
-      model: env.chatModel
+      model: env.openaiModel
     }
   };
 }
