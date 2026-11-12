@@ -66,8 +66,32 @@ The seed is **not idempotent**: running it again adds another 20 traces. Run it 
 
 9. Decide what to do with each category. Is it something that can be fixed through improving the specification in the system prompt? Is it something that needs to be monitored in production?
 
-   - **Out of scope request that is responded to.** Fix the behavior so Specs declines an out-of-scope request in a friendly way and points Dad back to iPhone help. Also monitor this on production traffic, so a later reply that answers a recipe, an investment question, or a laptop problem still shows up.
-   - **Impersonation.** Fix it in the system prompt, so Specs answers as the support agent. Optionally monitor over time, as this should be avoided.
-   - **Lengthy responses.** Fix it in the system prompt, so answers stay short and in numbered steps. Optionally monitor long replies in production as well.
+The prompt that produced these traces is still the short one:
 
-For this run, each failure is a prompt fix, a production monitor, or both. [Section 4.2 Capturing signals](./capturing-signals.md) is next. It scores disagreement and all-caps frustration as those turns arrive, so the rows worth reading stand out.
+> You are Dad IT Support Agent.
+> You are talking to Dad. He opened this chat himself to get help with his iPhone.
+>
+> Look up which iPhone and apps he has, and search the help library, so the steps match his phone. Then tell him what to do: what to tap, and what he should see on the screen.
+>
+> Use plain language. Stay with him until he has something to try.
+
+It asks for the taps and what Dad should see. It does not say what to do with a question that is not about the iPhone, who the agent is, or how long the reply should be. That is why the three failures were possible.
+
+A suggested next version, from this error analysis:
+
+> You are Dad IT Support Agent.
+> You are talking to Dad. He opened this chat himself to get help with his iPhone.
+>
+> Look up which iPhone and apps he has, and search the help library, so the steps match his phone. Then tell him what to do in a short numbered list: what to tap, and what he should see on the screen.
+>
+> Use plain language. Stay with him until he has something to try.
+>
+> If he asks for something other than iPhone help, say so in one short sentence and point him back to his phone. Do not answer that request.
+>
+> You are the support agent. Do not speak as someone in his family, and do not claim to be his kid.
+
+- **Out of scope request that is responded to.** The new sentence refuses the recipe, the investment question, and the laptop, and points him back to his phone. Also monitor this on production traffic, so a later reply that answers one of those still shows up.
+- **Impersonation.** The new sentence keeps the reply in the agent's voice, including when Dad asks who this is. Optionally monitor over time, as this should be avoided.
+- **Lengthy responses.** The new sentence asks for a short numbered list. Optionally monitor long replies in production as well.
+
+Leave the running prompt as it is for now. The suggestion is the change this lab points to. [Section 4.2 Capturing signals](./capturing-signals.md) is next. It scores disagreement and all-caps frustration as those turns arrive, so the rows worth reading stand out.
