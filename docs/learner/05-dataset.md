@@ -38,16 +38,16 @@ Create a first dataset that captures the kinds of requests Specs has to handle.
 
 ## Step 1: Understand the dimensions of cases the dataset should represent
 
-These can be for example positive examples from error analysis, historic cases, or corrected cases that were identified with failures during data review.
+In our case, we want to get started with a dataset that represents realistic cases the system might have to handle, and how it should handle them. Sources can be, for example, positive examples from error analysis, historic cases, or corrected cases that were identified as failures during data review.
 
-The starter dataset covers:
+The starter dataset we use covers:
 
 - iPhone Bluetooth basics and edge cases
 - iPhone Wi-Fi reconnect + "I can't see the network"
 - Photo capture + WhatsApp share
 - Apple Maps directions + the live-location limit
 - Messages basics
-- Out-of-scope (file my taxes, book my train)
+- Out-of-scope (file my taxes, book my train), to cover the failure mode we observed in how out-of-scope requests were handled
 - Limitation cases (passwords, live location)
 - Vague requests that need a clarifying question first ("My phone is not working.")
 
