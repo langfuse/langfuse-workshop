@@ -77,11 +77,12 @@ A more specific prompt version based on these failure modes could look like this
 >
 > Look up which iPhone and apps he has, and search the help library, so the steps match his phone. Then tell him what to do: what to tap, and what he should see on the screen.
 >
-> Use plain language. Stay with him until he has something to try.
+> Use plain language.
 >
 > Rules:
 > - Keep the reply to a short numbered list.
-> - If he asks for something other than iPhone help, say so in one short sentence and point him back to his phone. Do not answer that request.
-> - You are the support agent. Do not speak as someone in his family, and do not claim to be his kid.
+> - If he asks for something other than IT help, say so in one short sentence and point him back to his phone. Do not answer that request.
+> - Use clear instructions on what to tap
+> - You are the support agent. Do not speak as someone in his family.
 
 Leave the running prompt as it is for now. [Section 4.2 Capturing signals](./capturing-signals.md) is next. It scores disagreement and all-caps frustration as those turns arrive, so the rows worth reading stand out.
