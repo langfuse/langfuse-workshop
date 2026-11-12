@@ -19,7 +19,7 @@ There are a few different ways to work with production data at scale.
 
 Cost and latency are logged on every trace. With [dashboards](https://langfuse.com/docs/metrics/features/custom-dashboards) you can build out a view on aggregate metrics over time, like spend per model, most used tool calls, and tools that are most likely to fail.
 
-![Latency (p95) across traces. Cost and quality use the same chart.](../images/monitoring/latency-over-time.png)
+![Home: trace volume, model cost, and scores.](../images/monitoring/home-dashboard.png)
 
 ### Do structured error analysis
 
