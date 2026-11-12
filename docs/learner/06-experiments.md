@@ -112,7 +112,7 @@ Why run the judge as a callback instead of a Langfuse Platform evaluator?
 - The judge prompt and model live next to the experiment runner in git.
 - Both scores appear in the script's printed summary as soon as the run finishes.
 
-The judge uses the same model credential as the agent: `LANGFUSE_GATEWAY_KEY` when it is set, otherwise `OPENAI_API_KEY` and `OPENAI_MODEL` from `.env`. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
+The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env` — the same credentials the agent already uses. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
 
 ## Step 4 — Run the dataset
 
