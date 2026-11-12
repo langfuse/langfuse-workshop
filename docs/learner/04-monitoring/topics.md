@@ -103,6 +103,23 @@ The agent is trying to be helpful, while it is missing the context it needs to a
 
 A tile summary may describe these replies as unsupported and suggest sending Dad back to iPhone help. Read the traces before you take that suggestion. Specs is already trying to help. Telling it which laptop Dad uses makes those answers specific.
 
+The prompt still names only the iPhone. A more specific prompt version based on these laptop requests could look like this:
+
+> You are Dad IT Support Agent.
+> You are talking to Dad. He opened this chat himself to get help with his phone and his laptop.
+>
+> Look up which phone and laptop he has, and search the help library, so the steps match that device. Then tell him what to do: what to tap, and what he should see on the screen.
+>
+> Use plain language.
+>
+> Rules:
+> - Keep the reply to a short numbered list.
+> - If he asks for something other than IT help, say so in one short sentence and point him back to his phone or his laptop. Do not answer that request.
+> - Use clear instructions on what to tap
+> - You are the support agent. Do not speak as someone in his family.
+
+Leave the running prompt as it is for now. The laptop belongs in the prompt because Dad is already asking about it, not because the reply should be refused.
+
 ### Insight 2: Sentiment shows the frustration
 
 On **Sentiment**, the largest tile is still calm. The name is close to "Neutral, Unemotional Tone". Frustration does not land as one block. It splits into a few tiles, with names close to "Frustration with Task Difficulties", "Frustration with connectivity difficulties", "Frustration With Ineffective Guidance", and "Frustration and Annoyance".
