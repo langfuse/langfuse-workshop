@@ -70,4 +70,4 @@ The seed is **not idempotent**: running it again adds another 20 traces. Run it 
    - **Impersonation.** Fix it in the system prompt, so Specs answers as the support agent. Optionally monitor over time, as this should be avoided.
    - **Lengthy responses.** Fix it in the system prompt, so answers stay short and in numbered steps. Optionally monitor long replies in production as well.
 
-For this run, each failure is a prompt fix, a production monitor, or both. [Section 4.2 Detect topics and issues](./topics.md) is next. It looks at the same production traffic at a larger scale, without reading every trace by hand.
+For this run, each failure is a prompt fix, a production monitor, or both. [Section 4.2 Capturing signals](./capturing-signals.md) is next. It scores disagreement and all-caps frustration as those turns arrive, so the rows worth reading stand out.

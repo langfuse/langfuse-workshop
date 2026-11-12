@@ -1,6 +1,6 @@
 ---
 title: "Workshop: Monitoring AI Agent Behavior"
-description: "Make sense of production traces: aggregate cost, latency, and quality, read failures by hand, see topics and issues, and capture signals."
+description: "Make sense of production traces: aggregate cost, latency, and quality, read failures by hand, and capture signals."
 ---
 
 # 04 Monitoring
@@ -31,14 +31,6 @@ The Academy page on [error analysis](https://langfuse.com/academy/monitoring/err
 
 In the hands-on lab in [section 4.1 Error analysis](./04-monitoring/error-analysis.md), we run through error analysis for the Dad IT Support Agent together.
 
-### Identify topics and issues at scale
-
-Error analysis derives general concepts from individual traces, and a person does that reading. Topics and issue detection is the scaled and automated approach: it clusters incoming traces into intent, sentiment, outcome, and issue categories. That shows the current state of the system, and how that state changes over time.
-
-![Intent groups for the Dad IT Support Agent.](../images/topics/intent-treemap.png)
-
-In the hands-on lab in [section 4.2 Detect topics and issues](./04-monitoring/topics.md), we run through topics and issue detection for the Dad IT Support Agent together.
-
 ### Capture signals from users
 
 A signal is something the user does or says that indicates how the turn felt, stored on the trace as a score. It is a judgment from the moment of use.
@@ -51,4 +43,4 @@ For Specs, we start with two conversation signals. We identify whether Dad disag
 
 The Academy page on [capturing signals](https://langfuse.com/academy/monitoring/capturing-signals) maps explicit ratings, behavioral signals, conversation signals, and outcomes.
 
-In the hands-on lab in [section 4.3 Capturing signals](./04-monitoring/capturing-signals.md), we run through capturing signals for the Dad IT Support Agent together.
+In the hands-on lab in [section 4.2 Capturing signals](./04-monitoring/capturing-signals.md), we run through capturing signals for the Dad IT Support Agent together.

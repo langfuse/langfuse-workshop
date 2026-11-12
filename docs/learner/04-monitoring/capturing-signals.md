@@ -1,9 +1,9 @@
 ---
-title: "Workshop: 4.3 Capturing Signals"
+title: "Workshop: 4.2 Capturing Signals"
 description: "Score user disagreement and all-caps frustration on production traces so the turns worth reading stand out."
 ---
 
-# 4.3 Capturing signals
+# 4.2 Capturing signals
 
 ## Why capture signals
 
@@ -11,7 +11,7 @@ Once traces are coming in, you want a judgment on them that does not require ope
 
 Signals are different from a quality rubric you wrote ahead of time. They measure how the user reacted at the moment of use, including reactions you had not thought to score. Negative signals are the ones to open individually. A user rarely corrects an answer they were happy with.
 
-For Specs we capture two conversation signals. [Section 4.2 Detect topics and issues](./topics.md) already showed the feeling on Sentiment: a tile close to "Frustration with connectivity difficulties", where Dad is frustrated that the laptop would not reconnect to Wi-Fi. Some of those lines are in all caps, and some push back on the steps. These two scores are how you find those turns without opening the treemap.
+For Specs we capture two conversation signals. Some of Dad's messages push back on the steps, and some are written in all caps. These two scores are how you find those turns without opening every trace.
 
 - **User disagreement:** Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
 - **All-caps frustration:** Dad writes something like "THIS STILL ISNT WORKING". A long run of capital letters is a cheap deterministic clue that the conversation may need extra attention. It is a triage hint, not proof that Dad is angry.
@@ -27,9 +27,22 @@ Complementary materials:
 git checkout checkpoint/04-monitoring
 ```
 
+## Add the model connection
+
+The disagreement judge needs a model connection on the project. The keys in `.env` do not fill that list.
+
+1. In Langfuse, open **Project Settings → LLM Connections**.
+2. Click **Add LLM Connection**.
+3. Choose OpenAI, name the connection, and paste your OpenAI API key into the secret field.
+4. Save the connection.
+
+If a connection is already there, keep it and continue.
+
+Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
+
 ## The evaluator model
 
-Use the OpenAI connection you added in [section 4.2 Detect topics and issues](./topics.md#add-the-model-connection). When the wizard asks you to pick a model, choose that connection and **5.6 Luna** (`gpt-5.6-luna`).
+Use the OpenAI connection you just added. When the wizard asks you to pick a model, choose that connection and **5.6 Luna** (`gpt-5.6-luna`).
 
 ![Pick the evaluator model in the Set up evaluator wizard. Choose 5.6 Luna.](../../images/monitoring/default-evaluation-model.png)
 
@@ -79,7 +92,7 @@ Code evaluators are a good fit for that pattern: no model call, no prompt design
 3. Run a test on the evaluator.
 4. Click on **Create Evaluator** and then on execute.
 
-This evaluator runs as TypeScript inside Langfuse's sandbox, so it does not use the OpenAI connection from [section 4.2 Detect topics and issues](./topics.md#add-the-model-connection).
+This evaluator runs as TypeScript inside Langfuse's sandbox, so it does not use the OpenAI connection.
 
 ## Verify
 

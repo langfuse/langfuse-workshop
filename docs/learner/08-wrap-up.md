@@ -31,7 +31,7 @@ git checkout checkpoint/08-wrap-up
 
 - Trace an LLM app end-to-end and read the result as a debugging surface.
 - Connect prompts to traces so a prompt change has a measurable next-trace effect.
-- Make sense of a pile of production traces: read failures, look at topics and issues, and detect disagreement and all-caps frustration automatically.
+- Make sense of a pile of production traces: read failures, and detect disagreement and all-caps frustration automatically.
 - Turn product scope into a starter dataset of realistic examples.
 - Run experiments on the same agent code with no parallel implementation.
 - Compare runs after changes and decide which setup is better — by score and by reading individual outputs.
