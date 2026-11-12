@@ -133,8 +133,6 @@ This first run is your **baseline experiment**. It uses the production `dad-it-s
 - **Item-level traces**: identical shape to production traces.
 - The dataset's **chart view** → per-run averages for both scores, ready for side-by-side comparison after future changes.
 
-![Experiment Results](../images/experiments/experiment-results.png)
-
 ## How to verify you are done
 
 - One run row appears under the dataset.

@@ -102,13 +102,11 @@ For this workshop we use the programmatic path because we already have a curated
 npm run dataset:seed
 ```
 
-Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 16 items and 0 experiment runs (so far):
-
-![Datasets list view in Langfuse: dad-it-support-workshop with its seeded items and no runs yet.](../images/datasets/05-dataset-list.png)
+Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 16 items and 0 experiment runs (so far).
 
 Click into the dataset and switch to the **Items** tab. You should see every seeded item with input, expected output, and metadata columns:
 
-![Items view of the dad-it-support-workshop dataset: every row with messages input, ideal answer + expected behavior, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
+![Items view of a seeded dataset: each row has the messages input, the ideal answer and expected behavior, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
 
 ## How to verify you are done
 

@@ -67,8 +67,6 @@ Two ways to make the change:
 
 Prompts → `dad-it-support-agent` → create a new version or draft → replace the text with the prompt from the end of [4.1 Error analysis](./04-monitoring/error-analysis.md) → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
 
-![Review Prompt Changes in Langfuse: side-by-side diff between v1 and the draft with the new out-of-scope rule highlighted, ready to save as a new version and promote to production.](../images/evaluate-a-change/07-evaluate-a-change-prompt-diff.png)
-
 **Option B: Code-side (publish the bundled variant):**
 
 The same prompt ships as the `error-analysis` variant in `scripts/publish-prompt.ts`:
@@ -95,7 +93,7 @@ In Langfuse:
 - **Chart view** → per-run averages side by side.
 - Add the new run as 'Compare with' in the sidebar
 
-![Side-by-side comparison](../images/evaluate-a-change/side-by-side-runs.png)
+![Two experiment runs compared side by side in Langfuse: summary averages and deltas for behavior_match and correctness at the top, then per-item scores for each run.](../images/evaluate-a-change/side-by-side-runs.png)
 
 Things to look for:
 
