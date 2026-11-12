@@ -30,7 +30,7 @@ DATASET_NAME=dad-it-support-workshop
 
 ## Goal
 
-Seed a first dataset that captures the kinds of requests we expect Specs to handle. To get there:
+Create a first dataset that captures the kinds of requests Specs has to handle.
 
 1. **Understand the item shape** — every dataset item has the same three fields, and we want ours to match the agent's actual input.
 2. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
