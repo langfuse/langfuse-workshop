@@ -22,7 +22,6 @@ import { LangfuseClient } from "@langfuse/client";
 import OpenAI from "openai";
 import type { ChatMessage } from "../src/shared/types";
 import { env } from "../src/server/env";
-import { assertChatConfigured, chatClientOptions, correctnessResponseFormat } from "../src/server/llm";
 import { runSupportConversation } from "../src/server/support-agent";
 
 const langfuseSpanProcessor = new LangfuseSpanProcessor();
@@ -122,10 +121,10 @@ function parseCorrectnessScore(value: unknown): boolean {
 }
 
 async function scoreCorrectness(answer: string, idealAnswer: string) {
-  const openai = new OpenAI(chatClientOptions());
+  const openai = new OpenAI({ apiKey: env.openaiApiKey });
   const response = await openai.chat.completions.create({
-    model: env.chatModel,
-    response_format: correctnessResponseFormat(),
+    model: env.openaiModel,
+    response_format: { type: "json_object" },
     messages: [
       {
         role: "system",
@@ -175,7 +174,9 @@ async function main() {
     throw new Error("Langfuse credentials are required to run dataset experiments.");
   }
 
-  assertChatConfigured();
+  if (!env.openaiApiKey) {
+    throw new Error("OPENAI_API_KEY is required to run the agent and the correctness judge.");
+  }
 
   // --- 5. Pull the hosted dataset by DATASET_NAME from .env.
   const langfuse = new LangfuseClient({
@@ -195,7 +196,7 @@ async function main() {
     runName,
     description: "Workshop dataset run for the Dad IT Support Agent",
     metadata: {
-      model: env.chatModel
+      model: env.openaiModel
     },
     maxConcurrency: 1,
     // `task` runs the agent on one dataset item. The return value
