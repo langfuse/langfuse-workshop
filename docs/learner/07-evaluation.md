@@ -132,6 +132,8 @@ For reference, test runs of this exact comparison on the 16-item dataset went fr
 
 Closing the loop, change → rerun → compare → decide, is what makes prompt or model changes go from gut calls to engineering decisions. Every future change has a free baseline to measure against.
 
+The dataset and evaluators you compared with today are a starting point. When error analysis turns up a new failure, add items for it and, if it is worth tracking, an evaluator, then rerun the baseline so later comparisons include it.
+
 The [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`) bumps prompt versions, links runs to versions, and produces a comparison chart automatically: this walkthrough exists so you see what the skill is doing under the hood.
 
 ## End state

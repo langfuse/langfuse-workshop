@@ -22,6 +22,8 @@ The third needs no reference, like the all-caps check in monitoring:
 
 - **`short_reply`** (deterministic, no model call): *did the answer stay short?* `1` if the reply has at most 120 words. It targets the lengthy responses category from error analysis.
 
+Treat this set as a **starting point**, not the finished eval suite. It covers the failures error analysis found so far, with the simplest check that catches each one. Not every category needs an offline evaluator: impersonation, for example, is rare enough here that reading traces covers it for now. As new failure categories show up in production, add an evaluator for the ones worth tracking, adjust limits like the word count, and check the judges against your own labels before you rely on them.
+
 All three scores are **callback evaluators** inside `runExperiment`. They run in your process right after each item finishes, so the console summary and the Langfuse run already include every score when the script exits. We intentionally avoid Langfuse Platform evaluators in this chapter: configuring one needs existing experiment data to preview and map variables, which creates a chicken-and-egg problem before your first run.
 
 Complementary materials:
@@ -177,6 +179,8 @@ See the [LLM-as-a-Judge docs](https://langfuse.com/docs/evaluation/evaluation-me
 ## Wrap-up
 
 The three scores give you three angles on the same run: **behavior match** for "did Specs reply, defer, or ask a follow-up when it should?", **short reply** for "did it keep the answer short?", and **correctness** for "did the change make any answer worse?" All three run as callbacks on `runExperiment`, so the first workshop run is fully scored without platform evaluator setup.
+
+They are a starting point. The suite grows with your error analysis: each new failure category you decide to track becomes a dataset item and, where needed, an evaluator.
 
 The [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`) knows the recommended evaluator shapes and setup patterns: this walkthrough exists so you see what the skill is doing under the hood.
 
