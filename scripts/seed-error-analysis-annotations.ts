@@ -3,16 +3,18 @@
  *
  * Finds the root observations tagged error-analysis-seed, adds any that are
  * missing from the "error analysis" queue, and writes two annotation scores
- * on each: open coding (text) and pass or fail. Those queue items are then
- * marked completed. Other items already in the queue are left alone.
+ * on each: open coding (text) and pass or fail. The items stay pending, so
+ * they remain in Process queue with the fields already filled. Other items
+ * already in the queue are left alone.
  *
  * The notes describe what the reply did. They do not name the clusters, so
  * Halo still has to find them. A pass is a short numbered list of iPhone taps.
  * A fail answers something other than the iPhone, speaks as family, or runs
  * on as one long paragraph.
  *
- * Idempotent. Each score uses a stable id and the observation start time, so
- * a second run updates the same scores instead of adding another pair.
+ * Idempotent. Each score uses a stable id, so a second run updates the same
+ * scores instead of adding another pair. The score time is the time of the
+ * run, so the notes stay inside the time range the Langfuse screens use.
  *
  *   npm run langfuse:seed:error-analysis:annotations
  *   npm run langfuse:seed:error-analysis:annotations -- --dry-run
@@ -300,7 +302,7 @@ async function main() {
       observationId: entry.observation.id,
       queueId: queue.id,
       source: "ANNOTATION",
-      timestamp: entry.observation.startTime,
+      timestamp: new Date().toISOString(),
       environment: entry.observation.environment
     };
     scores.push({
@@ -325,15 +327,19 @@ async function main() {
     await api("POST", "/api/public/scores", scores.slice(index, index + 20));
   }
 
+  const reopened: string[] = [];
   for (const entry of planned) {
     const item = itemsByObject.get(entry.observation.id);
     if (!item) throw new Error(`Queue item missing for observation ${entry.observation.id}.`);
-    if (item.status !== "COMPLETED") {
-      await api("PATCH", `/api/public/annotation-queues/${queue.id}/items/${item.id}`, { status: "COMPLETED" });
+    if (item.status === "COMPLETED") {
+      await api("PATCH", `/api/public/annotation-queues/${queue.id}/items/${item.id}`, { status: "PENDING" });
+      reopened.push(item.id);
     }
   }
 
-  console.log(`Wrote ${scores.length} scores and completed ${planned.length} queue items.`);
+  console.log(
+    `Wrote ${scores.length} scores on ${planned.length} pending queue items${reopened.length ? ` and reopened ${reopened.length}` : ""}.`
+  );
 }
 
 const isDirectRun = Boolean(process.argv[1]) && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
