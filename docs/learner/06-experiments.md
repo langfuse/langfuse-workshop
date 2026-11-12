@@ -13,7 +13,7 @@ A trace tells you about *one* turn. An experiment tells you about behavior *acro
 2. **Runs the item's input through the agent**: same `runSupportConversation(...)` the web app uses, so the trace shape is the same as production.
 3. **Scores the actual output against the expected output** with one or more evaluators.
 
-Different evaluators answer different questions. For this workshop we use two that give a quick first read on answer quality:
+Why not reuse the monitoring evaluators? Live production traffic has no reference answer, so monitoring uses judges that don't need one: user disagreement and all caps read only the conversation. A dataset has expected outputs, so experiments can compare each answer against what it should have been. That is why both evaluators here read a field from `expectedOutput`:
 
 - **`behavior_match`** (decision model + deterministic match): *did Specs reply, defer, or ask a follow-up when we expected it to?* The OpenAI Decisions API picks one of three fixed labels, and the script compares that label with `expectedBehavior`.
 - **`correctness`** (LLM-as-a-judge): *does the answer preserve the material meaning of the ideal answer?* A semantic-equivalence check: paraphrases pass, missing required detail or a contradicted fact fails.

@@ -10,6 +10,7 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 ## Instructor notes
 
 - The key idea is reuse: the experiment runner calls the same `runSupportConversation(...)` as the web app.
+- Explain why these evaluators differ from the monitoring ones: production traffic has no reference answer, so 4.2 uses judges that read only the conversation (user disagreement, all caps). A dataset has expected outputs, so both experiment evaluators compare against a field in `expectedOutput`.
 - Contrast `behavior_match` (a Decisions API label plus a deterministic exact match) with LLM-as-a-judge scoring (`correctness`): both as **callbacks** on `runExperiment`.
 - Point at the semantic-equivalence judge prompt in `scripts/run-dataset.ts`: expected output is the source of truth; paraphrases pass; missing material meaning fails.
 - Call out why this chapter avoids Langfuse Platform evaluators as the primary path: configuring one needs existing experiment data to preview mappings, which blocks a clean first run.
