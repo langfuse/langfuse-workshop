@@ -1,6 +1,6 @@
 ---
 title: "Workshop: Evaluate a Prompt Change"
-description: "Change one prompt rule, rerun the same dataset, and compare Langfuse experiment scores to decide whether the update improved the agent."
+description: "Publish the prompt suggested by error analysis, rerun the same dataset, and compare Langfuse experiment scores to decide whether the update improved the agent."
 ---
 
 # 07 Evaluate a change
@@ -22,9 +22,9 @@ Complementary materials:
 git checkout checkpoint/07-evaluation
 ```
 
-Your app is traced, monitored, has a hosted dataset, and at least one experiment run with both `behavior_match` and `correctness` scores. Now you make a change to the app and rerun the experiment to see whether it helped or hurt.
+Your app is traced, monitored, has a hosted dataset, and at least one experiment run with both `behavior_match` and `correctness` scores. That run is your **baseline experiment**: it used the production `dad-it-support-agent` prompt, the same one whose traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md). Now you swap in the more specific prompt that error analysis suggested and rerun the experiment to see whether it helped or hurt.
 
-Look at your first experiment run before making changes. Open the dataset → **Experiments** tab and check the averages:
+Look at your baseline run before making changes. Open the dataset → **Experiments** tab and check the averages:
 
 - `correctness` average: what fraction of items did the judge mark as actually correct?
 - `behavior_match` average: how often did Specs reply, defer, or ask a follow-up when the dataset expected it to?
@@ -44,42 +44,38 @@ The shape is always the same: change *one* thing (or a configuration of multiple
 
 ## Goal
 
-Change something in the prompt and improve the experiment results: measured by `correctness` and `behavior_match` going up across the dataset.
+Publish the prompt suggested at the end of error analysis and improve the experiment results: measured by `correctness` and `behavior_match` going up across the dataset compared with the baseline.
 
 
 Three passes:
 
-1. **Change one thing**: swap the prompt variant or edit in the Langfuse UI.
+1. **Change one thing**: publish the error-analysis prompt as a new version.
 2. **Rerun the dataset** against the new prompt.
 3. **Compare runs** side by side and decide whether to ship.
 
 ## Step 1: Change the prompt
 
-The change you make should be informed by what you saw in run 1, for example, items where `behavior_match` expected `defer_question` but the agent danced around an out-of-scope question instead of refusing it cleanly. A concrete edit that addresses that:
+Error analysis ended with a more specific prompt. Its Rules section answers the failure categories you found there, and the same rules address what the baseline run shows:
 
-> Add a rule that says: *"If a request is outside iPhone help (taxes, travel booking, anything that needs live account access), say so directly in one short sentence, what you can't help with and what you can, then stop. Do not attempt to answer the request."*
-
-That makes the out-of-scope behaviour explicit instead of letting the model improvise.
-
-If `behavior_match` also failed on the vague items, add a second rule: *"If you can't tell what Dad needs, ask one short clarifying question before giving any steps."*
+- **Out of scope:** "If he asks for something other than IT help, say so in one short sentence and point him back to his phone. Do not answer that request." This targets the `defer_question` items, where the baseline agent walks Dad through filing taxes or booking a train.
+- **Vague requests:** "If you can't tell what he needs, ask one short clarifying question before giving any steps." This targets the `ask_follow_up` items, where the baseline agent answers "My phone is not working." with steps right away.
+- **Lengthy responses and impersonation:** short numbered lists, and the agent speaks as the support agent, not as family.
 
 Two ways to make the change:
 
 **Option A: Langfuse-side (create a new version in the UI, recommended):**
 
-Prompts → `dad-it-support-agent` → create a new version or draft → add the sentence above to the prompt → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
+Prompts → `dad-it-support-agent` → create a new version or draft → replace the text with the prompt from the end of [4.1 Error analysis](./04-monitoring/error-analysis.md) → save that version → promote the new version to the `production` label. The resolver fetches by label, so the next request picks up the new version automatically. This is the workflow your team will use for ongoing iteration in production.
 
 ![Review Prompt Changes in Langfuse: side-by-side diff between v1 and the draft with the new out-of-scope rule highlighted, ready to save as a new version and promote to production.](../images/evaluate-a-change/07-evaluate-a-change-prompt-diff.png)
 
-**Option B: Code-side (edit `src/server/support-agent.ts` and republish):**
+**Option B: Code-side (publish the bundled variant):**
 
-Open `src/server/support-agent.ts`, add the same sentence to the `SYSTEM_PROMPT` constant, then publish:
+The same prompt ships as the `error-analysis` variant in `scripts/publish-prompt.ts`:
 
 ```bash
-npm run prompt:publish
+WORKSHOP_PROMPT_VARIANT=error-analysis npm run prompt:publish
 ```
-
-The repo also ships a `gentler` variant you can switch to as-is (`WORKSHOP_PROMPT_VARIANT=gentler npm run prompt:publish`): useful if you just want to see *any* prompt change rather than design your own.
 
 Either way you end up with a new prompt version, and the next `runSupportConversation(...)` call uses it.
 
@@ -89,7 +85,7 @@ Either way you end up with a new prompt version, and the next `runSupportConvers
 npm run dataset:run
 ```
 
-You now have two runs under the same dataset, each linked to a different prompt version. The same `behavior_match` and `correctness` callback evaluators from step 06 score the new run automatically inside `runExperiment`.
+You now have two runs under the same dataset: the baseline and the error-analysis prompt, each linked to its prompt version. The same `behavior_match` and `correctness` callback evaluators from step 06 score the new run automatically inside `runExperiment`.
 
 ## Step 3: Compare
 
@@ -106,6 +102,8 @@ Things to look for:
 - Which items improved (intentional).
 - Which items regressed (the part that makes evaluation feel useful).
 - Whether the prompt change shifted scope (more refusals? more confident answers? more steps per response?).
+
+For reference, a test run of this exact comparison on the 16-item dataset went from `behavior_match` 0.75 to 1.00 and `correctness` 0.69 to 0.75. Your numbers will differ a little from run to run, so read the items that changed rather than trusting the averages alone.
 
 ## How to verify you are done
 

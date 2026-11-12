@@ -86,4 +86,4 @@ A more specific prompt version based on these failure modes could look like this
 > - Use clear instructions on what to tap
 > - You are the support agent. Do not speak as someone in his family.
 
-Leave the running prompt as it is for now. [Section 4.2 Capturing signals](./capturing-signals.md) is next. It scores disagreement and all-caps frustration as those turns arrive, so the rows worth reading stand out.
+Leave the running prompt as it is for now. In [07 Evaluate a change](../07-evaluation.md) you publish this version and measure it against the current one on the dataset. [Section 4.2 Capturing signals](./capturing-signals.md) is next. It scores disagreement and all-caps frustration as those turns arrive, so the rows worth reading stand out.

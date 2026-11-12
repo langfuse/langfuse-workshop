@@ -125,6 +125,8 @@ npm run dataset:run
 
 The script finishes by printing a formatted run summary in the console. Item-level traces and both scores show up in Langfuse as the run executes. Because the evaluators are callbacks, you should already see `behavior_match` and `correctness` in that console summary, not as a later async fill-in.
 
+This first run is your **baseline experiment**. It uses the production `dad-it-support-agent` prompt from monitoring, so expect misses on the out-of-scope and vague items. In 07 you compare it against the prompt suggested at the end of error analysis.
+
 ## What to inspect in Langfuse
 
 - The new **Run** under your dataset → one row per item with **two** scores: `behavior_match` and `correctness`, plus a trace link.
