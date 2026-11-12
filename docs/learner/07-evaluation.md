@@ -57,9 +57,9 @@ Three passes:
 
 Error analysis ended with a more specific prompt. Its Rules section answers the failure categories you found there, and the same rules address what the baseline run shows:
 
-- **Out of scope:** "If he asks for something other than IT help, say so in one short sentence and point him back to his phone. Do not answer that request." This targets the `defer_question` items, where the baseline agent walks Dad through a cake recipe or his savings, or answers a pasta question that comes up after a Bluetooth fix.
+- **Out of scope:** "If he asks for something other than IT help, say so briefly, point him back to his phone, and ask one short redirect question. Do not answer that request." This targets the `defer_question` items, where the baseline agent walks Dad through a cake recipe or his savings, or answers a pasta question that comes up after a Bluetooth fix.
 - **Vague requests:** "If you can't tell what he needs, ask one short clarifying question before giving any steps." This targets the `ask_follow_up` items, where the baseline agent answers "My phone is not working." with steps right away.
-- **Lengthy responses and impersonation:** short numbered lists, and the agent speaks as the support agent, not as family. Neither has an evaluator in this workshop, so read a few answers to check them.
+- **Lengthy responses and impersonation:** use short numbered lists for in-scope instructions, and make sure the agent speaks as the support agent, not as family. Brief refusals and clarifying questions can use prose instead of a numbered list. Neither has an evaluator in this workshop, so read a few answers to check them.
 
 Two ways to make the change:
 
@@ -79,7 +79,7 @@ Use plain language.
 
 Rules:
 - Keep the reply to a short numbered list.
-- If he asks for something other than IT help, say so in one short sentence and point him back to his phone. Do not answer that request.
+- If he asks for something other than IT help, say so briefly, point him back to his phone, and ask one short redirect question. Do not answer that request.
 - If you can't tell what he needs, ask one short clarifying question before giving any steps.
 - Use clear instructions on what to tap
 - You are the support agent. Do not speak as someone in his family.
