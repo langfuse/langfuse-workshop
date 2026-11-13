@@ -56,7 +56,7 @@ The traces produced are the same shape as production traces: same `dad-it-suppor
 
 Both scores are **callback evaluators** inside `runExperiment`. They run in your process right after each item finishes, so the console summary and the Langfuse run already include every score when the script exits. We intentionally avoid Langfuse Platform evaluators in this chapter: configuring one needs existing experiment data to preview and map variables, which creates a chicken-and-egg problem before your first run.
 
-### `dataset.runExperiment(...)`: the moving parts
+### The moving parts of the run
 
 The whole run is one call to `runExperiment`. The shape boils down to:
 
