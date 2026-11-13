@@ -22,6 +22,7 @@ import { LangfuseClient } from "@langfuse/client";
 import OpenAI from "openai";
 import type { ChatMessage } from "../src/shared/types";
 import { env } from "../src/server/env";
+import { assertChatConfigured, chatClientOptions } from "../src/server/llm";
 import { runSupportConversation } from "../src/server/support-agent";
 
 const langfuseSpanProcessor = new LangfuseSpanProcessor();
@@ -61,7 +62,7 @@ async function decideBehavior(
   input: DatasetInput,
   answer: string
 ): Promise<{ behavior: Behavior | "refusal"; confidence?: number }> {
-  const openai = new OpenAI({ apiKey: env.openaiApiKey });
+  const openai = new OpenAI(chatClientOptions());
   const decision = await openai.post<{ answers: DecisionAnswer[] }>("/decisions", {
     body: {
       model: DECISION_MODEL,
@@ -168,7 +169,7 @@ function parseCorrectnessScore(value: unknown): boolean {
 }
 
 async function scoreCorrectness(answer: string, idealAnswer: string) {
-  const openai = new OpenAI({ apiKey: env.openaiApiKey });
+  const openai = new OpenAI(chatClientOptions());
   const response = await openai.chat.completions.create({
     model: env.openaiModel,
     response_format: { type: "json_object" },
@@ -221,11 +222,7 @@ async function main() {
     throw new Error("Langfuse credentials are required to run dataset experiments.");
   }
 
-  if (!env.openaiApiKey) {
-    throw new Error(
-      "OPENAI_API_KEY is required to run the agent, the behavior decision, and the correctness judge."
-    );
-  }
+  assertChatConfigured();
 
   // --- 5. Pull the hosted dataset by DATASET_NAME from .env.
   const langfuse = new LangfuseClient({

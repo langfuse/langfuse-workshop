@@ -4,6 +4,7 @@ import { observe, propagateAttributes } from "@langfuse/tracing";
 import { LangfuseClient } from "@langfuse/client";
 import type { ChatMessage, ChatRequest, ChatResponse } from "../shared/types";
 import { env } from "./env";
+import { chatClientOptions } from "./llm";
 import { getSupportContext } from "./support-data";
 import { TOOL_DEFINITIONS, executeTool } from "./tools";
 
@@ -68,7 +69,7 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
     },
     async () => {
       const openai = observeOpenAI(
-        new OpenAI({ apiKey: env.openaiApiKey }),
+        new OpenAI(chatClientOptions()),
         langfusePrompt ? { langfusePrompt } : undefined
       );
 

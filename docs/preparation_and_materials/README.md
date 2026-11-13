@@ -21,7 +21,7 @@ This is a high-level guide on how to give the Langfuse workshop to your own audi
 - Confirm participants have **AI Features** on, which includes Halo. New organizations usually have this on unless someone opted out. If it is off, an organization owner or admin turns it back on under **Organization Settings → General → AI Features**.
 - Update slides with training info. Ideally, copy them first.
 - Go through the workshop yourself.
-- Optional but generally recommended: prep an OpenAI API key for participants to use. Make sure to limit spend and delete it afterwards.
+- Model access has two options. Prefer a Langfuse AI Gateway key: create a service account key under Organization settings → AI Gateway → Gateway keys, set an expiration, share it as `LANGFUSE_GATEWAY_KEY`, and revoke it after the session. The other option is an OpenAI API key for participants; limit spend and delete it afterwards. The app uses whichever key is set, and the gateway key when both are set.
 - Please note: the workshop is a changing resource. We update and improve it frequently, so make sure you check the workshop shortly before a session.
 
 ## Audience

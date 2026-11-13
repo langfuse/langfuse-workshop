@@ -29,12 +29,18 @@ git checkout checkpoint/04-monitoring
 
 ## Add the model connection
 
-The disagreement judge needs a model connection on the project. The keys in `.env` do not fill that list.
+The disagreement judge needs a model connection on the project. The keys in `.env` do not fill that list. Use the same model credential as the app. When both are set, use the Langfuse gateway key.
+
+- **Langfuse AI Gateway** — **API Key** is `LANGFUSE_GATEWAY_KEY`. Open **Advanced settings** and set **API Base URL** to the gateway OpenAI route. On EU Cloud that is `https://gateway.cloud.langfuse.com/openai/v1`. For another region, use `LANGFUSE_GATEWAY_HOST` plus `/openai/v1`.
+- **OpenAI** — **API Key** is `OPENAI_API_KEY`. Leave **API Base URL** blank so Langfuse uses `https://api.openai.com/v1`.
 
 1. In Langfuse, open **Project Settings → LLM Connections**.
 2. Click **Add LLM Connection**.
-3. Choose OpenAI, name the connection, and paste your OpenAI API key into the secret field.
-4. Save the connection.
+3. Set **LLM adapter** to **OpenAI**.
+4. Set **Provider name** to a name without a colon, such as `langfuse` for the gateway key or `openai` for an OpenAI key.
+5. Paste the chosen key into **API Key**.
+6. Open **Advanced settings**. Set **API Base URL** only for the gateway key, as above. Leave **Use Responses API** off. This workshop uses Chat Completions.
+7. Save the connection.
 
 If a connection is already there, keep it and continue.
 
@@ -42,7 +48,7 @@ Keep the API key in the Langfuse secret field only. Do not paste it into worksho
 
 ## The evaluator model
 
-Use the OpenAI connection you just added. When the wizard asks you to pick a model, choose that connection and **5.6 Luna** (`gpt-5.6-luna`).
+Use the connection you just added. When the wizard asks you to pick a model, choose that connection and **5.6 Luna** (`gpt-5.6-luna`). The picker shows `{provider name} / gpt-5.6-luna`.
 
 ![Pick the evaluator model in the Set up evaluator wizard. Choose 5.6 Luna.](../../images/monitoring/default-evaluation-model.png)
 
@@ -92,7 +98,7 @@ Code evaluators are a good fit for that pattern: no model call, no prompt design
 3. Run a test on the evaluator.
 4. Click on **Create Evaluator** and then on execute.
 
-This evaluator runs as TypeScript inside Langfuse's sandbox, so it does not use the OpenAI connection.
+This evaluator runs as TypeScript inside Langfuse's sandbox, so it does not use the model connection.
 
 ## Verify
 

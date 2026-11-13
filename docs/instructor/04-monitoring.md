@@ -19,7 +19,7 @@ Error analysis seeds its own traces. Do not seed on the overview.
 Demo order:
 
 1. Error analysis, on its own 20 traces, while the room still has to read them.
-2. Capturing signals, so the two evaluators are the last thing they turn on. Learners add the OpenAI connection in this section.
+2. Capturing signals, so the two evaluators are the last thing they turn on. Learners add the model connection in this section: gateway key plus gateway base URL, or an OpenAI key with the base URL left blank.
 
 ### 4.1 Error analysis
 
@@ -35,9 +35,9 @@ Demo order:
 ### 4.2 Capturing signals
 
 - Two signals: **Detect User Disagreement** uses LLM-as-a-judge, and **Detect User Frustration (ALL CAPS)** uses deterministic TypeScript.
-- The API keys in `.env` do not configure the judge model inside Langfuse. Learners add the OpenAI connection in this section, before they pick **5.6 Luna**.
+- The API keys in `.env` do not configure the judge model inside Langfuse. Learners add the model connection in this section before they pick **5.6 Luna**. When `LANGFUSE_GATEWAY_KEY` is set, the connection API key is that gateway key and **API Base URL** is the gateway OpenAI route (`https://gateway.cloud.langfuse.com/openai/v1` on EU Cloud). When only `OPENAI_API_KEY` is set, paste that key and leave **API Base URL** blank. When both are set, use the gateway key and the gateway base URL. Leave **Use Responses API** off.
 - Both evaluators target the logical root `dad-it-support-chat-turn` agent observation, because that observation carries the conversation input and the final answer.
-- The disagreement judge should run on **5.6 Luna** (`gpt-5.6-luna`) from the OpenAI connection.
+- The disagreement judge should run on **5.6 Luna** (`gpt-5.6-luna`) from that connection.
 - Have learners use the right-side sample panel, filtered to `production`. In **Map variables to data**, bind variables with **Use** on the observation tree: `conversation_history` on **Input → messages**, `last_user_message` on **Input → messages → last**. Do not have them type a JSONPath. Test before saving.
 - `{{system_prompt}}` belongs to **Detect Out-of-Scope Request**. This section maps `conversation_history` on **Detect User Disagreement**.
 - After **Create evaluator**, review filters, estimated weekly volume and cost, and sampling rate, then click **Execute**.
@@ -50,7 +50,7 @@ Demo order:
 
 1. Walk the overview: volume, dashboards, error analysis, signals. Each way has one screenshot: the home dashboard, failure categories, and conversation signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
 2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 with open coding (Text) and pass/fail (Categorical), mark pass or fail, write the notes, ask Halo to find clusters, compare them with the rough list on the page, ask Halo to create categorical scores for those clusters, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions and read the more specific prompt under them. Do not publish it in this lab. Point to capturing signals.
-3. Capturing signals: add the OpenAI connection, pick **5.6 Luna**, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
+3. Capturing signals: add the model connection, pick **5.6 Luna**, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 4. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
 5. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them. If time remains, ask Halo on the **Dashboard** tab to chart those signals over time.
 6. If time remains, open the bonus: evaluator library → **Detect conversation signals**, test on one or two examples, save.

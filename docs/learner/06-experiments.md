@@ -123,7 +123,7 @@ Why run the judge as a callback instead of a Langfuse Platform evaluator?
 - The judge prompt and model live next to the experiment runner in git.
 - Every score appears in the script's printed summary as soon as the run finishes.
 
-The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env`: the same credentials the agent already uses. `behavior_match` uses the same `OPENAI_API_KEY`, with `gpt-6-luna` fixed in the script. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
+The judge and the behavior decision use the same model credential as the agent: `LANGFUSE_GATEWAY_KEY` when it is set, otherwise `OPENAI_API_KEY`. `correctness` uses `OPENAI_MODEL`. `behavior_match` uses `gpt-6-luna` on the Decisions API. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
 
 ## Step 5: Run the dataset
 
