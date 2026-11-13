@@ -113,16 +113,6 @@ Low-confidence labels are worth reading by hand. They usually mean the answer mi
 
 The last callback in `evaluators` calls OpenAI with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint: paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
 
-A generic equivalence judge treats every detail as required. Its prompt therefore has a short section on what is material for this agent: the kind of reply, any stated limitation, and the steps needed to finish the task. Confirmations of what Dad will see, optional alternatives, and the wording of a decline don't count. Without that section, the judge failed good answers for leaving out "or your passcode". This is what checking a judge against your own labels looks like in practice.
-
-Its job in this workshop is the **regression check**. `behavior_match` tells you whether a change fixed what it was meant to fix. `correctness` tells you whether the answers are still right after the fix. If a stricter prompt makes Specs refuse a question it should have helped with, or cut a step Dad needs, `correctness` drops on that item even when `behavior_match` goes up.
-
-Why run the judge as a callback instead of a Langfuse Platform evaluator?
-
-- You can score the **first** experiment run without waiting for preview data in the Evaluators UI.
-- The judge prompt and model live next to the experiment runner in git.
-- Every score appears in the script's printed summary as soon as the run finishes.
-
 The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env`: the same credentials the agent already uses. `behavior_match` uses the same `OPENAI_API_KEY`, with `gpt-6-luna` fixed in the script. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
 
 ## Step 5: Run the dataset
