@@ -12,15 +12,21 @@ description: "Seed 20 traces, annotate them in a queue, and use Halo to cluster 
 - It lets you find hidden failures and quantify how often they occur, so you can prioritize what to tackle.
 - Beyond this, the process helps engineers, domain experts, and PMs understand how the agent behaves in production, and it gives them a common ground for discussion.
 
-In this lab we work through 20 example traces in five steps: gather them, write a note on each, group the notes into categories, count how often each category appears, and decide what to do about each one. Usually 50–100 traces are recommended as a starting point. The process should be repeated over and over again as system usage and failure modes can shift.
+If you are new to error analysis, check out the Academy page on [error analysis](https://langfuse.com/academy/monitoring/error-analysis).
 
-![The five steps of error analysis: gather traces, open coding, cluster into categories, label and measure, decide and act.](../../images/monitoring/error-analysis-process.png)
+## Starting point
 
 ```bash
 git checkout checkpoint/04-monitoring
 ```
 
-If you are new to error analysis, check out the Academy page on [error analysis](https://langfuse.com/academy/monitoring/error-analysis).
+## Goal
+
+In this lab we perform error analysis to identify failure modes. For each failure mode we decide what to do about it.
+
+We work through 20 example traces in five steps: gather them, write a note on each, group the notes into categories, count how often each category appears, and decide what to do about each one. Usually 50–100 traces are recommended as a starting point. The process should be repeated over and over again as system usage and failure modes can shift.
+
+![The five steps of error analysis: gather traces, open coding, cluster into categories, label and measure, decide and act.](../../images/monitoring/error-analysis-process.png)
 
 To be able to judge the outputs, we need to establish a few expectations towards the application:
 
