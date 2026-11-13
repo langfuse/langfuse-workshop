@@ -14,6 +14,14 @@ Complementary materials:
 - Docs: [Datasets](https://langfuse.com/docs/evaluation/experiments/datasets)
 - Academy: [Datasets](https://langfuse.com/academy/datasets)
 
+## Goal
+
+Create a first eval dataset that captures the kinds of requests Specs has to handle.
+
+1. **Decide on the goal** for your eval dataset.
+2. **Design the item shape**: every dataset item has the same three fields, and we want ours to match the agent's actual input.
+3. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
+
 ## Starting point
 
 ```bash
@@ -27,14 +35,6 @@ Make sure `.env` has:
 ```bash
 DATASET_NAME=dad-it-support-workshop
 ```
-
-## Goal
-
-Create a first eval dataset that captures the kinds of requests Specs has to handle.
-
-1. **Decide on the goal** for your eval dataset.
-2. **Design the item shape**: every dataset item has the same three fields, and we want ours to match the agent's actual input.
-3. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
 
 ## Step 1: Decide on the goal for your eval dataset
 

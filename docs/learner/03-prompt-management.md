@@ -13,6 +13,15 @@ Complementary materials:
 
 - Docs: [Prompt management](https://langfuse.com/docs/prompt-management/overview)
 
+## Goal
+
+Have a versioned prompt in Langfuse that is managed centrally and fetched by the application code.
+
+We do this in two steps:
+
+1. **Publish the system prompt to Langfuse** so a versioned copy lives there.
+2. **Fetch it back at request time**, and link each OpenAI generation to the version that produced it.
+
 ## Starting point
 
 ```bash
@@ -29,15 +38,6 @@ Make sure `.env` has:
 LANGFUSE_PROMPT_NAME=dad-it-support-agent
 LANGFUSE_PROMPT_LABEL=production
 ```
-
-## Goal
-
-Have a versioned prompt in Langfuse that is managed centrally and fetched by the application code.
-
-We do this in two steps:
-
-1. **Publish the system prompt to Langfuse** so a versioned copy lives there.
-2. **Fetch it back at request time**, and link each OpenAI generation to the version that produced it.
 
 ## Step 1: Publish the prompt (Langfuse UI)
 
