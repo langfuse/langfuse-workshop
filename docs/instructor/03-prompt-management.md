@@ -25,4 +25,4 @@ Learner guide: [03 Prompt Management](../learner/03-prompt-management.md)
 
 - Prompt name/label mismatches between `.env` and Langfuse.
 - Learners forgetting that the SDK fetches the `production` label by default.
-- The Prompt badge proves linking, not usage. A transcript still sending the local `SYSTEM_PROMPT` passes every verify step while prompt edits in the UI change nothing — if an edit seems to have no effect, check the generation input.
+- The Prompt badge proves linking, not usage. A transcript still sending the local `SYSTEM_PROMPT` passes every verify step while prompt edits in the UI change nothing: if an edit seems to have no effect, check the generation input.
