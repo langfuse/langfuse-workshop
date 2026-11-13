@@ -1,8 +1,8 @@
 /* ──────────────────────────────────────────────────────────────────────────
- * Langfuse Design System — Colors & Typography Tokens
+ * Langfuse Design System: Colors & Typography Tokens
  * Sourced from langfuse-docs/style.css and Figma "Langfuse Sharp".
  *
- * The Langfuse visual language is based on "corner boxes" — boxy containers
+ * The Langfuse visual language is based on "corner boxes": boxy containers
  * with 8×8 corner brackets, 2px radii (nearly sharp), warm near-monochrome
  * palette, F37 Analog as serif-display, Inter as body, Geist Mono for code,
  * and a trademark FBFF81 acid-yellow/neon accent used for CTAs and highlights.
@@ -35,7 +35,7 @@
   font-display: swap;
 }
 
-/* ── Tokens — light (default) ─────────────────────────────────────────── */
+/* ── Tokens: light (default) ─────────────────────────────────────────── */
 :root {
   /* Font families */
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
@@ -87,7 +87,7 @@
   /* Highlight / marker */
   --highlight-yellow: #fbff7a;            /* text highlighter */
 
-  /* Elevation / shadow — very subtle, near-flat */
+  /* Elevation / shadow: very subtle, near-flat */
   --shadow-sm: 0 4px 8px 0 rgba(0, 0, 0, 0.05),
                0 4px 4px 0 rgba(0, 0, 0, 0.03);
   --shadow-card: -23px 51px 16px 0 rgba(0, 0, 0, 0),
@@ -97,14 +97,14 @@
                  -1px 2px 5px 0 rgba(0, 0, 0, 0.04);
   --shadow-lilac: 0 8px 24px 0 rgba(181, 175, 234, 0.25);
 
-  /* Radius — very sharp; 2px base */
+  /* Radius: very sharp; 2px base */
   --radius-sharp: 2px;
   --radius-sm: 1.5px;
   --radius-md: 2px;
   --radius-lg: 4px;
   --radius-pill: 9999px;
 
-  /* Spacing — 4px baseline */
+  /* Spacing: 4px baseline */
   --space-0: 0;
   --space-1: 4px;
   --space-2: 8px;
@@ -119,7 +119,7 @@
   --space-20: 80px;
 }
 
-/* ── Tokens — dark ──────────────────────────────────────────────────────── */
+/* ── Tokens: dark ──────────────────────────────────────────────────────── */
 .dark,
 [data-theme="dark"] {
   --line-structure: #2c2c29;
@@ -148,9 +148,9 @@
   --text-code-blue: #6ab8cc;
 }
 
-/* ── Typography — semantic classes ──────────────────────────────────────── */
+/* ── Typography: semantic classes ──────────────────────────────────────── */
 
-/* Display — F37 Analog Medium, leading 105%, [leading-trim:both] */
+/* Display: F37 Analog Medium, leading 105%, [leading-trim:both] */
 .lf-display, .lf-h1 {
   font-family: var(--font-analog);
   font-weight: 500;
@@ -262,7 +262,7 @@
   text-decoration-thickness: 1px;
 }
 
-/* Utility — highlighter behind text */
+/* Utility: highlighter behind text */
 .lf-highlight {
   position: relative;
   display: inline-block;
