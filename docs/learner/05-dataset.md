@@ -47,17 +47,12 @@ For Specs, two things matter most:
 
 On top of that, the dataset should cover the shapes of input we expect Specs to handle in production, at least the ones we have seen so far. It mixes cases that already work well, for example traces that passed error analysis, with cases that caused problems in the past and cases that must be handled correctly.
 
-The starter dataset has 25 items. Nine come straight from the traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md), each marked `"source": "error-analysis"` in its metadata:
+The starter dataset has 25 items. Nine come from the traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md) (`"source": "error-analysis"`); the other 16 cover cases it didn't include (`"source": "starter"`), so the step 07 prompt is also measured on cases it wasn't written from. Together they cover:
 
-- Ordinary questions that passed: pin a WhatsApp chat, turn on Do Not Disturb, make the text bigger
-- Out-of-scope questions that got answered: a cake recipe, an index fund
-- Multi-turn conversations: an out-of-scope question after a Bluetooth fix ("Can you also tell me how to cook pasta?") or a Wi-Fi fix (a laptop recommendation), and follow-ups such as "Where is the moon icon?" after Do Not Disturb
-
-The other 16 (`"source": "starter"`) cover cases error analysis didn't include but that must be handled correctly:
-
-- iPhone Bluetooth, Wi-Fi, photos, WhatsApp, Maps, and Messages basics and edge cases
-- Out-of-scope requests not seen in error analysis (file my taxes, book my train), so the step 07 prompt is also measured on cases it wasn't written from
-- Limitation cases (passwords, live location)
+- iPhone how-to questions, from Bluetooth and Wi-Fi to WhatsApp, Maps and photos
+- Out-of-scope requests, such as a cake recipe or filing taxes
+- Multi-turn conversations, such as a follow-up ("Where is the moon icon?") or an off-topic question after a fix
+- Limits the agent must state, such as passwords or live location
 - Vague requests that need a clarifying question first ("My phone is not working.")
 
 If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch. For more on choosing what goes into a dataset, see the Academy page on [building datasets](https://langfuse.com/academy/datasets).
@@ -115,7 +110,7 @@ Open Langfuse → **Datasets**. The list view should show the new `dad-it-suppor
 
 Click into the dataset and switch to the **Items** tab. You should see every seeded item with input, expected output, and metadata columns:
 
-![Items view of a seeded dataset: each row has the messages input, the ideal answer and expected behavior, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
+![Items view of a seeded dataset: each row has the messages input, the ideal answer and expected behavior, and source, category and difficulty metadata.](../images/datasets/05-dataset-items.png)
 
 ## How to verify you are done
 
