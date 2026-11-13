@@ -20,11 +20,13 @@ If you are new to error analysis, check out the Academy page on [error analysis]
 git checkout checkpoint/04-monitoring
 ```
 
+We use 20 sample traces to get started. Usually 50–100 sample traces are recommended for a first pass.
+
 ## Goal
 
 In this lab we perform error analysis to identify failure modes. For each failure mode we decide what to do about it.
 
-We work through 20 example traces in five steps: gather them, write a note on each, group the notes into categories, count how often each category appears, and decide what to do about each one. Usually 50–100 traces are recommended as a starting point. The process should be repeated over and over again as system usage and failure modes can shift.
+We work in five steps: gather traces, write a note on each, group the notes into categories, count how often each category appears, and decide what to do about each one. The process should be repeated over and over again as system usage and failure modes can shift.
 
 ![The five steps of error analysis: gather traces, open coding, cluster into categories, label and measure, decide and act.](../../images/monitoring/error-analysis-process.png)
 
