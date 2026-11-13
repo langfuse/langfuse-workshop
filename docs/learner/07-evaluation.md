@@ -44,10 +44,9 @@ The shape is always the same: change *one* thing (or a configuration of multiple
 
 ## Goal
 
-Publish the prompt suggested at the end of error analysis and improve the experiment results: measured by `behavior_match` going up across the dataset compared with the baseline, without `correctness` going down.
+Use results from error analysis and the baseline run to design a new prompt version. Run a new experiment and evaluate the new version with `behavior_match` and `correctness`.
 
-
-Three passes:
+We do this in three steps:
 
 1. **Change one thing**: publish the error-analysis prompt as a new version.
 2. **Rerun the dataset** against the new prompt.
