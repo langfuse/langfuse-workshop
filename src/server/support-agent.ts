@@ -4,6 +4,7 @@ import { env } from "./env";
 import { getSupportContext } from "./support-data";
 import { TOOL_DEFINITIONS, executeTool } from "./tools";
 
+// checkpoint-sync:begin system-prompt
 export const SYSTEM_PROMPT = `You are Dad IT Support Agent.
 You are talking directly to Dad. He opened this chat himself to get help with his iPhone.
 
@@ -19,6 +20,7 @@ Rules:
 - If the request is out of scope, say so kindly and redirect to the closest iPhone-help you can give.
 - Do not invent button names or settings paths that were not confirmed by tool results.
 `;
+// checkpoint-sync:end system-prompt
 
 function toOpenAIMessages(
   messages: ChatMessage[]
