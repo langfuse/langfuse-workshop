@@ -41,7 +41,7 @@ function createMessage(role: ChatMessage["role"], content: string): ChatMessage 
 function createGreeting(): ChatMessage {
   return createMessage(
     "assistant",
-    "Hi Dad. I'm here for whatever's bothering your iPhone — Wi-Fi, Bluetooth, photos, messages, maps, you name it.\n\nAsk me **one** thing at a time and I'll walk you through it, step by step."
+    "Hi Dad. I'm here for whatever's bothering your iPhone: Wi-Fi, Bluetooth, photos, messages, maps, you name it.\n\nAsk me **one** thing at a time and I'll walk you through it, step by step."
   );
 }
 
