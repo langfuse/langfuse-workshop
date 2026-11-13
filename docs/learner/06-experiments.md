@@ -18,14 +18,6 @@ Complementary materials:
 - Docs: [Experiments via SDK](https://langfuse.com/docs/evaluation/experiments/experiments-via-sdk)
 - Academy: [Experiments](https://langfuse.com/academy/experiments) and [Evaluate](https://langfuse.com/academy/evaluate)
 
-## Starting point
-
-```bash
-git checkout checkpoint/06-experiments
-```
-
-Your dataset is seeded in Langfuse. `scripts/run-dataset.ts` is already in the repo.
-
 ## Goal
 
 By the end of this chapter:
@@ -33,6 +25,14 @@ By the end of this chapter:
 1. You can run the full dataset against the agent on demand.
 2. Every item gets a **`behavior_match`** score (decision model + deterministic match) and a **`correctness`** score (LLM-as-a-judge regression check), both from `runExperiment` callbacks.
 3. Both scores plus the per-item traces are visible in Langfuse and ready to compare against future runs.
+
+## Starting point
+
+```bash
+git checkout checkpoint/06-experiments
+```
+
+Your dataset is seeded in Langfuse. `scripts/run-dataset.ts` is already in the repo.
 
 ## Step 1: Choose the evaluators
 

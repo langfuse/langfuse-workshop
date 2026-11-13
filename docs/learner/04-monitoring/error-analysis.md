@@ -14,14 +14,6 @@ description: "Seed 20 traces, annotate them in a queue, and use Halo to cluster 
 
 If you are new to error analysis, check out the Academy page on [error analysis](https://langfuse.com/academy/monitoring/error-analysis).
 
-## Starting point
-
-```bash
-git checkout checkpoint/04-monitoring
-```
-
-We use 20 sample traces to get started. Usually 50–100 sample traces are recommended for a first pass.
-
 ## Goal
 
 In this lab we perform error analysis to identify failure modes. For each failure mode we decide what to do about it.
@@ -35,6 +27,14 @@ To be able to judge the outputs, we need to establish a few expectations towards
 - The agent shall always respond in a structured and easy to understand manner, so the user can follow.
 - The agent is made specifically for IT support questions, more specifically for phone help.
 - The agent should talk about itself as an AI agent and not pretend to be something or someone else.
+
+## Starting point
+
+```bash
+git checkout checkpoint/04-monitoring
+```
+
+We use 20 sample traces to get started. Usually 50–100 sample traces are recommended for a first pass.
 
 ## Step 1: Gather traces
 
