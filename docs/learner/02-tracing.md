@@ -15,14 +15,6 @@ Complementary materials:
 - Docs: [What does a good trace look like?](https://langfuse.com/docs/observability/best-practices)
 - Academy: [Tracing](https://langfuse.com/academy/tracing). Why tracing sits at the start of the AI engineering loop.
 
-## Starting point
-
-```bash
-git checkout checkpoint/02-tracing
-```
-
-This is the blank slate for the tracing step: same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json`. Run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse keys.
-
 ## Goal
 
 When Dad asks "How do I turn Bluetooth on?", the agent doesn't just hit OpenAI once. Behind the scenes it asks OpenAI what to do, calls `get_support_context` to fetch Dad's iPhone setup, asks OpenAI again, calls `search_help_library` for Bluetooth steps, then asks OpenAI one more time to produce the numbered answer. None of that is visible today.
@@ -37,6 +29,14 @@ We will build up the trace in three steps that mirror the agent's structure:
 2. **Nested traces**: group the generations under one agent run per turn.
 3. **Recording tool calls**: make each tool invocation its own observation.
 
+
+## Starting point
+
+```bash
+git checkout checkpoint/02-tracing
+```
+
+This is the blank slate for the tracing step: same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json`. Run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse keys.
 
 ## Step 1: First trace
 
