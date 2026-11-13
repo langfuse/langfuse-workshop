@@ -16,21 +16,6 @@ Complementary materials:
 - Docs: [Evaluation overview](https://langfuse.com/docs/evaluation/overview)
 - Academy: [Evaluate](https://langfuse.com/academy/evaluate)
 
-## Starting point
-
-```bash
-git checkout checkpoint/07-evaluation
-```
-
-Your app is traced, monitored, has a hosted dataset, and at least one experiment run with `behavior_match` and `correctness` scores. That run is your **baseline experiment**: it used the production `dad-it-support-agent` prompt, the same one whose traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md). Now you swap in the more specific prompt that error analysis suggested and rerun the experiment to see whether it helped or hurt.
-
-Look at your baseline run before making changes. Open the dataset → **Experiments** tab and check the averages:
-
-- `correctness` average: what fraction of items did the judge mark as actually correct?
-- `behavior_match` average: how often did Specs reply, defer, or ask a follow-up when the dataset expected it to?
-
-Open the items where either score is low and read the agent's answer. A typical finding at this stage: the agent walks Dad through an out-of-scope request instead of deferring, answers a vague request without asking what is wrong, or gives generic advice instead of the iPhone-specific instructions. Whatever you see is the *problem you're about to try to fix*.
-
 ## What you could change
 
 This chapter is framed around prompt iteration because changing the prompt is the lowest-friction lever. The same workflow applies if you change:
@@ -51,6 +36,21 @@ We do this in three steps:
 1. **Change one thing**: publish the error-analysis prompt as a new version.
 2. **Rerun the dataset** against the new prompt.
 3. **Compare runs** side by side and decide whether to ship.
+
+## Starting point
+
+```bash
+git checkout checkpoint/07-evaluation
+```
+
+Your app is traced, monitored, has a hosted dataset, and at least one experiment run with `behavior_match` and `correctness` scores. That run is your **baseline experiment**: it used the production `dad-it-support-agent` prompt, the same one whose traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md). Now you swap in the more specific prompt that error analysis suggested and rerun the experiment to see whether it helped or hurt.
+
+Look at your baseline run before making changes. Open the dataset → **Experiments** tab and check the averages:
+
+- `correctness` average: what fraction of items did the judge mark as actually correct?
+- `behavior_match` average: how often did Specs reply, defer, or ask a follow-up when the dataset expected it to?
+
+Open the items where either score is low and read the agent's answer. A typical finding at this stage: the agent walks Dad through an out-of-scope request instead of deferring, answers a vague request without asking what is wrong, or gives generic advice instead of the iPhone-specific instructions. Whatever you see is the *problem you're about to try to fix*.
 
 ## Step 1: Change the prompt
 
