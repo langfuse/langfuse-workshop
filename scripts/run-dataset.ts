@@ -5,8 +5,8 @@
  *   1. Call the same runSupportConversation(...) the web app uses.
  *   2. Roll the per-item traces into one experiment run row.
  *   3. Attach callback evaluators from runExperiment:
- *      - keyword_overlap (deterministic)
- *      - correctness (LLM-as-a-judge)
+ *      - behavior_match (decision model + deterministic match)
+ *      - correctness (LLM-as-a-judge regression check)
  *
  * Usage:
  *   npm run dataset:run
@@ -36,32 +36,74 @@ type DatasetInput = {
   }>;
 };
 
+const BEHAVIORS = ["defer_question", "reply", "ask_follow_up"] as const;
+type Behavior = (typeof BEHAVIORS)[number];
+
 type DatasetExpectation = {
   idealAnswer: string;
-  expectedKeywords: string[];
+  expectedBehavior: Behavior;
 };
 
-// --- 3. The deterministic evaluator.
-//        Fraction of expected keywords that show up (case-insensitive)
-//        in the agent's answer. 1 means every expected keyword landed;
-//        0 means none did.
-function keywordOverlap(answer: string, expectedKeywords: string[]) {
-  if (expectedKeywords.length === 0) {
-    return 1;
+// --- 3. The behavior_match evaluator: decision model + deterministic check.
+//        The OpenAI Decisions API answers a `choice` question about the
+//        conversation and can only return one of the BEHAVIORS values.
+//        The score itself is a plain equality check against
+//        expectedBehavior: 1 on match, 0 otherwise.
+//        The pinned openai SDK (6.x) has no `client.decisions` helper yet,
+//        so the request goes through the generic `openai.post(...)`.
+const DECISION_MODEL = "gpt-6-luna";
+
+type DecisionAnswer =
+  | { type: "choice"; name: string; choice: Behavior; confidence: number }
+  | { type: "refusal"; name: string };
+
+async function decideBehavior(
+  input: DatasetInput,
+  answer: string
+): Promise<{ behavior: Behavior | "refusal"; confidence?: number }> {
+  const openai = new OpenAI({ apiKey: env.openaiApiKey });
+  const decision = await openai.post<{ answers: DecisionAnswer[] }>("/decisions", {
+    body: {
+      model: DECISION_MODEL,
+      input: [...input.messages, { role: "assistant", content: answer }],
+      questions: [
+        {
+          type: "choice",
+          name: "behavior",
+          instructions: "How did the assistant handle the user's latest request?",
+          choices: [
+            {
+              value: "defer_question",
+              description:
+                "Declines the request itself because it is out of scope, even if it then offers other help."
+            },
+            {
+              value: "reply",
+              description:
+                "Gives help with the request the user actually asked. It may mention a limitation along the way."
+            },
+            {
+              value: "ask_follow_up",
+              description: "Asks the user a clarifying question instead of answering yet."
+            }
+          ]
+        }
+      ]
+    }
+  });
+
+  const result = decision.answers[0];
+  if (!result || result.type !== "choice") {
+    return { behavior: "refusal" };
   }
-
-  const normalizedAnswer = answer.toLowerCase();
-  const matches = expectedKeywords.filter((keyword) =>
-    normalizedAnswer.includes(keyword.toLowerCase())
-  );
-
-  return matches.length / expectedKeywords.length;
+  return { behavior: result.choice, confidence: result.confidence };
 }
 
-// --- 4. The LLM-as-a-judge correctness evaluator.
+// --- 4. The LLM-as-a-judge correctness evaluator, used as the regression check.
 //        Semantic-equivalence judge: does the agent answer preserve every
-//        material meaning in idealAnswer? Returns 0 or 1.
-//        Runs as a runExperiment callback so scores land with the run —
+//        material meaning in idealAnswer? Returns 0 or 1. A prompt change that
+//        fixes one behavior but drops needed help shows up here.
+//        Runs as a runExperiment callback so scores land with the run:
 //        no Langfuse Platform evaluator setup required first.
 const CORRECTNESS_PROMPT = `You are an expert semantic-equivalence evaluator for AI systems.
 You will receive an actual assistant output and an expected output.
@@ -80,6 +122,11 @@ Score true only when the actual output conveys every material meaning, fact, con
 - Accept additional detail only when it is non-conflicting and does not alter or obscure the expected meaning.
 - Treat equivalent information expressed in text, objects, arrays, or another representation as matching when the meaning is preserved.
 - Score false for a wrong conclusion, contradicted fact, missing required detail, altered constraint, unsupported claim, misleading addition, or changed relationship between facts.
+
+## What Is Material For This Support Agent
+- Material: the kind of reply (steps, a decline, or a clarifying question), any limitation the expected output states, and the screens and actions needed to finish the task.
+- Not material: confirmations of what the user will see, optional alternatives (for example Face ID or passcode), the exact wording of a decline or whether it names the topic, the example options a clarifying question lists, and a minor step the user can skip and still finish the task.
+- A different valid route to the same result is a match.
 
 ## Decision Rules
 1. Identify the expected output's material claims, facts, constraints, conclusions, and relationships.
@@ -175,7 +222,9 @@ async function main() {
   }
 
   if (!env.openaiApiKey) {
-    throw new Error("OPENAI_API_KEY is required to run the agent and the correctness judge.");
+    throw new Error(
+      "OPENAI_API_KEY is required to run the agent, the behavior decision, and the correctness judge."
+    );
   }
 
   // --- 5. Pull the hosted dataset by DATASET_NAME from .env.
@@ -215,16 +264,19 @@ async function main() {
     // Callback evaluators run in this process after `task` returns.
     // Each one returns a Langfuse score attached to the item's trace.
     evaluators: [
-      async ({ output, expectedOutput }) => {
+      async ({ input, output, expectedOutput }) => {
         const expected = expectedOutput as DatasetExpectation;
-        const overlap = keywordOverlap(output as string, expected.expectedKeywords);
+        const { behavior, confidence } = await decideBehavior(
+          input as DatasetInput,
+          output as string
+        );
 
         return {
-          name: "keyword_overlap",
-          value: overlap,
-          comment: `Matched ${Math.round(
-            overlap * expected.expectedKeywords.length
-          )} of ${expected.expectedKeywords.length} expected keywords.`
+          name: "behavior_match",
+          value: behavior === expected.expectedBehavior ? 1 : 0,
+          comment: `Expected ${expected.expectedBehavior}, got ${behavior}${
+            confidence === undefined ? "" : ` (confidence ${confidence.toFixed(2)})`
+          }.`
         };
       },
       async ({ output, expectedOutput }) => {
