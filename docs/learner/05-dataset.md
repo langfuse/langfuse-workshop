@@ -1,9 +1,9 @@
 ---
-title: "Workshop: Build a Langfuse Dataset"
-description: "Seed a starter dataset for the support agent with realistic inputs, expected outputs, and metadata for future evaluation runs."
+title: "Workshop: Build Eval Datasets"
+description: "Decide what your eval dataset should cover, design the item shape, and seed it into Langfuse for experiments."
 ---
 
-# 05 Dataset
+# 05 Build eval datasets
 
 ## Why build datasets
 
@@ -30,53 +30,80 @@ DATASET_NAME=dad-it-support-workshop
 
 ## Goal
 
-Seed a first dataset that captures the kinds of requests we expect Specs to handle. To get there:
+Create a first eval dataset that captures the kinds of requests Specs has to handle.
 
-1. **Understand the item shape** — every dataset item has the same three fields, and we want ours to match the agent's actual input.
-2. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
+1. **Decide on the goal** for your eval dataset.
+2. **Design the item shape**: every dataset item has the same three fields, and we want ours to match the agent's actual input.
+3. **Seed the hosted dataset** so it lives in Langfuse and is ready for experiments in the next step.
 
-![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
+## Step 1: Decide on the goal for your eval dataset
 
-## Step 1 — Read the item shape
+Build your eval dataset from what you expect your system to hit in production, and from what is important to you: the things you want to evaluate to make sure the system works. A previous error analysis is a good place to start.
 
-Dataset items in Langfuse follow a consistent shape — three fields, one required, two optional:
+For Specs, two things matter most:
+
+- **The answers are correct.**
+- **The agent behaves appropriately**: it knows when to reply, when to defer a question, and when to ask a follow-up first. Error analysis showed that out-of-scope requests often get answered anyway.
+
+On top of that, the dataset should cover the shapes of input we expect Specs to handle in production, at least the ones we have seen so far. It mixes cases that already work well, for example traces that passed error analysis, with cases that caused problems in the past and cases that must be handled correctly.
+
+The starter dataset has 25 items. Nine come straight from the traces you reviewed in [4.1 Error analysis](./04-monitoring/error-analysis.md), each marked `"source": "error-analysis"` in its metadata:
+
+- Ordinary questions that passed: pin a WhatsApp chat, turn on Do Not Disturb, make the text bigger
+- Out-of-scope questions that got answered: a cake recipe, an index fund
+- Multi-turn conversations: an out-of-scope question after a Bluetooth fix ("Can you also tell me how to cook pasta?") or a Wi-Fi fix (a laptop recommendation), and follow-ups such as "Where is the moon icon?" after Do Not Disturb
+
+The other 16 (`"source": "starter"`) cover cases error analysis didn't include but that must be handled correctly:
+
+- iPhone Bluetooth, Wi-Fi, photos, WhatsApp, Maps, and Messages basics and edge cases
+- Out-of-scope requests not seen in error analysis (file my taxes, book my train), so the step 07 prompt is also measured on cases it wasn't written from
+- Limitation cases (passwords, live location)
+- Vague requests that need a clarifying question first ("My phone is not working.")
+
+If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch. For more on choosing what goes into a dataset, see the Academy page on [building datasets](https://langfuse.com/academy/datasets).
+
+## Step 2: Design the item shape
+
+Dataset items in Langfuse follow a consistent shape: three fields, one required, two optional:
 
 | Field | Required | Purpose |
 | --- | --- | --- |
 | `input` | yes | What you'd feed the agent. For us, the same `{ messages: [...] }` shape `/api/chat` accepts. |
-| `expectedOutput` | optional | What a good answer would look like. Free-form — used by evaluators to compare actual vs expected. |
+| `expectedOutput` | optional | What a good answer would look like. Free-form: used by evaluators to compare actual vs expected. |
 | `metadata` | optional | Tags or other fields for filtering and grouping (`category`, `difficulty`, etc.). |
 
-For us, the conceptual shape of one item is:
+In our case, the conceptual shape of one item is:
 
 ```json
 {
   "input": "How do I turn Bluetooth on on my iPhone?",
   "expectedOutput": {
-    "idealAnswer": "Open Settings, tap Bluetooth, and turn the Bluetooth switch on.",
-    "expectedKeywords": ["Settings", "Bluetooth", "switch", "on"]
+    "idealAnswer": "1. Open the Settings app.\n2. Tap Bluetooth.\n3. Turn the Bluetooth switch on. It turns green when Bluetooth is on.",
+    "expectedBehavior": "reply"
   },
-  "metadata": { "category": "iphone-bluetooth", "difficulty": "easy" }
+  "metadata": { "category": "iphone-bluetooth", "difficulty": "easy", "source": "starter" }
 }
 ```
 
-The two fields inside `expectedOutput` answer two different evaluator questions:
+The two fields inside `expectedOutput` match the two evaluation questions from Step 1:
 
-- **`idealAnswer`** is the human-readable reference reply. It's what the LLM-as-a-judge `correctness` callback in chapter 06 reads to decide whether the meaning matches.
-- **`expectedKeywords`** is a small list of strings the answer *must* contain to be considered "covered the steps." In chapter 06 the experiment script uses it for a deterministic `keyword_overlap` callback — fast, cheap, and no model call required.
+- **`idealAnswer`**: is the answer correct? This is the reply we want, written the way the prompt asks for it, with only the steps that matter.
+- **`expectedBehavior`**: did Specs behave appropriately? One of `reply`, `defer_question`, or `ask_follow_up`.
 
-`metadata` lets us slice runs by category or difficulty later when comparing experiment runs side by side.
+In chapter 06 you will see how each of these is evaluated.
 
-If you look at the actual JSON in `data/seed-dataset.json`, the `input` is the full `{ messages: [...] }` shape that `/api/chat` accepts, plus an `id` field for the dataset row. We've simplified the example above to show *what an item is*; the on-disk format is what the experiment script (step 06) can feed straight into `runSupportConversation(...)` without rewriting inputs.
+`metadata` lets us slice runs by category, difficulty, or source later when comparing experiment runs side by side.
 
-## Step 2 — Seed the dataset
+If you look at the actual JSON in `data/seed-dataset.json`, the `input` is the full `{ messages: [...] }` shape that `/api/chat` accepts, plus an `id` field for the dataset row. Multi-turn items carry the earlier user and assistant turns in that array, and the expectations apply to the last reply. We've simplified the example above to show *what an item is*; the on-disk format is what the experiment script (step 06) can feed straight into `runSupportConversation(...)` without rewriting inputs.
+
+## Step 3: Seed the dataset
 
 You have several options for getting items into a Langfuse dataset:
 
 - **Add items manually** in the UI (Datasets → New item).
 - **Upload a CSV / JSON** file via the UI.
-- **Turn live production traces** into dataset items directly from the Trace view — this is the most powerful path once you have monitoring catching interesting traces.
-- **Programmatic seeding** via the SDK / CLI — best for an initial bulk load like ours.
+- **Turn live production traces** into dataset items directly from the Trace view: this is the most powerful path once you have monitoring catching interesting traces.
+- **Programmatic seeding** via the SDK / CLI: best for an initial bulk load like ours.
 
 For this workshop we use the programmatic path because we already have a curated JSON file:
 
@@ -84,25 +111,11 @@ For this workshop we use the programmatic path because we already have a curated
 npm run dataset:seed
 ```
 
-Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 14 items and 0 experiment runs (so far):
-
-![Datasets list view in Langfuse — dad-it-support-workshop with 14 items and no runs yet.](../images/datasets/05-dataset-list.png)
+Open Langfuse → **Datasets**. The list view should show the new `dad-it-support-workshop` dataset with 25 items and 0 experiment runs (so far).
 
 Click into the dataset and switch to the **Items** tab. You should see every seeded item with input, expected output, and metadata columns:
 
-![Items view of the dad-it-support-workshop dataset — all 14 rows with messages input, ideal answer + expected keywords, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
-
-## What the starter dataset covers
-
-- iPhone Bluetooth basics and edge cases
-- iPhone Wi-Fi reconnect + "I can't see the network"
-- Photo capture + WhatsApp share
-- Apple Maps directions + the live-location limit
-- Messages basics
-- Out-of-scope (file my taxes, book my train)
-- Limitation cases (passwords, live location)
-
-If you add items later, prefer ones that match a real signal you saw in monitoring rather than items invented from scratch.
+![Items view of a seeded dataset: each row has the messages input, the ideal answer and expected behavior, and category/difficulty metadata.](../images/datasets/05-dataset-items.png)
 
 ## How to verify you are done
 
@@ -112,7 +125,7 @@ If you add items later, prefer ones that match a real signal you saw in monitori
 
 ## Wrap-up
 
-Datasets are how you write down what your system is expected to handle. A good one gives you confidence to ship and to iterate without regressing. You can seed datasets via the [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli) or skill, build them from production traces in the UI, or maintain them in code like we did — the right approach depends on where your best examples come from.
+Datasets are how you write down what your system is expected to handle. A good one gives you confidence to ship and to iterate without regressing. You can seed datasets via the [Langfuse CLI](https://langfuse.com/docs/api-and-data-platform/features/cli) or skill, build them from production traces in the UI, or maintain them in code like we did: the right approach depends on where your best examples come from.
 
 Next we use this dataset to run experiments against the agent.
 
