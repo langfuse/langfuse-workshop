@@ -4,8 +4,8 @@
  * Unlike scripts/import-trace-seed.ts (which uses the public batch ingestion REST
  * API and can therefore only ever create SPAN/GENERATION/EVENT observations), this
  * importer replays each snapshot trace through the Langfuse OpenTelemetry SDK. That
- * is the only ingestion path that preserves the richer observation types — AGENT,
- * TOOL, CHAIN, RETRIEVER, EVALUATOR, GUARDRAIL, EMBEDDING — exactly as the live agent
+ * is the only ingestion path that preserves the richer observation types: AGENT,
+ * TOOL, CHAIN, RETRIEVER, EVALUATOR, GUARDRAIL, and EMBEDDING, exactly as the live agent
  * emits them and as the export captured them.
  *
  * How it works per trace bundle:
@@ -19,12 +19,13 @@
  *   4. OTel-generated trace/observation IDs are captured so scores (which have no OTel
  *      path) can be re-pointed and sent via the REST score-create batch afterwards.
  *
- * All timestamps are shifted uniformly so the newest seeded event lands at "now",
- * preserving the original spread — same behaviour as the REST importer.
+ * All timestamps are shifted uniformly so the newest seeded event lands more than
+ * 5 minutes before now, preserving the original spread. Topics only picks up a
+ * trace after its last activity is outside that window.
  *
  * On top of the exported file, this script also synthesises a handful of edge-case
- * turns that the calm, in-scope export is missing — out-of-scope asks, ALL-CAPS
- * rages, and more "where is that?" follow-ups — so the monitoring evaluators
+ * turns that the calm, in-scope export is missing: out-of-scope asks, ALL-CAPS
+ * rages, and more "where is that?" follow-ups, so the monitoring evaluators
  * ("Out of scope request", "user_all_caps_signal", "User Disagreement") have real
  * positive cases to fire on. They are built by cloning a real bundle as a template
  * and swapping in the new wording, so their observation tree, token usage/cost, and
@@ -96,7 +97,7 @@ const sdk = new NodeSDK({ spanProcessors: [langfuseSpanProcessor] });
 // The exported file is all calm, in-scope iPhone how-tos, so three monitoring
 // evaluators never see a positive. We synthesise a handful of out-of-scope asks,
 // ALL-CAPS rages, and "where is that?" follow-ups by cloning a real bundle and
-// swapping in new wording — cloning keeps the full AGENT -> 3x GENERATION ->
+// swapping in new wording. Cloning keeps the full AGENT -> 3x GENERATION ->
 // 2x TOOL tree, token usage/cost, key ordering, and score shape identical to a
 // genuine export. Each turn also gets the four boolean scores with the correct
 // values so dashboards light up (the --no-scores path still re-scores live).
@@ -139,7 +140,7 @@ const EDGE_CASES: EdgeCase[] = [
     template: "single",
     question: "Can you file my taxes for me this year?",
     finalAnswer:
-      "I'm sorry, but I can't do that for you — I'm only set up to help you use your iPhone, like Wi‑Fi, photos, messages, and apps.\n\nFiling taxes needs a real tax service or an accountant. If you have a tax app or website on your iPhone, I'd be glad to help you open it and show you where to tap. Which one do you use?",
+      "I'm sorry, but I can't do that for you: I'm only set up to help you use your iPhone, like Wi‑Fi, photos, messages, and apps.\n\nFiling taxes needs a real tax service or an accountant. If you have a tax app or website on your iPhone, I'd be glad to help you open it and show you where to tap. Which one do you use?",
     searchQuery: "file taxes on behalf of user",
     scores: { outOfScope: 1, allCaps: 0, disagreement: 0, followUp: 0 },
     comments: {
@@ -155,7 +156,7 @@ const EDGE_CASES: EdgeCase[] = [
     template: "single",
     question: "Book me a train ticket to Munich for tomorrow morning.",
     finalAnswer:
-      "I'm sorry, I can't book travel for you — I can only help you use your iPhone.\n\nIf you have a train app like DB Navigator, I'd be happy to walk you through opening it and finding the ticket yourself, one step at a time. Which app would you like to use?",
+      "I'm sorry, I can't book travel for you: I can only help you use your iPhone.\n\nIf you have a train app like DB Navigator, I'd be happy to walk you through opening it and finding the ticket yourself, one step at a time. Which app would you like to use?",
     searchQuery: "book train ticket to Munich",
     scores: { outOfScope: 1, allCaps: 0, disagreement: 0, followUp: 0 },
     comments: {
@@ -171,7 +172,7 @@ const EDGE_CASES: EdgeCase[] = [
     template: "single",
     question: "Can you transfer 200 euros from my bank account to my son?",
     finalAnswer:
-      "I'm sorry, but I can't move money for you — for your safety, only you can do that inside your banking app.\n\nIf you tell me which banking app you use, I can guide you to the right screen and tell you exactly what to tap, but you'll enter the amount and confirm it yourself.",
+      "I'm sorry, but I can't move money for you: for your safety, only you can do that inside your banking app.\n\nIf you tell me which banking app you use, I can guide you to the right screen and tell you exactly what to tap, but you'll enter the amount and confirm it yourself.",
     searchQuery: "transfer money from bank account",
     scores: { outOfScope: 1, allCaps: 0, disagreement: 0, followUp: 0 },
     comments: {
@@ -188,7 +189,7 @@ const EDGE_CASES: EdgeCase[] = [
     template: "single",
     question: "WHY WON'T THIS STUPID PHONE CONNECT TO THE WIFI I HAVE BEEN TRYING FOR AN HOUR",
     finalAnswer:
-      "I'm sorry it's been so frustrating — we'll get your Wi‑Fi sorted together, nice and slowly.\n\n1. Start at your **Home Screen**.\n\n2. Find the gray **Settings** app (the gear icon) and tap it.\n\n3. Tap **Wi‑Fi** near the top.\n\n4. Make sure the **Wi‑Fi** switch is green and on.\n\n5. Under **Networks**, tap your home network's name.\n\n6. Type your Wi‑Fi password carefully, then tap **Join**.\n\nYou should see a blue checkmark next to your network when it connects. Tell me what you see and we'll take the next step.",
+      "I'm sorry it's been so frustrating: we'll get your Wi‑Fi sorted together, nice and slowly.\n\n1. Start at your **Home Screen**.\n\n2. Find the gray **Settings** app (the gear icon) and tap it.\n\n3. Tap **Wi‑Fi** near the top.\n\n4. Make sure the **Wi‑Fi** switch is green and on.\n\n5. Under **Networks**, tap your home network's name.\n\n6. Type your Wi‑Fi password carefully, then tap **Join**.\n\nYou should see a blue checkmark next to your network when it connects. Tell me what you see and we'll take the next step.",
     searchQuery: "reconnect iPhone to home Wi-Fi network",
     scores: { outOfScope: 0, allCaps: 1, disagreement: 0, followUp: 0 },
     comments: {
@@ -203,7 +204,7 @@ const EDGE_CASES: EdgeCase[] = [
     template: "single",
     question: "I JUST WANT TO SEND ONE PHOTO WHY IS THIS SO COMPLICATED",
     finalAnswer:
-      "I hear you — sending a photo should be simple, and we'll do it together in a few taps.\n\n1. Start at your **Home Screen**.\n\n2. Tap the green **WhatsApp** icon.\n\n3. Tap **Chats** at the bottom, then tap the person you want to send the photo to.\n\n4. Tap the **+** (or paperclip) next to the message box.\n\n5. Tap **Photo & Video Library**.\n\n6. Tap the photo you want, then tap the blue **Send** arrow.\n\nYou should see the photo appear in the chat. Let me know if you get stuck on any step.",
+      "I hear you: sending a photo should be simple, and we'll do it together in a few taps.\n\n1. Start at your **Home Screen**.\n\n2. Tap the green **WhatsApp** icon.\n\n3. Tap **Chats** at the bottom, then tap the person you want to send the photo to.\n\n4. Tap the **+** (or paperclip) next to the message box.\n\n5. Tap **Photo & Video Library**.\n\n6. Tap the photo you want, then tap the blue **Send** arrow.\n\nYou should see the photo appear in the chat. Let me know if you get stuck on any step.",
     searchQuery: "take a photo and send it on WhatsApp",
     scores: { outOfScope: 0, allCaps: 1, disagreement: 0, followUp: 0 },
     comments: {
@@ -219,10 +220,10 @@ const EDGE_CASES: EdgeCase[] = [
     template: "follow-up",
     question: "How do I turn Bluetooth on on my iPhone?",
     answer:
-      "Sure — here's how to turn on Bluetooth.\n\n1. Start at your **Home Screen**.\n\n2. Tap the gray **Settings** app (the gear icon).\n\n3. Tap **Bluetooth** near the top.\n\n4. Tap the **Bluetooth** switch so it turns green.\n\nYou should see 'Now Discoverable' appear underneath. Tell me what happens next.",
+      "Sure: here's how to turn on Bluetooth.\n\n1. Start at your **Home Screen**.\n\n2. Tap the gray **Settings** app (the gear icon).\n\n3. Tap **Bluetooth** near the top.\n\n4. Tap the **Bluetooth** switch so it turns green.\n\nYou should see 'Now Discoverable' appear underneath. Tell me what happens next.",
     followUp: "I DID ALL THAT AND IT STILL DOES NOT WORK THIS IS RIDICULOUS",
     finalAnswer:
-      "I'm sorry — that really is annoying when it won't cooperate. Let's check one thing at a time.\n\n1. Stay in **Settings > Bluetooth**.\n\n2. Make sure your earbuds or speaker are charged and held very close to the iPhone.\n\n3. Put that device into **pairing mode** (usually hold its button until a light flashes).\n\n4. Watch the list under **Other Devices** and wait a few seconds for the name to appear.\n\n5. Tap the device's name when you see it.\n\nTell me whether the name shows up in that list and we'll go from there.",
+      "I'm sorry: that really is annoying when it won't cooperate. Let's check one thing at a time.\n\n1. Stay in **Settings > Bluetooth**.\n\n2. Make sure your earbuds or speaker are charged and held very close to the iPhone.\n\n3. Put that device into **pairing mode** (usually hold its button until a light flashes).\n\n4. Watch the list under **Other Devices** and wait a few seconds for the name to appear.\n\n5. Tap the device's name when you see it.\n\nTell me whether the name shows up in that list and we'll go from there.",
     searchQuery: "Bluetooth device not connecting pairing mode iPhone 15",
     scores: { outOfScope: 0, allCaps: 1, disagreement: 1, followUp: 1 },
     comments: {
@@ -240,17 +241,17 @@ const EDGE_CASES: EdgeCase[] = [
     template: "follow-up",
     question: "How do I back up to iCloud?",
     answer:
-      "Of course — here's how to back up to iCloud.\n\n1. Start at your **Home Screen**.\n\n2. Tap the gray **Settings** app.\n\n3. Tap **your name** at the very top.\n\n4. Tap **iCloud**.\n\n5. Tap **iCloud Backup**.\n\n6. Tap **Back Up Now**.\n\nYou should see the date and time update when the backup finishes.",
+      "Of course: here's how to back up to iCloud.\n\n1. Start at your **Home Screen**.\n\n2. Tap the gray **Settings** app.\n\n3. Tap **your name** at the very top.\n\n4. Tap **iCloud**.\n\n5. Tap **iCloud Backup**.\n\n6. Tap **Back Up Now**.\n\nYou should see the date and time update when the backup finishes.",
     followUp: "Sorry, where is that on the home screen?",
     finalAnswer:
-      "No need to apologise — let's find it together.\n\n1. Press the side button or tap the screen to wake your iPhone.\n\n2. Unlock it with Face ID or your passcode so you're on the **Home Screen**.\n\n3. Look for a gray icon shaped like a **gear** — it's labelled **Settings**.\n\n4. If you can't see it, swipe down the middle of the screen and type **Settings** in the search bar at the top.\n\n5. Tap **Settings** to open it, then tap **your name** at the very top.\n\nTell me when you can see your name at the top and we'll carry on.",
+      "No need to apologise: let's find it together.\n\n1. Press the side button or tap the screen to wake your iPhone.\n\n2. Unlock it with Face ID or your passcode so you're on the **Home Screen**.\n\n3. Look for a gray icon shaped like a **gear**: it's labelled **Settings**.\n\n4. If you can't see it, swipe down the middle of the screen and type **Settings** in the search bar at the top.\n\n5. Tap **Settings** to open it, then tap **your name** at the very top.\n\nTell me when you can see your name at the top and we'll carry on.",
     searchQuery: "where to find Settings app on iPhone 15 home screen",
     scores: { outOfScope: 0, allCaps: 0, disagreement: 1, followUp: 1 },
     comments: {
       outOfScope: "The user is still asking about backing up their iPhone to iCloud, which is within the assistant's support scope.",
       allCaps: "No all-caps run longer than 5 letters detected.",
       disagreement:
-        "The user asks \"where is that?\" immediately after the iCloud steps, with \"Sorry\", signalling they cannot locate the Settings app the answer referenced — a sign the prior answer was not clear enough.",
+        "The user asks \"where is that?\" immediately after the iCloud steps, with \"Sorry\", signalling they cannot locate the Settings app the answer referenced: a sign the prior answer was not clear enough.",
       followUp:
         "The message uses \"that\" with no standalone meaning; it refers to the Settings location from the previous answer, so it is a follow-up."
     }
@@ -260,10 +261,10 @@ const EDGE_CASES: EdgeCase[] = [
     template: "follow-up",
     question: "How do I change my default browser to Chrome?",
     answer:
-      "Happy to help — here's how to make Chrome your default browser.\n\n1. Start at your **Home Screen**.\n\n2. Tap the gray **Settings** app.\n\n3. Scroll down and tap **Apps**.\n\n4. Tap **Chrome**.\n\n5. Tap **Default Browser App**.\n\n6. Tap **Chrome** so it shows a checkmark.\n\nYou should see the checkmark move next to Chrome.",
+      "Happy to help: here's how to make Chrome your default browser.\n\n1. Start at your **Home Screen**.\n\n2. Tap the gray **Settings** app.\n\n3. Scroll down and tap **Apps**.\n\n4. Tap **Chrome**.\n\n5. Tap **Default Browser App**.\n\n6. Tap **Chrome** so it shows a checkmark.\n\nYou should see the checkmark move next to Chrome.",
     followUp: "And where do I find that app?",
     finalAnswer:
-      "Good question — let's find the Settings app first.\n\n1. Wake your iPhone and unlock it to reach the **Home Screen**.\n\n2. Look for the gray **gear** icon labelled **Settings**.\n\n3. If it's not on the first page, swipe left to check the other pages, or swipe down the middle of the screen and type **Settings** in the search bar.\n\n4. Tap **Settings** to open it.\n\nOnce it's open, scroll down to **Apps** and tell me what you see.",
+      "Good question: let's find the Settings app first.\n\n1. Wake your iPhone and unlock it to reach the **Home Screen**.\n\n2. Look for the gray **gear** icon labelled **Settings**.\n\n3. If it's not on the first page, swipe left to check the other pages, or swipe down the middle of the screen and type **Settings** in the search bar.\n\n4. Tap **Settings** to open it.\n\nOnce it's open, scroll down to **Apps** and tell me what you see.",
     searchQuery: "find Settings app and Apps list on iPhone 15",
     scores: { outOfScope: 0, allCaps: 0, disagreement: 1, followUp: 1 },
     comments: {
@@ -280,7 +281,7 @@ const EDGE_CASES: EdgeCase[] = [
     template: "follow-up",
     question: "How do I set a screen time limit?",
     answer:
-      "Sure — here's how to set a Screen Time limit.\n\n1. Start at your **Home Screen**.\n\n2. Tap the gray **Settings** app.\n\n3. Tap **Screen Time**.\n\n4. Tap **App Limits**.\n\n5. Tap **Add Limit**.\n\n6. Choose a category, set the time, and tap **Add**.\n\nYou should see your new limit listed under App Limits.",
+      "Sure: here's how to set a Screen Time limit.\n\n1. Start at your **Home Screen**.\n\n2. Tap the gray **Settings** app.\n\n3. Tap **Screen Time**.\n\n4. Tap **App Limits**.\n\n5. Tap **Add Limit**.\n\n6. Choose a category, set the time, and tap **Add**.\n\nYou should see your new limit listed under App Limits.",
     followUp: "Okay, where do I tap first?",
     finalAnswer:
       "Let's take it from the very first tap.\n\n1. Make sure you're on the **Home Screen**.\n\n2. Find the gray **gear** icon labelled **Settings** and tap it once.\n\n3. Scroll down a little until you see **Screen Time** (it has a purple hourglass icon).\n\n4. Tap **Screen Time**.\n\nTell me when you can see the Screen Time page and we'll set the limit together.",
@@ -351,7 +352,7 @@ function transformEdgeStrings(
   return value;
 }
 
-// Longest run of consecutive A–Z letters — mirrors the all-caps code evaluator.
+// Longest run of consecutive A–Z letters: mirrors the all-caps code evaluator.
 function longestUpperRun(text: string) {
   let longest = 0;
   let current = 0;
@@ -437,7 +438,8 @@ function buildEdgeBundle(
   const clone = JSON.parse(JSON.stringify(template)) as TraceSeedTraceBundle;
 
   // Spread the new turns a few minutes past the rest of the window so they are the
-  // most recent traffic; computeTimestampOffsetMs later lands the newest at "now".
+  // most recent traffic; computeTimestampOffsetMs later lands the newest more than
+  // 5 minutes before now.
   const offsetMs = (index + 1) * 60_000;
 
   const swaps: Array<{ from: string; token: string; to: string }> = [];
@@ -550,8 +552,9 @@ async function main() {
   const bundles = [...fileBundles, ...edgeCaseBundles];
 
   const combined: TraceSeedSnapshot = { ...snapshot, traces: bundles };
-  const offsetMs = computeTimestampOffsetMs(combined, Date.now());
-  logTimestampShift(combined, offsetMs);
+  const nowMs = Date.now();
+  const offsetMs = computeTimestampOffsetMs(combined, nowMs);
+  logTimestampShift(combined, offsetMs, nowMs);
 
   const totalObservations = bundles.reduce((sum, b) => sum + b.observations.length, 0);
   const totalScores = includeScores ? bundles.reduce((sum, b) => sum + b.scores.length, 0) : 0;
@@ -798,9 +801,19 @@ function formatTypeCounts(counts: Record<string, number>) {
     .join(", ");
 }
 
-// Uniformly shifts every seeded timestamp so the most recent lands at `nowMs`,
-// preserving the original spread and each trace's internal timing.
+// Topics waits about 5 minutes after a trace's last activity before it can use it.
+// Land the newest seeded event strictly outside that window.
+const NEWEST_EVENT_LAG_MS = 6 * 60_000;
+
+// Uniformly shifts every seeded timestamp so the most recent lands
+// NEWEST_EVENT_LAG_MS before `nowMs`, preserving the original spread and each
+// trace's internal timing.
 function computeTimestampOffsetMs(snapshot: TraceSeedSnapshot, nowMs: number) {
+  const latestMs = newestTimestampMs(snapshot);
+  return Number.isFinite(latestMs) ? nowMs - NEWEST_EVENT_LAG_MS - latestMs : 0;
+}
+
+function newestTimestampMs(snapshot: TraceSeedSnapshot) {
   let latestMs = Number.NEGATIVE_INFINITY;
 
   const consider = (value: string | null | undefined) => {
@@ -821,13 +834,18 @@ function computeTimestampOffsetMs(snapshot: TraceSeedSnapshot, nowMs: number) {
     }
   }
 
-  return Number.isFinite(latestMs) ? nowMs - latestMs : 0;
+  return latestMs;
 }
 
-function logTimestampShift(snapshot: TraceSeedSnapshot, offsetMs: number) {
+function logTimestampShift(snapshot: TraceSeedSnapshot, offsetMs: number, nowMs: number) {
   const days = (offsetMs / (1000 * 60 * 60 * 24)).toFixed(1);
+  const newestMs = newestTimestampMs(snapshot) + offsetMs;
+  const ageMinutes = (nowMs - newestMs) / 60_000;
+  if (!(ageMinutes > 5)) {
+    throw new Error(`Newest seeded event is only ${ageMinutes.toFixed(2)} minutes before now.`);
+  }
   console.log(
-    `Shifting all timestamps forward by ${days} day(s) so the newest of ${snapshot.traces.length} traces lands now.`
+    `Shifting all timestamps forward by ${days} day(s) so the newest of ${snapshot.traces.length} traces lands ${ageMinutes.toFixed(1)} minutes before now.`
   );
 }
 
