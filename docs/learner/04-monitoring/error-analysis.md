@@ -22,12 +22,6 @@ We work in five steps: gather traces, write a note on each, group the notes into
 
 ![The five steps of error analysis: gather traces, open coding, cluster into categories, label and measure, decide and act.](../../images/monitoring/error-analysis-process.png)
 
-To be able to judge the outputs, we need to establish a few expectations towards the application:
-
-- The agent shall always respond in a structured and easy to understand manner, so the user can follow.
-- The agent is made specifically for IT support questions, more specifically for phone help.
-- The agent should talk about itself as an AI agent and not pretend to be something or someone else.
-
 ## Starting point
 
 ```bash
@@ -35,6 +29,14 @@ git checkout checkpoint/04-monitoring
 ```
 
 We use 20 sample traces to get started. Usually 50–100 sample traces are recommended for a first pass.
+
+## Step 0: Set expectations
+
+To be able to judge the outputs, we need to establish a few expectations towards the application:
+
+- The agent shall always respond in a structured and easy to understand manner, so the user can follow.
+- The agent is made specifically for IT support questions, more specifically for phone help.
+- The agent should talk about itself as an AI agent and not pretend to be something or someone else.
 
 ## Step 1: Gather traces
 
