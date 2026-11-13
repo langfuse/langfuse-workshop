@@ -16,17 +16,6 @@ Complementary materials:
 - Docs: [Evaluation overview](https://langfuse.com/docs/evaluation/overview)
 - Academy: [Evaluate](https://langfuse.com/academy/evaluate)
 
-## What you could change
-
-This chapter is framed around prompt iteration because changing the prompt is the lowest-friction lever. The same workflow applies if you change:
-
-- **The model**: try a stronger or cheaper one and rerun.
-- **The context**: add or remove fields from the system prompt or tool results.
-- **The agent architecture**: add a tool, change tool ordering, change retries.
-- **The prompt**: what we'll do here.
-
-The shape is always the same: change *one* thing (or a configuration of multiple variables), rerun the dataset, compare runs side by side.
-
 ## Goal
 
 Use results from error analysis and the baseline run to design a new prompt version. Run a new experiment and evaluate the new version with `behavior_match` and `correctness`.
@@ -51,6 +40,17 @@ Look at your baseline run before making changes. Open the dataset → **Experime
 - `behavior_match` average: how often did Specs reply, defer, or ask a follow-up when the dataset expected it to?
 
 Open the items where either score is low and read the agent's answer. A typical finding at this stage: the agent walks Dad through an out-of-scope request instead of deferring, answers a vague request without asking what is wrong, or gives generic advice instead of the iPhone-specific instructions. Whatever you see is the *problem you're about to try to fix*.
+
+## Step 0: Choose the lever to change
+
+This chapter is framed around prompt iteration because changing the prompt is the lowest-friction lever. The same workflow applies if you change:
+
+- **The model**: try a stronger or cheaper one and rerun.
+- **The context**: add or remove fields from the system prompt or tool results.
+- **The agent architecture**: add a tool, change tool ordering, change retries.
+- **The prompt**: what we'll do here.
+
+The shape is always the same: change *one* thing (or a configuration of multiple variables), rerun the dataset, compare runs side by side.
 
 ## Step 1: Change the prompt
 
