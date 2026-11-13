@@ -24,13 +24,11 @@ What to propagate:
 
 | Change type | Propagate to checkpoints? | How |
 | --- | --- | --- |
-| Shared tooling / config present on every milestone (`package.json` scripts, root tooling, env loading helpers used before a step diverges) | Yes: every tag that still has the old state | Checkout each tag, apply the same change, commit, force-move the tag, push |
-| `docs/` or `README.md` | Yes: every tag | `./scripts/sync-checkpoint-docs.sh --push` after the change is on the source branch/`main` |
-| `AGENTS.md` | Yes: every tag | Included in `./scripts/sync-checkpoint-docs.sh` |
-| Milestone-only app code (for example tracing wrappers that only exist from `02-tracing` onward) | Only tags that already contain that code path | Patch those tags; do not invent the feature on earlier milestones |
-| Docs-only clarification with no app impact | Yes: all tags via the docs sync script | Keep milestone app trees unchanged |
+| Anything outside the milestone files (`docs/`, `README.md`, `AGENTS.md`, `package.json`, `scripts/`, `data/`, client code, shared server code) | Yes: every tag | Automatic: the `Sync checkpoint tags` action copies `main` onto every tag |
+| Shared content inside a milestone file (for example the `SYSTEM_PROMPT`) | Yes: every tag | Keep it between `// checkpoint-sync:begin <name>` and `// checkpoint-sync:end <name>`; the sync copies that region |
+| Milestone-only app code (for example tracing wrappers that only exist from `02-tracing` onward) | Only tags that already contain that code path | Lives in the milestone files, which the sync leaves alone; patch those tags by hand and do not invent the feature on earlier milestones |
 
-Do not stop at a PR to `main` when checkpoints still carry the old shared state. Document force-moved tag tips in the PR when you update them.
+Do not stop at a PR to `main` when checkpoints still carry the old shared state. After the merge, check that the action run succeeded. Document force-moved tag tips in the PR when you update tags by hand.
 
 ### Other change rules
 
@@ -78,18 +76,24 @@ Recommended jump patterns:
 - Full workshop: walk through all checkpoints in order.
 - Catch-up jump: if a group gets stuck in tracing, jump straight to `checkpoint/04-monitoring` or `checkpoint/05-dataset` and continue from there.
 
-## Refreshing checkpoint docs and agent notes
+## Syncing checkpoint tags
 
-Learner/instructor docs, `README.md`, and `AGENTS.md` live on `main` and are copied onto every `checkpoint/*` tag so a mid-workshop checkout still shows current instructions and maintainer rules. App code at each checkpoint stays on that milestone; only `docs/`, `README.md`, and `AGENTS.md` move forward with `main` through this script.
+Every `checkpoint/*` tag is `main`'s tree except for its milestone files: the files whose code the next lesson changes. `scripts/sync-checkpoints.sh` sets this list in `milestone_files()`:
 
-After those files land on `main` (or on the branch you want to sync from), refresh the tags:
+| Tags | Milestone files (kept from the tag) |
+| --- | --- |
+| `00-setup`, `01-base-app`, `02-tracing` | `src/server/index.ts`, `src/server/support-agent.ts`, `src/server/tools.ts` (untraced) |
+| `03-prompt-management` | `src/server/support-agent.ts`, `src/server/tools.ts` (no Langfuse prompt fetch) |
+| `04-monitoring` onward | none (equal to `main`) |
+
+Inside a milestone file, regions marked `// checkpoint-sync:begin <name>` / `// checkpoint-sync:end <name>` still come from `main`. The sync fails if `main` has a region that a tag's milestone file lacks. When a new lesson starts editing a file, add it to `milestone_files()` for the earlier tags.
+
+The `Sync checkpoint tags` GitHub Action (`.github/workflows/sync-checkpoints.yml`) runs on every push to `main` (and by hand). It runs `npm ci`, then `./scripts/sync-checkpoints.sh --verify --push`. Each changed tag gets one commit, must pass `npm run typecheck`, and is force-moved. All moved tags are pushed together, and only once every tag has passed. `.github/` stays on `main` only.
+
+To run it locally (clean working tree required):
 
 ```bash
-./scripts/sync-checkpoint-docs.sh --push
+./scripts/sync-checkpoints.sh --verify          # update local tags only
+./scripts/sync-checkpoints.sh --verify --push   # also force-push them
+SOURCE_REF=my-branch ./scripts/sync-checkpoints.sh --verify
 ```
-
-Without `--push`, the script updates local tags only. The script requires a clean working tree and force-moves the canonical checkpoint tags.
-
-The `Sync checkpoint tags` GitHub Action (`.github/workflows/sync-checkpoints.yml`) runs this script with `--push` on every push to `main` that touches `docs/`, `README.md`, or `AGENTS.md`, and can also be started by hand. When a push changes other files, it only posts a warning listing them; those still need the manual tag patches below.
-
-For shared implementation changes that are not covered by that script (for example `package.json` scripts), update each affected checkpoint tag manually: checkout the tag, apply the same change, commit, force-move the tag, and push it. Then still run the docs sync if docs or `AGENTS.md` also changed.
