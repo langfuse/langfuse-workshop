@@ -38,7 +38,7 @@ npm run langfuse:seed:error-analysis
 
 The seed is **not idempotent**: running it again adds another 20 traces. Run it once. The new traces are tagged `error-analysis-seed`, and they are the newest traces in the project.
 
-In [Tracing](https://cloud.langfuse.com/project/~/traces), select the last 20 traces and add them to an annotation queue. The queue has two score configs: **open coding** (Text) and **pass/fail** (Categorical, with the categories pass and fail). Create the queue with those configs, then add the traces. A queue keeps the score configs it was created with.
+In [Tracing](https://cloud.langfuse.com/project/~/traces), select the last 20 traces and add them to an annotation queue named `error analysis`. The queue has two score configs: `open coding` (Text) and `pass or fail` (Categorical, with the categories pass and fail). Create the queue with those configs, then add the traces. A queue keeps the score configs it was created with.
 
 ![Select the traces, then add them to an annotation queue.](../../images/monitoring/add-to-annotation-queue.png)
 
@@ -96,3 +96,11 @@ A more specific prompt version based on these failure modes could look like this
 > - You are the support agent. Do not speak as someone in his family.
 
 Leave the running prompt as it is for now. In [07 Evaluate a change](../07-evaluation.md) you publish this version and measure it against the current one on the dataset. [Section 4.2 Capturing signals](./capturing-signals.md) is next. It scores disagreement and all-caps frustration as those turns arrive, so the rows worth reading stand out.
+
+> **Short on time? Seed the finished annotations.** After Step 1, with the 20 traces seeded and the `error analysis` queue created, run:
+>
+> ```bash
+> npm run langfuse:seed:error-analysis:annotations
+> ```
+>
+> It writes an `open coding` note and a `pass or fail` mark on all 20 traces and completes the queue items, which covers Step 2. The notes describe each reply but do not name the clusters, so continue with Step 3. Running it again updates the same scores instead of adding new ones.
