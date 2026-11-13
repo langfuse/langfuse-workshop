@@ -44,10 +44,9 @@ The shape is always the same: change *one* thing (or a configuration of multiple
 
 ## Goal
 
-Publish the prompt suggested at the end of error analysis and improve the experiment results: measured by `behavior_match` going up across the dataset compared with the baseline, without `correctness` going down.
+Use results from error analysis and the baseline run to design a new prompt version. Run a new experiment and evaluate the new version with `behavior_match` and `correctness`.
 
-
-Three passes:
+We do this in three steps:
 
 1. **Change one thing**: publish the error-analysis prompt as a new version.
 2. **Rerun the dataset** against the new prompt.
@@ -57,9 +56,12 @@ Three passes:
 
 Error analysis ended with a more specific prompt. Its Rules section answers the failure categories you found there, and the same rules address what the baseline run shows:
 
-- **Out of scope:** "If he asks for something other than IT help, say so briefly, point him back to his phone, and ask one short redirect question. Do not answer that request." This targets the `defer_question` items, where the baseline agent walks Dad through a cake recipe or his savings, or answers a pasta question that comes up after a Bluetooth fix.
-- **Vague requests:** "If you can't tell what he needs, ask one short clarifying question before giving any steps." This targets the `ask_follow_up` items, where the baseline agent answers "My phone is not working." with steps right away.
-- **Lengthy responses and impersonation:** use short numbered lists for in-scope instructions, and make sure the agent speaks as the support agent, not as family. Brief refusals and clarifying questions can use prose instead of a numbered list. Neither has an evaluator in this workshop, so read a few answers to check them.
+| Failure | Prompt rule | Baseline behavior it targets | Checked by |
+| --- | --- | --- | --- |
+| Out of scope | "If he asks for something other than IT help, say so briefly, point him back to his phone, and ask one short redirect question. Do not answer that request." | `defer_question` items: walks Dad through a cake recipe or his savings, or answers a pasta question after a Bluetooth fix | `behavior_match` |
+| Vague requests | "If you can't tell what he needs, ask one short clarifying question before giving any steps." | `ask_follow_up` items: answers "My phone is not working." with steps right away | `behavior_match` |
+| Lengthy responses | "Keep the reply to a short numbered list." Brief refusals and clarifying questions can stay in prose. | Long, unstructured replies | Read a few answers |
+| Impersonation | "You are the support agent. Do not speak as someone in his family." | Replies in a family voice | Read a few answers |
 
 Two ways to make the change:
 
