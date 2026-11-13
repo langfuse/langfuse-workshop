@@ -24,11 +24,11 @@ What to propagate:
 
 | Change type | Propagate to checkpoints? | How |
 | --- | --- | --- |
-| Shared tooling / config present on every milestone (`package.json` scripts, root tooling, env loading helpers used before a step diverges) | Yes — every tag that still has the old state | Checkout each tag, apply the same change, commit, force-move the tag, push |
-| `docs/` or `README.md` | Yes — every tag | `./scripts/sync-checkpoint-docs.sh --push` after the change is on the source branch/`main` |
-| `AGENTS.md` | Yes — every tag | Included in `./scripts/sync-checkpoint-docs.sh` |
+| Shared tooling / config present on every milestone (`package.json` scripts, root tooling, env loading helpers used before a step diverges) | Yes: every tag that still has the old state | Checkout each tag, apply the same change, commit, force-move the tag, push |
+| `docs/` or `README.md` | Yes: every tag | `./scripts/sync-checkpoint-docs.sh --push` after the change is on the source branch/`main` |
+| `AGENTS.md` | Yes: every tag | Included in `./scripts/sync-checkpoint-docs.sh` |
 | Milestone-only app code (for example tracing wrappers that only exist from `02-tracing` onward) | Only tags that already contain that code path | Patch those tags; do not invent the feature on earlier milestones |
-| Docs-only clarification with no app impact | Yes — all tags via the docs sync script | Keep milestone app trees unchanged |
+| Docs-only clarification with no app impact | Yes: all tags via the docs sync script | Keep milestone app trees unchanged |
 
 Do not stop at a PR to `main` when checkpoints still carry the old shared state. Document force-moved tag tips in the PR when you update them.
 
@@ -54,14 +54,14 @@ The workshop needs two things at once:
 
 Canonical progression:
 
-- `00-setup`: setup, keys, Langfuse Cloud EU, Langfuse CLI, Langfuse skill, and workshop framing on the same untraced app state as `01-base-app`.
+- `00-setup`: setup, keys, Langfuse Cloud EU, organization AI Features and Halo (usually on for new orgs unless someone opted out), Langfuse CLI, Langfuse skill, and workshop framing on the same untraced app state as `01-base-app`.
 - `01-base-app`: working Dad IT Support Agent on the official OpenAI SDK, with one fixed Dad context, two local tools, and no Langfuse tracing yet.
 - `02-tracing`: learners add Langfuse tracing on top of the base app with OpenTelemetry setup, `observeOpenAI(new OpenAI())`, `observe(...)` wrappers around app/tool functions, and optional `propagateAttributes(...)` for user/session metadata.
 - `03-prompt-management`: learners replace the code-only prompt path with a Langfuse-managed prompt plus local fallback.
-- `04-monitoring`: starts from the traced app and stable message-array trace shape; this step is mostly evaluator design, variable mapping, and Langfuse UI setup.
-- `05-dataset`: adds a starter dataset that matches the app scope and uses message-array inputs plus expected outputs.
-- `06-experiments`: runs the app against the Langfuse dataset with the SDK experiment runner and two `runExperiment` callback evaluators — deterministic `keyword_overlap` plus an in-script LLM-as-a-judge `correctness` score. Platform evaluators are optional bonus only (they need existing experiment data to configure).
-- `07-evaluation`: changes the prompt, reruns the same dataset, and compares the same `keyword_overlap` + `correctness` callback scores side by side.
+- `04-monitoring`: starts from the traced app and stable message-array trace shape. The overview introduces dashboards, error analysis, and production signals. Error analysis seeds 20 traces with `npm run langfuse:seed:error-analysis` (7 ordinary one-turn answers and 13 single-failure traces: out-of-scope replies, impersonation, and lengthy responses), then an annotation queue with open coding (Text) and pass/fail (Categorical), and Halo clusters the notes, creates the category scores, and builds the frequency dashboard. Capturing signals is the evaluator setup: learners add the model connection (gateway key with the gateway base URL, or an OpenAI key with the base URL left blank), then variable mapping and Langfuse UI, on those message-array observations.
+- `05-dataset` ("Build eval datasets"): decides what to evaluate (correct answers and reply/defer/follow-up behavior), then seeds 25 items with message-array inputs plus expected outputs. 9 come from the `04-monitoring` error-analysis traces, including multi-turn ones (`metadata.source: "error-analysis"`); 16 are starter cases (`"starter"`).
+- `06-experiments`: runs the app against the Langfuse dataset with the SDK experiment runner and two `runExperiment` callback evaluators, one per goal from `05-dataset`: `behavior_match` (OpenAI Decisions API label plus deterministic exact match against `expectedBehavior`) and an in-script LLM-as-a-judge `correctness` score used as the regression check. Platform evaluators are optional bonus only (they need existing experiment data to configure).
+- `07-evaluation`: publishes the more specific prompt from the end of `04-monitoring` error analysis (`WORKSHOP_PROMPT_VARIANT=error-analysis`), reruns the same dataset, and compares the baseline run from `06-experiments` against it with the same `behavior_match` and `correctness` callback scores side by side.
 - `08-wrap-up`: recaps the mental model and points to next steps.
 
 What makes the checkpoints stitchable:
@@ -69,7 +69,7 @@ What makes the checkpoints stitchable:
 - The OpenAI SDK is already in place before tracing starts, so step 2 is only about observability. `chatClientOptions()` uses `LANGFUSE_GATEWAY_KEY` when it is set, and `OPENAI_API_KEY` against `https://api.openai.com/v1` when only that key is set.
 - Prompt management falls back to the local prompt if the Langfuse prompt is absent.
 - Monitoring depends on stable message arrays on the agent/generation observations and the root `answer` field, not provider-specific internals.
-- Dataset items carry both `idealAnswer` and `expectedKeywords`, which feed the step-06 `correctness` and `keyword_overlap` callback evaluators.
+- Dataset items carry both `idealAnswer` and `expectedBehavior`, which feed the step-06 `correctness` and `behavior_match` callback evaluators.
 - Dataset and experiment scripts reuse the same app logic as the web UI; experiment scores are produced by `runExperiment` callbacks in the runner process.
 
 Recommended jump patterns:
@@ -89,5 +89,7 @@ After those files land on `main` (or on the branch you want to sync from), refre
 ```
 
 Without `--push`, the script updates local tags only. The script requires a clean working tree and force-moves the canonical checkpoint tags.
+
+The `Sync checkpoint tags` GitHub Action (`.github/workflows/sync-checkpoints.yml`) runs this script with `--push` on every push to `main` that touches `docs/`, `README.md`, or `AGENTS.md`, and can also be started by hand. When a push changes other files, it only posts a warning listing them; those still need the manual tag patches below.
 
 For shared implementation changes that are not covered by that script (for example `package.json` scripts), update each affected checkpoint tag manually: checkout the tag, apply the same change, commit, force-move the tag, and push it. Then still run the docs sync if docs or `AGENTS.md` also changed.

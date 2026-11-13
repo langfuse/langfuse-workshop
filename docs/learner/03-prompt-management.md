@@ -5,6 +5,14 @@ description: "Move the system prompt into Langfuse, fetch the production prompt 
 
 # 03 Prompt Management
 
+## Why manage prompts
+
+Keeping the system prompt in code means every prompt change is a code change: pull request, review, build, deploy. With Langfuse prompt management the prompt lives in Langfuse: versioned, labelled, and editable in the UI, and the app fetches it at request time. That means non-engineers can iterate on prompts, changes ship independent of release cycles, and every version is preserved and linked to the traces it produced.
+
+Complementary materials:
+
+- Docs: [Prompt management](https://langfuse.com/docs/prompt-management/overview)
+
 ## Starting point
 
 ```bash
@@ -22,12 +30,6 @@ LANGFUSE_PROMPT_NAME=dad-it-support-agent
 LANGFUSE_PROMPT_LABEL=production
 ```
 
-## Why manage prompts
-
-Keeping the system prompt in code means every prompt change is a code change: pull request, review, build, deploy. With Langfuse prompt management the prompt lives in Langfuse — versioned, labelled, and editable in the UI — and the app fetches it at request time. That means non-engineers can iterate on prompts, changes ship independent of release cycles, and every version is preserved and linked to the traces it produced.
-
-Learn more in the [Langfuse prompts docs](https://langfuse.com/docs/prompt-management/overview).
-
 ## Goal
 
 Two steps:
@@ -35,9 +37,9 @@ Two steps:
 1. **Publish the system prompt to Langfuse** so a versioned copy lives there.
 2. **Fetch it back at request time**, and link each OpenAI generation to the version that produced it.
 
-## Step 1 — Publish the prompt (Langfuse UI)
+## Step 1: Publish the prompt (Langfuse UI)
 
-The most direct way to create a prompt is to add it manually in the UI — it's the same workflow your team will use for every future iteration.
+The most direct way to create a prompt is to add it manually in the UI: it's the same workflow your team will use for every future iteration.
 
 1. In Langfuse, open **Prompts → Create Prompt**.
 2. **Name** it `dad-it-support-agent` (matching `LANGFUSE_PROMPT_NAME` in your `.env`).
@@ -46,11 +48,11 @@ The most direct way to create a prompt is to add it manually in the UI — it's 
 5. **Label** the version `production` (matching `LANGFUSE_PROMPT_LABEL` in your `.env`).
 6. **Save**.
 
-![Creating the dad-it-support-agent prompt in Langfuse.](../images/prompt-management/03-prompt-management-new-prompt-form.png)
+![The published dad-it-support-agent prompt in Langfuse: version 1 with the production and latest labels.](../images/prompt-management/03-prompt-management-published-prompt.png)
 
-> 💡 *Alternative — publish via script.* `scripts/publish-prompt.ts` pushes the `SYSTEM_PROMPT` constant up to Langfuse (`npm run prompt:publish`). Same outcome.
+> 💡 *Alternative: publish via script.* `scripts/publish-prompt.ts` pushes the `SYSTEM_PROMPT` constant up to Langfuse (`npm run prompt:publish`). Same outcome.
 
-## Step 2 — Fetch the prompt from Langfuse
+## Step 2: Fetch the prompt from Langfuse
 
 **Add the import** in `src/server/support-agent.ts`:
 
@@ -73,7 +75,7 @@ async function getPrompt() {
 }
 ```
 
-**Use it in `runSupportConversation`** — fetch, then fall back to the local constant if the fetch returned null:
+**Use it in `runSupportConversation`**: fetch, then fall back to the local constant if the fetch returned null:
 
 ```ts
 const langfusePrompt = await getPrompt();
@@ -92,9 +94,9 @@ and change it to:
 { role: "system", content: systemPrompt },
 ```
 
-Without this change the model keeps receiving the local constant — the Prompt badge in the next step would still appear, but editing the prompt in Langfuse would have no effect on answers.
+Without this change the model keeps receiving the local constant: the Prompt badge in the next step would still appear, but editing the prompt in Langfuse would have no effect on answers.
 
-**Pass `langfusePrompt` to the existing `observeOpenAI` call** so the generation gets linked to the published prompt version — only when we actually have one:
+**Pass `langfusePrompt` to the existing `observeOpenAI` call** so the generation gets linked to the published prompt version: only when we actually have one:
 
 ```ts
 const openai = observeOpenAI(
@@ -105,8 +107,8 @@ const openai = observeOpenAI(
 
 Three things to notice:
 
-- The `observeOpenAI(new OpenAI(...))` call itself didn't change — same inline wrap from step 02. We just added a conditional second argument carrying the `langfusePrompt`.
-- The local `SYSTEM_PROMPT` constant stays in the file as the fallback. If Langfuse is misconfigured or the prompt isn't published yet, the chat keeps working — it just won't carry the Prompt badge on that turn.
+- The `observeOpenAI(new OpenAI(...))` call itself didn't change: same inline wrap from step 02. We just added a conditional second argument carrying the `langfusePrompt`.
+- The local `SYSTEM_PROMPT` constant stays in the file as the fallback. If Langfuse is misconfigured or the prompt isn't published yet, the chat keeps working: it just won't carry the Prompt badge on that turn.
 - Passing `langfusePrompt` into `observeOpenAI` is what makes every generation under that client carry the **Prompt** badge linking back to the exact published version.
 
 ## Verify
@@ -120,7 +122,7 @@ Ask one question, then in Langfuse:
 - Open the trace, click the OpenAI generation. It should show a **Prompt** badge linking to `dad-it-support-agent` at the version you published.
 - In the Prompts view for `dad-it-support-agent`, scroll to "Used in" and your trace appears.
 
-![A traced openai-chat-completion with the Prompt badge in the top-right linking back to dad-it-support-agent · v1.](../images/prompt-management/03-prompt-management-prompt-badge.png)
+![A traced OpenAI.chat generation with the prompt badge in its header linking back to dad-it-support-agent - v1.](../images/prompt-management/03-prompt-management-prompt-badge.png)
 
 ## Wrap-up
 

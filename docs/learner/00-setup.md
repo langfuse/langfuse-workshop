@@ -13,9 +13,11 @@ Have the workshop app running locally with both OpenAI and Langfuse credentials 
 
 ## Prerequisites
 
-**Node.js `^20.19.0 || >=22.12.0`** — check with `node -v` and upgrade before installing if you are below it (`nvm install 22`, or the equivalent for `asdf`, `fnm`, or `volta`).
+**Node.js `^20.19.0 || >=22.12.0`**: check with `node -v` and upgrade before installing if you are below it (`nvm install 22`, or the equivalent for `asdf`, `fnm`, or `volta`).
 
 An older version fails in a way that is easy to misread. Vite's platform-specific binary is an optional dependency, so npm skips it **without reporting an error**: `npm install` looks like it succeeded, and the problem only appears later when `npm run dev` cannot start Vite. If you upgrade Node after installing, re-run `npm ci` so the skipped binary is fetched.
+
+**Langfuse AI Features, which include Halo.** New organizations usually have these on unless someone opted out. If [Halo](https://langfuse.com/docs/api-and-data-platform/features/halo) is missing from the project, an organization owner or admin turns AI Features back on under **Organization Settings → General → AI Features**. The workshop also uses the other features this setting covers, such as Ask AI in filters.
 
 ## Starting point
 
@@ -29,14 +31,15 @@ git checkout checkpoint/00-setup
 
 This checkpoint intentionally contains the same untraced base app as `checkpoint/01-base-app`. Use it to confirm that your API keys, dependencies, and local ports work before switching to the build chapters. The Langfuse keys are configured now, but traces start only after you add instrumentation in `02-tracing`.
 
-## Step 1 — Get the API keys
+## Step 1: Get the API keys
 
 1. **A model credential** — set one of these two. When both are set, the Langfuse gateway key is used.
    - **Langfuse AI Gateway** — a key from the instructor, saved as `LANGFUSE_GATEWAY_KEY`. Calls go to the gateway OpenAI route. On EU Cloud that is `https://gateway.cloud.langfuse.com/openai/v1`. Set `LANGFUSE_GATEWAY_HOST` for another region.
    - **OpenAI** — [platform.openai.com](https://platform.openai.com) → API Keys → create one. `OPENAI_API_KEY` calls `https://api.openai.com/v1`.
 2. **Langfuse project keys** — sign up at [langfuse.com](https://langfuse.com) on the **EU region**, create a project, and copy the public + secret keys from **Settings → API Keys**. These project keys are separate from the gateway key. You will paste them into `.env` in Step 3 as well.
+3. **AI Features**: confirm Halo is visible in the project. New organizations usually have this on unless someone opted out. If Halo is missing, an owner or admin enables **Organization Settings → General → AI Features**.
 
-## Step 2 — Install the Langfuse skill and CLI
+## Step 2: Install the Langfuse skill and CLI
 
 Later modules drive Langfuse through a coding agent, which needs the `langfuse` skill and the Langfuse CLI.
 
@@ -54,7 +57,7 @@ npm install -g langfuse-cli
 npx skills add langfuse/skills --skill "langfuse"
 ```
 
-## Step 3 — Configure `.env`
+## Step 3: Configure `.env`
 
 ```bash
 cp .env.example .env
@@ -79,7 +82,7 @@ The workshop app always loads this repository's `.env` file for the server and h
 
 Keep these values in your local `.env` only. Do not paste real API keys into shared workshop notes, transcripts, screenshots, or chat messages.
 
-## Step 4 — Install and run
+## Step 4: Install and run
 
 ```bash
 npm install
@@ -90,7 +93,7 @@ Leave `npm run dev` running while you edit. Client changes hot-reload via Vite; 
 
 Open [http://127.0.0.1:3333](http://127.0.0.1:3333) to access the Dad IT Support Agent UI.
 
-## Step 5 — Confirm what you see
+## Step 5: Confirm what you see
 
 You should see the **Dad IT Support Agent** chat:
 
@@ -99,7 +102,7 @@ You should see the **Dad IT Support Agent** chat:
 - suggestion chips below the greeting
 - the iPhone panel on the right ("Dad" + iPhone 15 details)
 
-![How Specs handles a ticket — one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
+![How Specs handles a ticket: one agent, two tools, one model, each hop an observation in the trace.](../images/specs_illustration.png)
 
 
 ## How to verify you are done

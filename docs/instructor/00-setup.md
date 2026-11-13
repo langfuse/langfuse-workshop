@@ -10,6 +10,7 @@ Learner guide: [00 Setup](../learner/00-setup.md)
 ## Instructor notes
 
 - Recommend **Langfuse Cloud**, not self-hosted. Supporting self-hosted setups would mean maintaining the workshop against too many Langfuse versions. This workshop is also not about learning how to self-host Langfuse; it is about current features in their most up-to-date form.
+- Confirm Halo is visible for each learner. New organizations usually have **AI Features** on unless someone opted out. If they are off, only an owner or admin can turn them back on under **Organization Settings → General → AI Features**, so someone on a company organization may need that person to do it before the session.
 - Use `checkpoint/00-setup` as the stable base-app checkout. It should be equivalent to `checkpoint/01-base-app`, not the complete reference app.
 - `main` contains the complete reference implementation, but learners should use the checkpoint so setup and base-app orientation share the same starting state.
 - Make learners confirm the UI loads at `127.0.0.1:3333` and that a suggestion-chip chat turn returns a real answer.
@@ -17,7 +18,7 @@ Learner guide: [00 Setup](../learner/00-setup.md)
 - Emphasize the EU Langfuse host value: `LANGFUSE_BASE_URL=https://cloud.langfuse.com`.
 - Participants set one model credential. Prefer a **service account** gateway key under Organization settings → AI Gateway → Gateway keys: set an expiration, put it in `.env` as `LANGFUSE_GATEWAY_KEY`, and revoke it when the session ends. The organization needs an OpenAI provider credential with the workshop model enabled. EU keys use `https://gateway.cloud.langfuse.com`. The other option is the learner's own `OPENAI_API_KEY`, which calls `https://api.openai.com/v1`. When both are set, the gateway key is used. Project keys stay per learner either way.
 - The Node server and helper scripts load the repository `.env` with override enabled, so stale exported `LANGFUSE_*`, `OPENAI_*`, or `DATASET_NAME` values from another local project should not win. Have learners edit `.env` when they need to switch keys or projects.
-- Do not frontload **Project Settings → LLM Connections** here. Learners configure the default evaluator model in `04-monitoring`, when LLM-as-a-judge evaluators first become relevant.
+- Do not frontload **Project Settings → LLM Connections** here. Learners add the model connection in [section 4.2 Capturing signals](../learner/04-monitoring/capturing-signals.md) and pick **5.6 Luna** when creating the disagreement judge. A gateway key sets the API base URL. An OpenAI-only key leaves it blank.
 - Keep key handling explicit: real API keys go only into `.env` or Langfuse secret fields, never into shared transcripts, notes, or chat.
 - After one successful chat turn, have learners switch to `checkpoint/02-tracing` for the first build step.
 
@@ -29,5 +30,6 @@ Learner guide: [00 Setup](../learner/00-setup.md)
 - Learners editing shell exports instead of `.env`. The workshop intentionally treats `.env` as the Node-side source of truth.
 - People expecting evaluator setup during initial setup. The app can run and trace correctly before the Langfuse-side LLM connection exists.
 - People wanting to use a company or local self-hosted Langfuse instance. Push them to Cloud so the UI and features match the lessons.
+- Halo missing, or Ask AI missing from filters, because the organization opted out of AI Features.
 - People expecting traces on `checkpoint/00-setup` or `checkpoint/01-base-app`. Both are intentionally untraced; tracing starts only after the `02-tracing` edits.
 - People staying on `main` for tracing. `main` is already the finished reference implementation.

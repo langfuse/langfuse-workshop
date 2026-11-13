@@ -2,11 +2,15 @@
 
 # Langfuse Workshop - the AI engineering loop, end to end
 
-This is a step-by-step Langfuse workshop built on a small TypeScript sample application: the **Dad IT Support Agent**. The workshop covers the full AI engineering loop with Langfuse: tracing, prompt management, monitoring, datasets, experiments, and evaluation.
+This is a step-by-step Langfuse workshop built on a small TypeScript sample application: the Dad IT Support Agent. The workshop covers the full AI engineering loop with Langfuse: tracing, prompt management, monitoring, datasets, experiments, and evaluation.
+
+The workshop is the hands-on version of many concepts explained in the [Langfuse Academy](https://langfuse.com/academy). The complementary materials are called out respectively.
 
 You can complete the workshop on your own from the learner lessons, or use the instructor notes to teach the same material to a group.
 
 > ⚠️ Use **Langfuse Cloud** so you have the latest features this workshop describes. Self-hosted instances may be on an older version and will not match the lessons.
+>
+> Confirm **AI Features** are on for your organization. New organizations usually have them on unless someone opted out. If **Halo** is missing, an owner or admin turns them back on under **Organization Settings → General → AI Features**.
 
 ## For learners
 
@@ -16,8 +20,8 @@ Use the learner path if you want to:
 
 - Log your first trace from a real LLM app and understand what you are looking at.
 - Move a prompt into Langfuse so changes are versioned and linked to traces.
-- Monitor production behavior without reading every trace by hand.
-- Build a dataset, run experiments, and evaluate changes with evidence.
+- Make sense of production traces: cost and latency, error analysis, and signals.
+- Build an eval dataset, run experiments, and evaluate changes with evidence.
 - Inspect a complete TypeScript reference implementation you can copy patterns from.
 
 No instructor is required. The learner lessons are complete enough to run the workshop in self-guided mode.
@@ -48,8 +52,8 @@ The sample app is a small web chat where Dad opens the chat to get iPhone help. 
 | 01 | [Base App](./docs/learner/01-base-app.md) | [Instructor notes](./docs/instructor/01-base-app.md) | `checkpoint/01-base-app` | Tour the running app. Nothing to build. |
 | 02 | [Tracing](./docs/learner/02-tracing.md) | [Instructor notes](./docs/instructor/02-tracing.md) | `checkpoint/02-tracing` | Log every agent step: generations, agent root, tool spans. |
 | 03 | [Prompt Management](./docs/learner/03-prompt-management.md) | [Instructor notes](./docs/instructor/03-prompt-management.md) | `checkpoint/03-prompt-management` | Move the system prompt into Langfuse. |
-| 04 | [Monitoring](./docs/learner/04-monitoring.md) | [Instructor notes](./docs/instructor/04-monitoring.md) | `checkpoint/04-monitoring` | Catch user disagreement and all-caps frustration. |
-| 05 | [Dataset](./docs/learner/05-dataset.md) | [Instructor notes](./docs/instructor/05-dataset.md) | `checkpoint/05-dataset` | Turn product scope into reusable examples. |
+| 04 | [Monitoring](./docs/learner/04-monitoring.md) | [Instructor notes](./docs/instructor/04-monitoring.md) | `checkpoint/04-monitoring` | Make sense of production traces: dashboards, error analysis, and signals. |
+| 05 | [Build eval datasets](./docs/learner/05-dataset.md) | [Instructor notes](./docs/instructor/05-dataset.md) | `checkpoint/05-dataset` | Decide what to evaluate and build a dataset from error analysis. |
 | 06 | [Experiments](./docs/learner/06-experiments.md) | [Instructor notes](./docs/instructor/06-experiments.md) | `checkpoint/06-experiments` | Run the agent against the dataset and score every item. |
 | 07 | [Evaluation](./docs/learner/07-evaluation.md) | [Instructor notes](./docs/instructor/07-evaluation.md) | `checkpoint/07-evaluation` | Change one thing, rerun the dataset, compare runs. |
 | 08 | [Wrap-up](./docs/learner/08-wrap-up.md) | [Instructor notes](./docs/instructor/08-wrap-up.md) | `checkpoint/08-wrap-up` | Apply the loop to your own app. |
