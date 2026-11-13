@@ -11,9 +11,9 @@ Tracing logs every step your agent takes. Every model call, every tool invocatio
 
 Complementary materials:
 
-- Docs: [AI Observability and application tracing](https://langfuse.com/docs/observability/overview) — SDK options, OpenTelemetry setup, and span attributes.
+- Docs: [AI Observability and application tracing](https://langfuse.com/docs/observability/overview). SDK options, OpenTelemetry setup, and span attributes.
 - Docs: [What does a good trace look like?](https://langfuse.com/docs/observability/best-practices)
-- Academy: [Tracing](https://langfuse.com/academy/tracing) — why tracing sits at the start of the AI engineering loop.
+- Academy: [Tracing](https://langfuse.com/academy/tracing). Why tracing sits at the start of the AI engineering loop.
 
 ## Starting point
 
@@ -21,24 +21,24 @@ Complementary materials:
 git checkout checkpoint/02-tracing
 ```
 
-This is the blank slate for the tracing step — same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json` — run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse keys.
+This is the blank slate for the tracing step: same code as `checkpoint/01-base-app`, with no Langfuse wiring yet. The Langfuse packages are already in `package.json`. Run `npm install` if you haven't. Make sure `.env` has your `OPENAI_API_KEY` and Langfuse keys.
 
 ## Goal
 
 When Dad asks "How do I turn Bluetooth on?", the agent doesn't just hit OpenAI once. Behind the scenes it asks OpenAI what to do, calls `get_support_context` to fetch Dad's iPhone setup, asks OpenAI again, calls `search_help_library` for Bluetooth steps, then asks OpenAI one more time to produce the numbered answer. None of that is visible today.
 
-The goal of this chapter is to make every one of those steps visible in Langfuse — one chat turn becomes one nested trace with the agent run, the OpenAI generations, and the two tool calls all logged in order.
+The goal of this chapter is to make every one of those steps visible in Langfuse: one chat turn becomes one nested trace with the agent run, the OpenAI generations, and the two tool calls all logged in order.
 
 ![Spec's step by step process](../images/tracing/process_illustration.png)
 
 We will build up the trace in three steps that mirror the agent's structure:
 
-1. **First trace** — log the OpenAI generations themselves.
-2. **Nested traces** — group the generations under one agent run per turn.
-3. **Recording tool calls** — make each tool invocation its own observation.
+1. **First trace**: log the OpenAI generations themselves.
+2. **Nested traces**: group the generations under one agent run per turn.
+3. **Recording tool calls**: make each tool invocation its own observation.
 
 
-## Step 1 — First trace
+## Step 1: First trace
 
 We want observability on the OpenAI calls themselves to see what the inputs and outputs are, and how much cost, tokens and time is spent. Two changes are enough.
 
@@ -97,16 +97,16 @@ and change it to:
 const openai = observeOpenAI(new OpenAI({ apiKey: env.openaiApiKey }));
 ```
 
-That's the entire diff. No factory function, no separate raw client — `observeOpenAI` wraps the OpenAI client inline at the call site, and `openai.chat.completions.create(...)` below it now emits a trace for every call.
+That's the entire diff. No factory function, no separate raw client: `observeOpenAI` wraps the OpenAI client inline at the call site, and `openai.chat.completions.create(...)` below it now emits a trace for every call.
 
 
-**Verify:** `npm run dev`, ask one question, refresh Langfuse — you should see one generation per OpenAI call with prompt, response, tokens, and latency. Each generation is still its own top-level trace; we fix that next.
+**Verify:** `npm run dev`, ask one question, refresh Langfuse: you should see one generation per OpenAI call with prompt, response, tokens, and latency. Each generation is still its own top-level trace; we fix that next.
 
-![Langfuse Traces view after Step 1 — each chat turn appears as standalone openai-chat-completion generations.](../images/tracing/02-tracing-step-1.png)
+![Langfuse Traces view after Step 1: each chat turn appears as standalone openai-chat-completion generations.](../images/tracing/02-tracing-step-1.png)
 
-## Step 2 — Nested traces
+## Step 2: Nested traces
 
-To put the generations into context we group them under one agent run per turn. Three edits in `src/server/support-agent.ts` — no function body changes.
+To put the generations into context we group them under one agent run per turn. Three edits in `src/server/support-agent.ts`: no function body changes.
 
 **1. Add the import:**
 
@@ -142,13 +142,13 @@ export const runSupportConversation = observe(runSupportConversationInner, {
 
 **Verify:** one chat turn should now show up as a single `dad-it-support-chat-turn` observation with the OpenAI generation nested underneath.
 
-![Trace tree after Step 2 — one dad-it-support-chat-turn agent root with the OpenAI generation as a child.](../images/tracing/02-tracing-step-2.png)
+![Trace tree after Step 2: one dad-it-support-chat-turn agent root with the OpenAI generation as a child.](../images/tracing/02-tracing-step-2.png)
 
 
 
-## Step 3 — Recording tool calls
+## Step 3: Recording tool calls
 
-The OpenAI generation already mentions the tool calls in its `tool_calls` output, but we have no observation for the actual tool execution — no way to see what input went in and what came out. The same `observe(...)` pattern, can be applied to each tool.
+The OpenAI generation already mentions the tool calls in its `tool_calls` output, but we have no observation for the actual tool execution: no way to see what input went in and what came out. The same `observe(...)` pattern, can be applied to each tool.
 
 ### `src/server/tools.ts`
 
@@ -228,11 +228,11 @@ Same pattern, different observation types, same concept: `observe(fn, { asType }
 
 A more straightforward way to add rich tracing in line with Langfuse best practices is the [**Langfuse skill**](https://github.com/langfuse/skills) (`/langfuse`). It applies the recommended patterns to your codebase without you hand-rolling each wrap. This walkthrough exists so you understand what the skill is doing under the hood.
 
-`observeOpenAI` itself wraps the official OpenAI SDK — under the hood it's the same as the Langfuse [auto-instrumentation for OpenAI JS](https://langfuse.com/integrations/model-providers/openai-js). If you're using a different SDK (Anthropic, Vercel AI SDK, your own HTTP client), the Langfuse [integrations catalogue](https://langfuse.com/integrations) has the equivalent wrapper or auto-instrumentation guide.
+`observeOpenAI` itself wraps the official OpenAI SDK: under the hood it's the same as the Langfuse [auto-instrumentation for OpenAI JS](https://langfuse.com/integrations/model-providers/openai-js). If you're using a different SDK (Anthropic, Vercel AI SDK, your own HTTP client), the Langfuse [integrations catalogue](https://langfuse.com/integrations) has the equivalent wrapper or auto-instrumentation guide.
 
-## Appendix/Bonus section — User and session IDs
+## Appendix/Bonus section: User and session IDs
 
-The walkthrough above gets you tracing with a clean parent → generation → tool shape. The next thing most teams want is to **slice traces by user and by session** — so you can pull up "every turn this user has had with the agent" or "the full multi-turn session from yesterday morning."
+The walkthrough above gets you tracing with a clean parent → generation → tool shape. The next thing most teams want is to **slice traces by user and by session**, so you can pull up "every turn this user has had with the agent" or "the full multi-turn session from yesterday morning."
 For simplicity reasons we skip this step in the live tracing walkthrough, but the checkpoints after tracing include it so later chapters can use session/user views without another code step. See information on [Sessions](https://langfuse.com/docs/observability/features/sessions) and [Users](https://langfuse.com/docs/observability/features/users) in the Langfuse docs.
 
 In short:
@@ -252,7 +252,7 @@ return propagateAttributes(
 );
 ```
 
-Anything inside the `propagateAttributes(...)` block — including all child spans emitted by `observeOpenAI` — automatically gets the `userId`, `sessionId`, and tags attached. The Langfuse **Users** view, **Sessions** view, and tag filters all light up as soon as the attributes are present.
+Anything inside the `propagateAttributes(...)` block, including all child spans emitted by `observeOpenAI`, automatically gets the `userId`, `sessionId`, and tags attached. The Langfuse **Users** view, **Sessions** view, and tag filters all light up as soon as the attributes are present.
 
 
 ## End state
