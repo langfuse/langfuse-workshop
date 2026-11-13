@@ -14,18 +14,18 @@ Complementary materials:
 - Docs: [Evaluate production traffic](https://langfuse.com/docs/evaluation/get-started/online)
 - Academy: [Capturing signals](https://langfuse.com/academy/monitoring/capturing-signals)
 
-## Starting point
-
-```bash
-git checkout checkpoint/04-monitoring
-```
-
 ## Goal
 
 Capture two conversation signals for Specs, so you can find these turns without opening every trace:
 
 - **User disagreement:** Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
 - **All-caps frustration:** Dad writes something like "THIS STILL ISNT WORKING". A long run of capital letters is a cheap deterministic clue that the conversation may need extra attention. It is a triage hint, not proof that Dad is angry.
+
+## Starting point
+
+```bash
+git checkout checkpoint/04-monitoring
+```
 
 ## Step 0: Set up the evaluator model
 
