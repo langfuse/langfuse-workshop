@@ -27,7 +27,7 @@ Capture two conversation signals for Specs, so you can find these turns without 
 - **User disagreement:** Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
 - **All-caps frustration:** Dad writes something like "THIS STILL ISNT WORKING". A long run of capital letters is a cheap deterministic clue that the conversation may need extra attention. It is a triage hint, not proof that Dad is angry.
 
-## Add the model connection
+## Step 0: Set up the evaluator model
 
 The disagreement judge needs a model connection on the project. The keys in `.env` do not fill that list.
 
@@ -40,9 +40,7 @@ If a connection is already there, keep it and continue.
 
 Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
 
-## The evaluator model
-
-Use the OpenAI connection you just added. When the wizard asks you to pick a model, choose that connection and **5.6 Luna** (`gpt-5.6-luna`).
+When the evaluator wizard in Step 1 asks you to pick a model, choose this connection and **5.6 Luna** (`gpt-5.6-luna`).
 
 ![Pick the evaluator model in the Set up evaluator wizard. Choose 5.6 Luna.](../../images/monitoring/default-evaluation-model.png)
 
@@ -94,7 +92,7 @@ Code evaluators are a good fit for that pattern: no model call, no prompt design
 
 This evaluator runs as TypeScript inside Langfuse's sandbox, so it does not use the OpenAI connection.
 
-## Verify
+## Step 3: Verify the monitors
 
 ```bash
 npm run dev
