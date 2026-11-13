@@ -1,5 +1,5 @@
 /* ──────────────────────────────────────────────────────────────────────────
- * CornerBox — Langfuse's signature 8×8 corner brackets.
+ * CornerBox: Langfuse's signature 8×8 corner brackets.
  * Pair with 1px border; brackets sit at -1px offset to overlap the stroke.
  * Apply `.lf-corners` to any `position: relative` element.
  * ────────────────────────────────────────────────────────────────────────── */
@@ -32,11 +32,11 @@
           mask-repeat: no-repeat;
 }
 
-/* Hover brackets — brackets show only on hover */
+/* Hover brackets: brackets show only on hover */
 .lf-corners-hover::before { opacity: 0; transition: opacity 0.2s ease; }
 .lf-corners-hover:hover::before { opacity: 1; }
 
-/* Diagonal stripe pattern — hover fill, callout bg */
+/* Diagonal stripe pattern: hover fill, callout bg */
 .lf-stripes {
   background: repeating-linear-gradient(
     315deg,
