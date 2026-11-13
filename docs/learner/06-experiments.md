@@ -41,7 +41,7 @@ In 05 you decided what the dataset should evaluate: correct answers, and the rig
 - **`behavior_match`** (decision model + deterministic match): *did Specs reply, defer, or ask a follow-up when we expected it to?* The OpenAI Decisions API picks one of three fixed labels, and the script compares that label with `expectedBehavior`.
 - **`correctness`** (LLM-as-a-judge regression check): *is the answer still correct, or did a change make it worse?* A semantic-equivalence check against `idealAnswer`: paraphrases pass, missing required detail or a contradicted fact fails. A prompt fix that makes the agent refuse too much, or drop a step, shows up here.
 
-Treat this set as a **starting point**, not the finished eval suite. It covers the two goals from 05, with the simplest check for each. Not every error-analysis category needs an offline evaluator: impersonation and lengthy replies don't get one here, and reading traces covers them for now. If one becomes worth tracking, add an evaluator for it, for example a plain word-count check for length, and check any judge against your own labels before you rely on it.
+Treat this set as a **starting point**: the simplest check for each goal from 05. Impersonation and lengthy replies get no evaluator here, so read traces for those, and add one (for example a word-count check) if they become worth tracking.
 
 ## Step 2: Understand the run script
 
