@@ -7,14 +7,7 @@ description: "Score user disagreement and all-caps frustration on production tra
 
 ## Why capture signals
 
-Once traces are coming in, you want a judgment on them that does not require opening each one. A production signal is something the user does or says that indicates whether the turn felt good or bad: a correction, a retry, a request for a human, a thank-you. Stored as a score on that trace, it is a way to find the rows worth reading.
-
-Signals are different from a quality rubric you wrote ahead of time. They measure how the user reacted at the moment of use, including reactions you had not thought to score. Negative signals are the ones to open individually. A user rarely corrects an answer they were happy with.
-
-For Specs we capture two conversation signals. Some of Dad's messages push back on the steps, and some are written in all caps. These two scores are how you find those turns without opening every trace.
-
-- **User disagreement:** Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
-- **All-caps frustration:** Dad writes something like "THIS STILL ISNT WORKING". A long run of capital letters is a cheap deterministic clue that the conversation may need extra attention. It is a triage hint, not proof that Dad is angry.
+Once traces are coming in, you want a judgment on them without opening each one. A production signal is something the user does or says that shows whether a turn went well: a correction, a retry, a request for a human, a thank-you. Stored as a score on the trace, it points you to the rows worth reading. Start with the negative ones: a user rarely corrects an answer they were happy with.
 
 Complementary materials:
 
@@ -26,6 +19,13 @@ Complementary materials:
 ```bash
 git checkout checkpoint/04-monitoring
 ```
+
+## Goal
+
+Capture two conversation signals for Specs, so you can find these turns without opening every trace:
+
+- **User disagreement:** Dad pushes back ("No, that menu isn't there"). Either the agent gave the wrong steps or the app is showing its limits.
+- **All-caps frustration:** Dad writes something like "THIS STILL ISNT WORKING". A long run of capital letters is a cheap deterministic clue that the conversation may need extra attention. It is a triage hint, not proof that Dad is angry.
 
 ## Add the model connection
 
