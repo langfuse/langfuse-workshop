@@ -41,7 +41,7 @@ In 05 you decided what the dataset should evaluate: correct answers, and the rig
 - **`behavior_match`** (decision model + deterministic match): *did Specs reply, defer, or ask a follow-up when we expected it to?* The OpenAI Decisions API picks one of three fixed labels, and the script compares that label with `expectedBehavior`.
 - **`correctness`** (LLM-as-a-judge regression check): *is the answer still correct, or did a change make it worse?* A semantic-equivalence check against `idealAnswer`: paraphrases pass, missing required detail or a contradicted fact fails. A prompt fix that makes the agent refuse too much, or drop a step, shows up here.
 
-Treat this set as a **starting point**, not the finished eval suite. It covers the two goals from 05, with the simplest check for each. Not every error-analysis category needs an offline evaluator: impersonation and lengthy replies don't get one here, and reading traces covers them for now. If one becomes worth tracking, add an evaluator for it, for example a plain word-count check for length, and check any judge against your own labels before you rely on it.
+Treat this set as a **starting point**: the simplest check for each goal from 05. Impersonation and lengthy replies get no evaluator here, so read traces for those, and add one (for example a word-count check) if they become worth tracking.
 
 ## Step 2: Understand the run script
 
@@ -56,7 +56,7 @@ The traces produced are the same shape as production traces: same `dad-it-suppor
 
 Both scores are **callback evaluators** inside `runExperiment`. They run in your process right after each item finishes, so the console summary and the Langfuse run already include every score when the script exits. We intentionally avoid Langfuse Platform evaluators in this chapter: configuring one needs existing experiment data to preview and map variables, which creates a chicken-and-egg problem before your first run.
 
-### `dataset.runExperiment(...)`: the moving parts
+### The moving parts of the run
 
 The whole run is one call to `runExperiment`. The shape boils down to:
 
@@ -112,16 +112,6 @@ Low-confidence labels are worth reading by hand. They usually mean the answer mi
 ## Step 4: Review the `correctness` regression check
 
 The last callback in `evaluators` calls OpenAI with a **semantic-equivalence** judge prompt. It treats `idealAnswer` as the source of truth and asks whether the agent answer preserves every material meaning, fact, and constraint: paraphrases are fine; missing required detail or a contradicted fact is not. The callback maps the judge's true/false result to a `correctness` score of `0` or `1` plus a short reasoning comment.
-
-A generic equivalence judge treats every detail as required. Its prompt therefore has a short section on what is material for this agent: the kind of reply, any stated limitation, and the steps needed to finish the task. Confirmations of what Dad will see, optional alternatives, and the wording of a decline don't count. Without that section, the judge failed good answers for leaving out "or your passcode". This is what checking a judge against your own labels looks like in practice.
-
-Its job in this workshop is the **regression check**. `behavior_match` tells you whether a change fixed what it was meant to fix. `correctness` tells you whether the answers are still right after the fix. If a stricter prompt makes Specs refuse a question it should have helped with, or cut a step Dad needs, `correctness` drops on that item even when `behavior_match` goes up.
-
-Why run the judge as a callback instead of a Langfuse Platform evaluator?
-
-- You can score the **first** experiment run without waiting for preview data in the Evaluators UI.
-- The judge prompt and model live next to the experiment runner in git.
-- Every score appears in the script's printed summary as soon as the run finishes.
 
 The judge uses your existing `OPENAI_API_KEY` / `OPENAI_MODEL` from `.env`: the same credentials the agent already uses. `behavior_match` uses the same `OPENAI_API_KEY`, with `gpt-6-luna` fixed in the script. You do **not** need the Langfuse-side default evaluator model from session 4 for this chapter.
 
