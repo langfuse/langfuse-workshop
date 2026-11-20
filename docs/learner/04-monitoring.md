@@ -33,9 +33,9 @@ In the hands-on lab in [section 4.1 Error analysis](./04-monitoring/error-analys
 
 ### Detect topics and issues
 
-Error analysis finds failure modes by reading traces. A person does that reading, starting from individual cases. Topics and issue detection is the scaled approach: it groups traces by intent, sentiment, outcome, and issues. That shows what the system is handling now, and how that changes over time.
+Error analysis finds failure modes by reading traces. A person does that reading, starting from individual cases. Topics and issue detection is the scaled approach: it groups traces into configurable facets such as intent, sentiment, outcome, and issues. That shows what the system is handling now, and how that changes over time.
 
-![Intent groups for the Dad IT Support Agent.](../images/topics/intent-treemap.png)
+![A Topics treemap with topic groups and a trace table.](../images/topics/topic-map.png)
 
 In the hands-on lab in [section 4.2 Detect topics and issues](./04-monitoring/topics.md), we run through topics and issue detection for the Dad IT Support Agent together.
 

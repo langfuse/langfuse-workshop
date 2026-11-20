@@ -36,16 +36,12 @@ Demo order:
 
 ### 4.2 Detect topics and issues
 
-- Section 4.2 seeds its own 200 traces with `npm run langfuse:seed:topics`. 110 are ordinary iPhone requests. 60 are laptop requests, 30 about printing and paper and 30 about the laptop's Wi-Fi, and each answer offers a Windows path and an Apple path because Specs does not know which laptop Dad has. 30 are stuck follow-ups that repeat the same steps after Dad says they failed. At least 40% of the batch has Dad sounding frustrated. The seed is not idempotent. The newest trace is about 10 minutes old, and the batch spans about five days, so it sits in the recent window Topics reads.
-- Learners add the OpenAI connection in this section, before the model list. Capturing signals reuses it. Someone who skips topics adds the connection at the start of 4.3.
-- Setup is three steps. Leave all four facets checked and keep the models marked **Recommended**. Leave the trace filters empty and the sample rate at 100%. On Review, **Look for** should be Intent, Sentiment, Outcome, and Issues, then **Start analyzing**. First results from past traces take about 3 to 5 minutes. A first map still forms from about 20 summaries on a facet. The review warns when fewer than about 100 matching traces are in the last 30 days.
-- Leave filters empty. This project has one agent. Mention the filter only as the way to separate agents when a project mixes them, which we do not recommend. One map per use case, usually by trace name, tags, or environment.
-- Walk the four tabs before hunting a fix. The groups are close to deterministic. A model names and describes them afterward, so tile names will be close to the examples on the page, and the counts will not match exactly.
-- Insight 1 is the laptop context gap, then a suggested prompt that names the phone and the laptop and keeps the error-analysis Rules, including the clarifying question. Do not publish it. The prompt published in 07 is the error-analysis one, which still points non-IT requests back to the phone.
-- Insight 2 is sentiment: mostly calm, with frustration split across a few tiles. That is the bridge to the two scores in capturing signals.
-- Insight 3 is repeated troubleshooting after Dad says the steps failed.
-- Insight 4 is a mismatched help-library lookup whose answer still covered the question. Leave it as a question about the guides, and do not patch it in this session.
-- Halo can read the map. Ask it to open a group, point at the step in the trace that led to the issue, and flag tiles that look like false positives.
+- This is a configuration-and-reading walkthrough. Open Topics and click **Edit map**. If the page is empty, **Set up topics** creates the first map. Enable Intent, Sentiment, Outcome, and Issues. Leave the trace filter broad enough for the seeded traces, leave live updates on if it is available, leave the sample rate at 100%, and save. Do not assume every project map has all four facets.
+- Section 4.2 seeds its own 200 traces with `npm run langfuse:seed:topics`. 110 are ordinary iPhone requests. 60 are laptop requests, 30 about printing and paper and 30 about the laptop's Wi-Fi, and each answer offers a Windows path and an Apple path because Specs does not know which laptop Dad has. 30 are stuck follow-ups that repeat the same steps after Dad says they failed. At least 40% of the batch has Dad sounding frustrated. The seed is not idempotent. The newest trace is about 10 minutes old, and the batch spans about five days, so it sits inside the 7-day matching window.
+- Learners add the OpenAI connection in this section, before **Edit map**. Capturing signals reuses it. Someone who skips topics adds the connection at the start of 4.3.
+- The matching-trace count covers the last 7 days. New traces can take about 5 minutes after their last activity to appear. If the count is empty, do not save an empty map. Check the seed, the filter, and the window first. A map marked **PAUSED** is not analyzing new traces.
+- After analysis fills in, compare Treemap and Scatter, try the **Unassigned** toggle, click one tile on each enabled facet, and use **Open in Tracing**. The groups are close to deterministic. A model names and describes them afterward, so labels and counts vary. Ask learners to check each label in Tracing.
+- Land the insights in this order. First walk the facets as a map of how the system is used, including groups where the product is working. On Intent, laptop Wi-Fi and laptop printing are missing context: the answers hedge between Windows and Apple. Read the suggested prompt that names the phone and the laptop. Do not publish it. The prompt published in 07 is the error-analysis one. On Sentiment, connect unresolved Wi-Fi conversations, all-caps lines, and "No, that menu isn't there" to the disagreement and all-caps scores. On Issues, repeated failed troubleshooting is a possible prompt fix, and mismatched searches are a question about the help library. Halo can open a group, point at the step that led to an issue, and flag false positives.
 
 ### 4.3 Capturing signals
 
@@ -63,9 +59,9 @@ Demo order:
 
 ## Demo rhythm
 
-1. Walk the overview: volume, dashboards, error analysis, topics, signals. Dashboards, error analysis, and signals each have one screenshot. Topics uses the intent treemap. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
+1. Walk the overview: volume, dashboards, error analysis, topics, signals. Dashboards, error analysis, and signals each have one screenshot. Topics uses the map screenshot. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
 2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 in `error analysis` with `open coding` (Text) and `pass or fail` (Categorical), mark pass or fail, write the notes, ask Halo to find clusters, compare them with the rough list on the page, ask Halo to create categorical scores for those clusters, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions and read the more specific prompt under them. Do not publish it in this lab. Point to topics.
-3. Topics: run `npm run langfuse:seed:topics` once, add the OpenAI connection, leave all four facets and the recommended models, leave filters empty at 100% sampling, and start analyzing. Walk intent, sentiment, outcome, and issues. Land the laptop prompt as a suggestion and do not publish it. If time remains, ask Halo to open one issue group and point at the step that caused it. Point to capturing signals.
+3. Topics: add the OpenAI connection, run `npm run langfuse:seed:topics` once, open Topics, use **Edit map** to enable the four facets, leave the filter broad and sampling at 100%, and save. Compare Treemap and Scatter, then use **Open in Tracing**. Investigate laptop printing as missing context, frustration as a lead-in to disagreement and all-caps scores, repeated failed troubleshooting as a prompt fix, and mismatched searches that did not change the answer. Do not publish the laptop prompt. If time remains, ask Halo to open one issue group and point at the step that caused it. Point to capturing signals.
 4. Capturing signals: reuse the OpenAI connection, pick **5.6 Luna**, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
 5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
 6. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them. If time remains, ask Halo on the **Dashboard** tab to chart those signals over time.
@@ -74,10 +70,11 @@ Demo order:
 ## Watch for
 
 - Re-running the error-analysis seed or the topics seed. Each run mints new trace IDs.
-- Treating a topics tile name or count as exact. The groups are stable. The names come from a model.
+- Treating a topics tile name or count as exact. The groups are close to deterministic. A model names and describes them afterward.
 - Publishing the laptop prompt in this lab. The prompt published in 07 is the error-analysis one.
-- Setting a topics filter on this project. It traces one agent. An empty filter is the setup.
-- Expecting the seeded topics traces to be missing because they look old. The seed places them in the last few days, with the newest one about 10 minutes ago.
+- Saving a map with an empty matching-trace count. Check the seed, the filter, and the last 7 days first.
+- Treating a **PAUSED** map as if it were analyzing new traces.
+- Narrowing the topics filter on this project until the seeded traces drop out. It traces one agent. A broad or empty filter is the setup.
 - Treating the overview's dashboard link as a configuration step. The signals section is where Halo builds a chart of the scores.
 - Skipping the reading in error analysis and jumping straight to evaluator templates.
 - Starting the disagreement judge with an empty model list. That list is the project's LLM connections.

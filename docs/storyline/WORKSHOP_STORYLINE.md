@@ -39,7 +39,7 @@ Failure modes:
 - First pass is the map: intent, sentiment, outcome, and issues, including where the product is working.
 - Why: what the agent handles, how users feel, and where it fails. The facets start an expansion, a system change, or an evaluator.
 - Clustering is close to deterministic. A model names and describes the groups afterward.
-- Filters stay empty in this lab. They are for a project that mixes agents, which we do not recommend.
+- The map is configured from Edit map. Leave the trace filter broad enough for the seeded traces. A filter is for a project that mixes agents, which we do not recommend.
 - Halo can open a group, point at the step that led to an issue, and flag false positives.
 
 Insights:

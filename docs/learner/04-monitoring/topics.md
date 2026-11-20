@@ -1,25 +1,25 @@
 ---
 title: "Workshop: 4.2 Detect topics and issues"
-description: "Detect topics and issues in 200 sample traces, grouped by intent, sentiment, outcome, and issues."
+description: "Configure a topic map for 200 sample traces, then explore model-generated groups by intent, sentiment, outcome, and issues."
 ---
 
 # 4.2 Detect topics and issues
 
 ## Why topics and issue detection
 
-Topics and issue detection groups trace data at scale by intent, sentiment, outcome, and issues.
+Topics turns trace-level data into a map of what your agent handles, where runs end, and what goes wrong. It is useful when the trace volume is too large to read one by one.
 
-Topics gives you a map of what your agent is handling in production, how users are feeling about the system, and where it fails.
+The map is a starting point for questions such as:
 
-The facets give you a starting point to dig deeper:
+- Which requests are we handling in production?
+- Which groups suggest an opportunity to expand the product?
+- Which recurring issues should become prompt changes, tools, or evaluators?
 
-- There might be insights on expansion opportunities for your system.
-- Some things might show up as failures and still be a sign that the system should change.
-- They can give you inspiration for what kind of evaluators to set up.
+Topic names come from a model after the groups form. Your result will be close to the examples in this lesson, and it will not be identical.
 
 ## Goal
 
-Detect topics and issues in 200 sample traces, then read the map for what Specs is asked to do, how Dad feels, and where the handling goes wrong.
+Configure a topic map for 200 sample traces, then read the groups for what Specs is asked to do, how Dad feels, and where the handling goes wrong.
 
 ## Starting point
 
@@ -39,7 +39,7 @@ Open [Tracing](https://cloud.langfuse.com/project/~/traces) if you want to inspe
 
 ## Step 2: Add the model connection
 
-The model list in the next step comes from the project's LLM connections. Add an OpenAI connection now. [Section 4.3 Capturing signals](./capturing-signals.md) uses this same connection.
+Topics needs an LLM connection in the project. Add an OpenAI connection before editing the map. [Section 4.3 Capturing signals](./capturing-signals.md) uses this same connection.
 
 1. In Langfuse, open **Project Settings → LLM Connections**.
 2. Click **Add LLM Connection**.
@@ -50,60 +50,64 @@ If a connection is already there, keep it and continue.
 
 Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
 
-## Step 3: Set up topics
+## Step 3: Configure the topic map
 
-1. On the empty Topics page, click **Set up topics**.
+The map is configured from **Edit map**. The facets and the trace filter belong to the map, and they can be changed later. If the page is empty, use **Set up topics** to create the first map, then continue here.
 
-   ![See what your traces are about, then set up topics.](../../images/topics/setup-topics.png)
+1. On **Topics**, click **Edit map**.
 
-2. Under **What to look for**, leave all four checked:
+   ![The current Topics map with the Edit map control.](../../images/topics/topic-map.png)
+
+2. In **Name**, keep `Default` or give the map a name that describes the app it covers.
+
+3. Under **Facets · What to look for**, enable the facets you want to compare:
 
    - **Intent:** what the run was asked to do.
-   - **Sentiment:** how the end user felt.
-   - **Outcome:** where the run ended, and whether that is confirmed.
+   - **Sentiment:** how the end user felt about the interaction.
+   - **Outcome:** where the run ended and whether that is confirmed.
    - **Issues:** the main problem in how the run was handled.
 
-   Under **Select models for analysis**, keep the models marked **Recommended**. Embeddings stays on `text-embedding-3-small` when that badge is on it. Click **Next**.
+   For this workshop, enable **Intent**, **Sentiment**, **Outcome**, and **Issues**. A project may have a different selection, so do not assume that every facet is present in every map.
 
-   ![Choose intent, sentiment, outcome, and issues, and keep the recommended models.](../../images/topics/setup-look-for.png)
+   ![Edit map shows configurable facets, trace filters, and the matching-trace count.](../../images/topics/edit-map.png)
 
-3. On **Select traces to analyze**, leave the trace filters empty and the sample rate at **100%**. Click **Next**.
+4. Under **Filter traces**, use **Query** or **Builder** to limit the map to the traces for this app. Topics runs at trace level. If the project contains several agents or applications, filtering keeps them from being mixed into one map. For this workshop, leave the filter broad enough to include the seeded traces. This project traces one agent, so an empty filter is enough.
 
-   This project traces one agent, so an empty filter is the right setup. The filter is for a project that sends several agents or applications into the same place. Keep one project per use case. When traces from different agents do share a project, filter each map to one of them, usually by trace name, tags, or environment, and add another map for the rest. Skip that here.
+5. Check the matching-trace count. The count covers the last 7 days. A correct seed can still be absent if it is outside that window or has not become eligible yet. New traces can take about 5 minutes after their last activity to appear. This seed already places the newest trace more than 5 minutes before now, and the batch sits inside the last few days.
 
-4. On **Review**, check that **Look for** is Intent, Sentiment, Outcome, and Issues, then click **Start analyzing**.
+6. Leave **Live updates** enabled if it is available. Live updates analyze new matching traces as they arrive and refit the map nightly. Leave the **Sampling rate** at 100% for this lab, then save the map.
 
-   The review says the run covers up to 500 recent traces that match the filter, and that first results from those traces take about 3 to 5 minutes. New traces show up 5 minutes after their last activity. This seed already places the newest trace more than 5 minutes before now, and the batch sits inside the last few days, so the review should list them. A first map still forms from a smaller batch: about 20 summaries on a facet is enough for a provisional grouping. If fewer than about 100 matching traces are in the last 30 days, the review warns that the first groups can take longer to settle.
+If the map is marked **PAUSED**, it is not analyzing new traces. The header status tells you whether the selected map is active. The map selector can contain more than one map.
 
-## Step 4: Read the map
+## Step 4: Explore the map
 
-When the page fills in, the tabs are **Intent**, **Sentiment**, **Outcome**, and **Issues**. The default view is Treemap.
+When analysis is ready, choose a facet from the tabs under **Analyze**. Only enabled facets appear. Choose **Treemap** for a size-based overview or **Scatter** for an embedding view of the groups.
 
-Click a tile. The list under it is the traces in that group, each with a one-line summary. **Open in Tracing** shows those same traces in the trace table. A model names the tiles after the groups form, so yours will be close to the ones below, and the counts will not match exactly.
+The **Unassigned** toggle controls whether traces without a topic are included. The tiles show model-generated names, counts, and percentages. Click a tile to see the matching traces and their summaries. **Open in Tracing** takes you to the corresponding trace list.
 
-![Intent groups for the Dad IT Support Agent, with the traces inside Perform WhatsApp Tasks.](../../images/topics/intent-treemap.png)
+![A Topics treemap with topic tiles and the matching trace table.](../../images/topics/topic-map.png)
 
-### The four tabs are a map of the system
+On **Scatter**, inspect the groups and the trace list together. You can search the results with filters such as an assignment or topic, then open the matching traces in Tracing.
 
-Start by walking the tabs, before looking for something to fix. Intent is the kinds of help Dad asked for. Sentiment is how the conversation felt. Outcome is where it ended. Issues is what went wrong in the handling, including when the same problem sits under more than one intent.
+![Scatter shows the embedding map, topic counts, and matching traces.](../../images/topics/scatter.png)
 
-A few hundred traces become a handful of groups. Some of what you see is the product working: iPhone tasks grouping together, ordinary requests landing cleanly. You are learning the shape of how the system is used in production, including the requests that succeed. It also helps to understand how the system is used over time. A topic that mattered last month, during a special event, may be rare now.
+On **Issues**, open a group and read several traces before calling it a failure. A model-generated issue can be too broad, can overlap with an intent, or can describe a symptom rather than the cause.
 
-The groups themselves are close to deterministic. A model names and describes them afterward, which is why the tile names move a little from run to run. Below is a walkthrough of one run of this data.
+## Step 5: Apply the map to the Dad IT Support Agent
+
+Walk through the enabled facets before choosing a fix. Intent shows the kinds of help Dad requested. Sentiment shows how conversations felt. Outcome shows where they ended. Issues shows recurring problems in the handling. Some groups will show the agent working as expected. Topics are a map of use, including the requests that succeed.
+
+The groups are close to deterministic. A model names and describes them afterward, so the names and counts below describe one run of this data. Yours may be different. Treat the labels as hypotheses: open representative traces, decide what the group means, and then turn the useful patterns into prompt changes, tools, or evaluators.
 
 ### Insight 1: Laptop help is a chance to widen what Specs supports
 
-On **Intent**, look for two of the larger groups that are not iPhone tasks: one about the laptop's Wi-Fi, and one about printing from the laptop, including paper jams and paper in the tray. The iPhone is the device Specs is built for. These requests sit outside that, and Specs answers them anyway.
+On **Intent**, look for two larger groups that are not iPhone tasks: one about the laptop's Wi-Fi, and one about printing from the laptop, including paper jams and paper in the tray.
 
-In this run the printing tile is **Laptop Printing Assistance**, 29 traces. The summaries are print jobs, a flashing printer light, and paper that comes out sideways.
+The iPhone is the device Specs is built for. These requests sit outside that, and Specs answers them anyway. Open several traces. The answer does not ask which laptop Dad has. It hedges every time: if it is Windows, do this; if it is a Mac, do this.
 
-![Intent treemap with Laptop Printing Assistance open, 29 traces.](../../images/topics/laptop-printing.png)
+The agent is trying to be helpful, and it is missing the context it needs. This is a context problem, and we can provide that context through the `get_support_context` tool. `DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts` already lists Dad's iPhone under `devices`, and that is what the tool returns. Add the laptop there, next to the phone. Specs can then give the steps for that machine.
 
-Open a few of those traces. The answer does not ask which laptop Dad has. It hedges every time: if it is Windows, do this; if it is a Mac, do this.
-
-The agent is trying to be helpful, and it is missing the context it needs to answer the question. This is a context problem, and we can provide that context through the `get_support_context` tool. `DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts` already lists Dad's iPhone under `devices`, and that is what the tool returns. Add the laptop there, next to the phone. Specs can then give the steps for that machine.
-
-A tile summary may describe these replies as unsupported and suggest sending Dad back to iPhone help. Read the traces before you take that suggestion. Specs is already trying to help. Telling it which laptop Dad uses makes those answers specific.
+A tile summary may describe these replies as unsupported and suggest sending Dad back to iPhone help. Read the traces before taking that suggestion. Specs is already trying to help. Telling it which laptop Dad uses makes those answers specific.
 
 The prompt still names only the iPhone. A more specific prompt version based on these laptop requests could look like this:
 
@@ -125,34 +129,26 @@ Leave the running prompt as it is for now. The laptop belongs in the prompt beca
 
 ### Insight 2: Sentiment shows the frustration
 
-On **Sentiment**, the largest tile is still calm. The name is close to "Neutral, Unemotional Tone". Frustration does not land as one block. It splits into a few tiles, with names close to "Frustration with Task Difficulties", "Frustration with connectivity difficulties", "Frustration With Ineffective Guidance", and "Frustration and Annoyance".
+On **Sentiment**, the largest group may still be calm or neutral. Frustration does not land as one block. It can split across several groups with names such as "Frustration with Task Difficulties", "Frustration with connectivity difficulties", "Frustration With Ineffective Guidance", or "Frustration and Annoyance."
 
-Click the connectivity one. It is about 25 traces. The summaries say Dad was frustrated that the laptop would not reconnect to Wi-Fi, or that the Wi-Fi troubleshooting did not work.
+Open the group that is about connectivity or troubleshooting. The summaries should include Dad being frustrated that the laptop would not reconnect to Wi-Fi, or that the Wi-Fi troubleshooting did not work.
 
-![Sentiment groups, with Frustration with connectivity difficulties open.](../../images/topics/sentiment-frustration.png)
+A few messages are in all caps, such as "THIS STILL ISNT WORKING", and a few push back: "No, that menu isn't there." [Section 4.3 Capturing signals](./capturing-signals.md) is next, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
 
-A few of those messages are in all caps ("THIS STILL ISNT WORKING"), and a few push back ("No, that menu isn't there"). [Section 4.3 Capturing signals](./capturing-signals.md) is next, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
+### Insight 3: Repeated steps after Dad says they failed
 
-### Insight 3: Repeated steps after Dad says it failed
+On **Issues**, look for a group about repeated failed troubleshooting. The description should say that the response repeats prior instructions instead of adapting to the reported problem or investigating why they did not work.
 
-On **Issues**, one tile in this run is **Repeated Failed Troubleshooting**, 30 traces. The tile says the response repeats prior instructions instead of adapting to the reported problem or investigating why they did not work.
-
-![Issues treemap with Repeated Failed Troubleshooting open, 30 traces.](../../images/topics/repeated-failed-troubleshooting.png)
-
-These are the two- and three-turn sessions where Dad says the steps did not work ("I did that, but nothing changed", "I can't find that option") and Specs sends the same numbered list again. They hide inside ordinary intents such as Bluetooth or WhatsApp, which is why they show up together here and not as their own intent.
+These are the two- and three-turn sessions where Dad says the steps did not work ("I did that, but nothing changed" or "I can't find that option") and Specs sends the same numbered list again. They hide inside ordinary intents such as Bluetooth or WhatsApp, which is why they show up together here.
 
 The fix could live in the system prompt: when Dad says a step failed, ask what he sees on screen and try a different path.
 
 ### Insight 4: A search that looks wrong, and an answer that still works
 
-On **Issues**, one tile in this run is **Mismatched Help Search Queries**, 39 traces. The tile says most of these traces used an unrelated or mismatched search query during the help lookup, and often still recovered with relevant instructions.
+On **Issues**, you may find a group about mismatched help-library searches. The tile can describe traces where the lookup query or result does not match the request, while the final answer still covers what Dad asked.
 
-![Issues treemap with Mismatched Help Search Queries open, 39 traces.](../../images/topics/mismatched-help-search.png)
+Open a few traces. The help-library query or result may be unrelated, and the final answer can still be useful. Leave this tile for a later look at the library. How often does `search_help_library` actually help, and which requests does it have nothing useful for? Look at the guides in `src/server/support-data.ts` before treating the tile as a broken answer.
 
-Open a few traces. The help-library query or result is unrelated, and the final answer still covers what Dad asked. The summaries say the mismatch was an extra step, and the answer still landed.
+Read enough traces to decide whether the group is a prompt problem, a tool problem, or missing library content. Halo can help with that reading. From the Topics page, ask it to open a group, point at the step in the trace that led to the issue, and flag tiles that look like false positives.
 
-Leave this tile for a later look at the library. How often does `search_help_library` actually help, and which requests does it have nothing useful for? That is a closer look at the guides in `src/server/support-data.ts`.
-
-Halo can read this map. From the Topics page, ask it to open a group, point at the step in the trace that led to the issue, and flag tiles that look like false positives. Use the tile as a starting point, then read the traces.
-
-[Section 4.3 Capturing signals](./capturing-signals.md) is next. It is one of those evaluators: a score for disagreement, and a score for all-caps frustration.
+[Section 4.3 Capturing signals](./capturing-signals.md) is next. It turns the frustration and disagreement patterns into production signals.
