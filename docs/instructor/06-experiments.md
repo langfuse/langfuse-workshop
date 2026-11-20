@@ -10,7 +10,7 @@ Learner guide: [06 Experiments](../learner/06-experiments.md)
 ## Instructor notes
 
 - The key idea is reuse: the experiment runner calls the same `runSupportConversation(...)` as the web app.
-- Explain why these evaluators differ from the monitoring ones: production traffic has no reference answer, so 4.2 uses judges that read only the conversation (user disagreement, all caps). A dataset has expected outputs, so `behavior_match` and `correctness` each compare against a field in `expectedOutput`.
+- Explain why these evaluators differ from the monitoring ones: production traffic has no reference answer, so [4.3 Capturing signals](../learner/04-monitoring/capturing-signals.md) uses judges that read only the conversation (user disagreement, all caps). A dataset has expected outputs, so `behavior_match` and `correctness` each compare against a field in `expectedOutput`.
 - Tie the two evaluators to the two goals from 05: `behavior_match` (Decisions API label plus exact match) checks the right behavior and shows whether a change fixed what it targeted; `correctness` (LLM-as-a-judge) checks the answer is correct and is the regression check that catches a fix making answers worse. Both are **callbacks** on `runExperiment`.
 - Frame the set as a starting point: the simplest check per goal. Not every error-analysis category gets an offline evaluator (impersonation and lengthy replies don't here), and the suite should grow as error analysis surfaces failures worth tracking. A word-count check for length is the obvious next one if a group asks.
 - Point at the semantic-equivalence judge prompt in `scripts/run-dataset.ts`: expected output is the source of truth; paraphrases pass; missing material meaning fails.
