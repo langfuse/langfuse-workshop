@@ -50,32 +50,40 @@ If a connection is already there, keep it and continue.
 
 Keep the API key in the Langfuse secret field only. Do not paste it into workshop transcripts or shared notes.
 
-## Step 3: Configure the topic map
+## Step 3: Set up topics from the empty state
 
-The map is configured from **Edit map**. The facets and the trace filter belong to the map, and they can be changed later. If the page is empty, use **Set up topics** to create the first map, then continue here.
+On a new project, Topics opens with **See what your traces are about** and a **Set up topics** button. Start there. The first-run setup is a three-step wizard; after the map exists, use **Edit map** to change the same settings.
 
-1. On **Topics**, click **Edit map**.
+![The empty Topics state before the first map is created.](../../images/topics/empty-setup.png)
 
-   ![The current Topics map with the Edit map control.](../../images/topics/topic-map.png)
-
-2. In **Name**, keep `Default` or give the map a name that describes the app it covers.
-
-3. Under **Facets · What to look for**, enable the facets you want to compare:
+1. Click **Set up topics**. In **Facets · What to look for**, leave all four facets checked:
 
    - **Intent:** what the run was asked to do.
    - **Sentiment:** how the end user felt about the interaction.
    - **Outcome:** where the run ended and whether that is confirmed.
    - **Issues:** the main problem in how the run was handled.
 
-   For this workshop, enable **Intent**, **Sentiment**, **Outcome**, and **Issues**. A project may have a different selection, so do not assume that every facet is present in every map.
+   A project may have a different selection, so do not assume that every facet is present in every map.
 
-   ![Edit map shows configurable facets, trace filters, and the matching-trace count.](../../images/topics/edit-map.png)
+   Keep the recommended models: `gpt-6-luna` for summaries, `text-embedding-3-small` for embeddings, and `gpt-6.1-terra` for grouping. Click **Next**.
 
-4. Under **Filter traces**, use **Query** or **Builder** to limit the map to the traces for this app. Topics runs at trace level. If the project contains several agents or applications, filtering keeps them from being mixed into one map. For this workshop, leave the filter broad enough to include the seeded traces. This project traces one agent, so an empty filter is enough.
+   ![Choose the four facets and the recommended analysis models.](../../images/topics/setup-look-for-current.png)
 
-5. Check the matching-trace count. The count covers the last 7 days. A correct seed can still be absent if it is outside that window or has not become eligible yet. New traces can take about 5 minutes after their last activity to appear. This seed already places the newest trace more than 5 minutes before now, and the batch sits inside the last few days.
+2. On **Select traces to analyze**, use **Query** or **Builder** to limit the map to the traces for this app. Topics runs on trace-level data. If the project contains several agents or applications, filtering keeps them from being mixed into one map. For this workshop, leave the filter empty so all seeded traces match.
 
-6. Leave **Live updates** enabled if it is available. Live updates analyze new matching traces as they arrive and refit the map nightly. Leave the **Sampling rate** at 100% for this lab, then save the map.
+   Leave the **Sampling rate** at `100%`. The wizard shows the matching-trace window and count on the review step; in the current UI capture, it reports the last 30 days. After a map exists, the **Edit map** preview may report a 7-day window instead. New traces can take about 5 minutes after their last activity to become eligible; the seed timestamps its newest trace more than 5 minutes in the past.
+
+   ![Select the traces and sampling rate before analysis.](../../images/topics/select-traces-current.png)
+
+   Click **Next**.
+
+3. On **Review**, confirm the four facets, the three models, and `100% sampling rate`. The review also shows how many traces match. Topics needs about 100 traces to form stable groups, so a smaller batch may take longer. If the project contains traces from more than this workshop, the first result can include those traces too; use a trace filter when you need an app-specific map.
+
+   ![Review the facets, models, sampling rate, and matching-trace count.](../../images/topics/review-current.png)
+
+   Click **Start analyzing**. The analysis runs in the background and may take a few minutes. New traces appear about 5 minutes after their last activity.
+
+After the first map exists, **Edit map** opens these settings again. Use it to rename the map, change facets or filters, toggle **Live updates**, or adjust the sampling rate.
 
 If the map is marked **PAUSED**, it is not analyzing new traces. The header status tells you whether the selected map is active. The map selector can contain more than one map.
 
@@ -85,13 +93,17 @@ When analysis is ready, choose a facet from the tabs under **Analyze**. Only ena
 
 The **Unassigned** toggle controls whether traces without a topic are included. The tiles show model-generated names, counts, and percentages. Click a tile to see the matching traces and their summaries. **Open in Tracing** takes you to the corresponding trace list.
 
-![A Topics treemap with topic tiles and the matching trace table.](../../images/topics/topic-map.png)
+![A loaded Topics treemap with model-generated topic tiles and the matching trace table.](../../images/topics/result-treemap.png)
 
 On **Scatter**, inspect the groups and the trace list together. You can search the results with filters such as an assignment or topic, then open the matching traces in Tracing.
 
-![Scatter shows the embedding map, topic counts, and matching traces.](../../images/topics/scatter.png)
+![Scatter shows the embedding map, topic counts, and matching traces.](../../images/topics/result-scatter.png)
 
 On **Issues**, open a group and read several traces before calling it a failure. A model-generated issue can be too broad, can overlap with an intent, or can describe a symptom rather than the cause.
+
+![The loaded Issues facet with model-generated issue labels and trace summaries.](../../images/topics/result-issues.png)
+
+![The loaded Sentiment facet with model-generated sentiment labels and trace summaries.](../../images/topics/result-sentiment.png)
 
 ## Step 5: Apply the map to the Dad IT Support Agent
 
