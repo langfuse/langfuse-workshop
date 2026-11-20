@@ -93,16 +93,57 @@ On **Issues**, open a group and read several traces before calling it a failure.
 
 Walk through the enabled facets before choosing a fix. Intent shows the kinds of help Dad requested. Sentiment shows how conversations felt. Outcome shows where they ended. Issues shows recurring problems in the handling. Some groups will show the agent working as expected; topics are not only a failure list.
 
-Use the seeded traces to investigate these questions. The exact names, counts, and grouping can vary between runs:
+Every generation of topics is non-deterministic because an LLM helps create the groups. The names and counts below describe one run of the workshop data. Yours may be different. Treat the labels as hypotheses: open representative traces, decide what the group means, and then turn the useful patterns into prompt changes, tools, or evaluators.
 
-1. On **Intent**, look for laptop Wi-Fi and laptop printing requests. The app is designed around Dad's iPhone, so these requests expose missing context. Open several traces and check whether the answer asks which laptop Dad uses. The useful change is to add Dad's laptop next to his phone in `DEFAULT_SUPPORT_CONTEXT`, which `get_support_context` returns.
+### Insight 1: Laptop help is a chance to widen what Specs supports
 
-2. On **Sentiment**, look for frustration around unresolved Wi-Fi or troubleshooting conversations. A few all-caps messages and replies such as “No, that menu isn't there” are good candidates for the conversation signals in [Section 4.3 Capturing signals](./capturing-signals.md). Topics help you find the pattern; the signal evaluator will help you find future individual turns.
+On **Intent**, look for two larger groups that are not iPhone tasks: one about the laptop's Wi-Fi, and one about printing from the laptop, including paper jams and paper in the tray.
 
-3. On **Issues**, look for conversations where Dad says the steps failed and the agent repeats them. Read the traces to confirm the issue before changing the prompt. A useful prompt rule is to ask what Dad sees and try a different path instead of repeating the same list.
+The iPhone is the device Specs is built for. These requests sit outside that, and Specs answers them anyway. Open several traces. The answer does not ask which laptop Dad has. It hedges every time: if it is Windows, do this; if it is a Mac, do this.
 
-4. If an issue reports a mismatched help-library search but the final answer still helps, inspect the tool call and answer before patching the agent. It may be a library-coverage question rather than an answer-quality failure.
+The agent is trying to be helpful while missing the context it needs. This is a context problem, and we can provide that context through the `get_support_context` tool. `DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts` already lists Dad's iPhone under `devices`, and that is what the tool returns. Add the laptop there, next to the phone. Specs can then give the steps for that machine instead of both.
 
-Every generation of topics is non-deterministic because an LLM helps create the groups. Treat the labels as hypotheses: open representative traces, decide what the group means, and then turn the useful patterns into prompt changes, tools, or evaluators.
+A tile summary may describe these replies as unsupported and suggest sending Dad back to iPhone help. Read the traces before taking that suggestion. Specs is already trying to help. Telling it which laptop Dad uses makes those answers specific.
+
+The prompt still names only the iPhone. A more specific prompt version based on these laptop requests could look like this:
+
+> You are Dad IT Support Agent.
+> You are talking to Dad. He opened this chat himself to get help with his phone and his laptop.
+>
+> Look up which phone and laptop he has, and search the help library, so the steps match that device. Then tell him what to do: what to tap, and what he should see on the screen.
+>
+> Use plain language.
+>
+> Rules:
+> - Keep the reply to a short numbered list.
+> - If he asks for something other than IT help, say so in one short sentence and point him back to his phone or his laptop. Do not answer that request.
+> - Use clear instructions on what to tap.
+> - You are the support agent. Do not speak as someone in his family.
+
+Leave the running prompt as it is for now. The laptop belongs in the prompt because Dad is already asking about it, not because the reply should be refused.
+
+### Insight 2: Sentiment shows the frustration
+
+On **Sentiment**, the largest group may still be calm or neutral. Frustration does not necessarily land as one block; it can split across several groups with names such as “Frustration with Task Difficulties,” “Frustration with connectivity difficulties,” “Frustration With Ineffective Guidance,” or “Frustration and Annoyance.”
+
+Open the group that is about connectivity or troubleshooting. The summaries should include Dad being frustrated that the laptop would not reconnect to Wi-Fi, or that the Wi-Fi troubleshooting did not work.
+
+A few messages are in all caps, such as “THIS STILL ISNT WORKING,” and a few push back: “No, that menu isn't there.” [Section 4.3 Capturing signals](./capturing-signals.md) is next, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
+
+### Insight 3: Repeated steps after Dad says they failed
+
+On **Issues**, look for a group about repeated failed troubleshooting. The description should say that the response repeats prior instructions instead of adapting to the reported problem or investigating why they did not work.
+
+These are the two- and three-turn sessions where Dad says the steps did not work (“I did that, but nothing changed” or “I can't find that option”) and Specs sends the same numbered list again. They hide inside ordinary intents such as Bluetooth or WhatsApp, which is why they show up together here and not as their own intent.
+
+The fix could live in the system prompt: when Dad says a step failed, ask what he sees on screen and try a different path instead of repeating the list.
+
+### Insight 4: A search that looks wrong, and an answer that still works
+
+On **Issues**, you may find a group about mismatched help-library searches. The tile can describe traces where the lookup query or result does not match the request, while the final answer still covers what Dad asked.
+
+Open a few traces. The help-library query or result may be unrelated, but the final answer can still be useful. That is not automatically a failure to patch in this session. It raises a question about the library: how often does `search_help_library` actually help, and which requests does it have nothing useful for? Look at the guides in `src/server/support-data.ts` before treating the tile as a broken answer.
+
+The useful next step is not to trust or reject a topic label blindly. Read enough traces to decide whether it is a prompt problem, a tool problem, or a missing-library-content problem. Then carry the strongest question into [Section 4.3 Capturing signals](./capturing-signals.md).
 
 Leave the running prompt as it is for now. The next section turns the frustration and disagreement patterns into production signals.
