@@ -10,7 +10,7 @@ import {
 } from "./langfuse-trace-seed-lib";
 
 // Real exported turns from data/seed-traffic-followups-traces.json. Cloning them keeps
-// the AGENT -> GENERATION/TOOL tree, token usage, and cost identical to live traffic.
+// the agent → generation → tool tree, token usage, and cost identical to live traffic.
 const SINGLE_TURN_TEMPLATE_ID = "b63ac42cd5e2207efd6b3b54e7d8aa8b";
 const FOLLOW_UP_TEMPLATE_ID = "ec538daf8f726dc969e901a85bda329b";
 const TEMPLATE_FILE = resolveFromScript(import.meta.url, "../data/seed-traffic-followups-traces.json");
@@ -175,6 +175,31 @@ function replaceConversationPrefix(messages: MessageRecord[], turns: ChatTurn[])
   return [...(hasSystem ? [messages[0]] : []), ...conversation, ...messages.slice(end)];
 }
 
+function requestedToolNames(output: unknown) {
+  const calls = asRecord(output)?.tool_calls;
+  if (!Array.isArray(calls)) return [];
+  return calls.flatMap((call) => {
+    const name = asRecord(asRecord(call)?.function)?.name;
+    return typeof name === "string" ? [name] : [];
+  });
+}
+
+function requestingGeneration(
+  observations: TraceSeedTraceBundle["observations"],
+  tool: TraceSeedTraceBundle["observations"][number]
+) {
+  return observations
+    .filter(
+      (observation) =>
+        observation.type === "GENERATION" &&
+        observation.endTime !== null &&
+        observation.endTime <= tool.startTime &&
+        requestedToolNames(observation.output).includes(tool.name ?? "")
+    )
+    .sort((left, right) => (left.endTime ?? "").localeCompare(right.endTime ?? ""))
+    .at(-1);
+}
+
 function isToolLoopMessage(message: MessageRecord) {
   return message.role === "tool" || (message.role === "assistant" && Array.isArray(message.tool_calls));
 }
@@ -238,6 +263,12 @@ export function assertBundlesMatch(snapshot: TraceSeedSnapshot, scenarios: Synth
     const search = bundle.observations.find((observation) => observation.name === "search_help_library");
     if (asRecord(search?.input)?.question !== scenario.searchQuestion) {
       throw new Error(`Trace ${index} searched for the template question.`);
+    }
+    for (const tool of bundle.observations.filter((observation) => observation.type === "TOOL")) {
+      const parent = requestingGeneration(bundle.observations, tool);
+      if (!parent || tool.parentObservationId !== parent.id) {
+        throw new Error(`Trace ${index} tool ${tool.name} is not nested under the generation that requested it.`);
+      }
     }
     const lastUser = [...scenario.turns].reverse().find((turn) => turn.role === "user");
     const lastGeneration = [...bundle.observations].reverse().find((observation) => observation.type === "GENERATION");
