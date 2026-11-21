@@ -17,11 +17,12 @@ Learner guide: [02 Tracing](../learner/02-tracing.md)
 
 1. Add `LangfuseSpanProcessor` and `observeOpenAI`, run one turn, show separate generation traces.
 2. Wrap `runSupportConversationInner` with `observe(...)`, run again, show nested generations.
-3. Wrap the two local tool helpers, run again, show the full tree.
+3. Wrap the two local tool helpers and pass the requesting generation as their parent. Run again, and show each tool nested under the generation that requested it.
 
 ## Watch for
 
 - An occasional blank parent container around `dad-it-support-chat-turn` right after Step 2. Refresh once before treating it as a code bug; if it persists every turn, check for accidental extra tracing wrappers beyond the single `observe(...)` in the lesson.
 - Learners wrapping the OpenAI client in a separate factory. The workshop intentionally keeps the wrapper inline.
 - Learners pasting the Step 3 block above the existing `executeTool` instead of replacing it. The server exits with `Multiple exports with the same name "executeTool"`; the leftover copy is further down `tools.ts`.
+- Tools sitting beside the generations. The model call runs inside `callRequestingGeneration`, `executeTool` receives `parentSpanContext`, and `generationParentProcessor` is in the `NodeSDK` list. Those three together put the tool under the generation that requested it.
 - Missing shutdown flush in `index.ts`; traces can arrive late without it. The named SDK variables go near the top; the flush lines go into the existing `shutdown()` near the bottom, not a new function next to the SDK start.

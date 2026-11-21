@@ -1,6 +1,7 @@
 import "./load-env";
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { LangfuseSpanProcessor } from "@langfuse/otel";
+import { generationParentProcessor } from "./generation-parent";
 import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,7 +12,9 @@ import { env, isLangfuseConfigured } from "./env";
 import { DEFAULT_SUPPORT_CONTEXT } from "./support-data";
 
 const langfuseSpanProcessor = new LangfuseSpanProcessor();
-const sdk = new NodeSDK({ spanProcessors: [langfuseSpanProcessor] });
+const sdk = new NodeSDK({
+  spanProcessors: [generationParentProcessor, langfuseSpanProcessor]
+});
 sdk.start();
 
 const requestSchema = z.object({
