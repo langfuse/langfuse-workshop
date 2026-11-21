@@ -5,6 +5,7 @@ import { LangfuseClient } from "@langfuse/client";
 import type { ChatMessage, ChatRequest, ChatResponse } from "../shared/types";
 import { env } from "./env";
 import { getSupportContext } from "./support-data";
+import { callRequestingGeneration } from "./generation-parent";
 import { TOOL_DEFINITIONS, executeTool } from "./tools";
 
 // Local fallback used when Langfuse isn't reachable or the prompt
@@ -82,12 +83,14 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
       let finalAnswer = "";
 
       for (let attempt = 0; attempt < 6; attempt += 1) {
-        const response = await openai.chat.completions.create({
-          model: env.openaiModel,
-          messages: transcript,
-          tools: TOOL_DEFINITIONS,
-          tool_choice: "auto"
-        });
+        const { result: response, parentSpanContext } = await callRequestingGeneration(() =>
+          openai.chat.completions.create({
+            model: env.openaiModel,
+            messages: transcript,
+            tools: TOOL_DEFINITIONS,
+            tool_choice: "auto"
+          })
+        );
 
         const message = response.choices[0]?.message;
         if (!message) {
@@ -108,7 +111,7 @@ async function runSupportConversationInner(request: ChatRequest): Promise<ChatRe
           const result =
             parsedArguments === null
               ? { ok: false, error: `The tool arguments for ${toolCall.function.name} were not valid JSON.` }
-              : await executeTool(toolCall.function.name, parsedArguments);
+              : await executeTool(toolCall.function.name, parsedArguments, parentSpanContext);
           transcript.push({
             role: "tool",
             tool_call_id: toolCall.id,

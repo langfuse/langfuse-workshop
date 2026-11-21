@@ -148,60 +148,123 @@ export const runSupportConversation = observe(runSupportConversationInner, {
 
 ## Step 3: Recording tool calls
 
-The OpenAI generation already mentions the tool calls in its `tool_calls` output, but we have no observation for the actual tool execution: no way to see what input went in and what came out. The same `observe(...)` pattern, can be applied to each tool.
+The OpenAI generation already mentions the tool calls in its `tool_calls` output, but we have no observation for the actual tool execution: no way to see what input went in and what came out. The same `observe(...)` pattern can be applied to each tool.
+
+`observe(...)` nests a tool under whichever span is active. The generation from `observeOpenAI` has already ended by the time the tool runs, and it was never the active span, so the tool lands beside that generation under the agent. The link is only inside the generation's saved messages. `src/server/generation-parent.ts` remembers the `OpenAI.chat` span for the model call so the tool can use it as its parent.
+
+### `src/server/index.ts`
+
+Register that helper next to the Langfuse processor. Find:
+
+```ts
+const sdk = new NodeSDK({ spanProcessors: [langfuseSpanProcessor] });
+```
+
+and change it to:
+
+```ts
+import { generationParentProcessor } from "./generation-parent";
+
+const sdk = new NodeSDK({
+  spanProcessors: [generationParentProcessor, langfuseSpanProcessor]
+});
+```
+
+The import goes with the other imports at the top of the file.
+
+### `src/server/support-agent.ts`
+
+Wrap the model call so the tools that follow can see which generation requested them. Find:
+
+```ts
+const response = await openai.chat.completions.create({
+  model: env.openaiModel,
+  messages: transcript,
+  tools: TOOL_DEFINITIONS,
+  tool_choice: "auto"
+});
+```
+
+and change it to:
+
+```ts
+import { callRequestingGeneration } from "./generation-parent";
+
+const { result: response, parentSpanContext } = await callRequestingGeneration(() =>
+  openai.chat.completions.create({
+    model: env.openaiModel,
+    messages: transcript,
+    tools: TOOL_DEFINITIONS,
+    tool_choice: "auto"
+  })
+);
+```
+
+The import goes with the other imports at the top. Then pass `parentSpanContext` into `executeTool` a few lines below:
+
+```ts
+await executeTool(toolCall.function.name, parsedArguments, parentSpanContext);
+```
 
 ### `src/server/tools.ts`
 
-Add the import and the two observed helpers above `executeTool`, then **replace the existing `executeTool` with the version below** so the switch calls the wrapped helpers instead of doing the work inline. `TOOL_DEFINITIONS` stays untouched.
+Add the import and the two helpers above `executeTool`, then **replace the existing `executeTool` with the version below** so the switch calls the wrapped helpers instead of doing the work inline. `TOOL_DEFINITIONS` stays untouched. `parentSpanContext` is what puts each tool under the generation that requested it.
 
 ```ts
+import type { SpanContext } from "@opentelemetry/api";
 import { observe } from "@langfuse/tracing";
 
-const getSupportContextTool = observe(
-  async () => {
-    const context = getSupportContext();
+async function readSupportContext() {
+  const context = getSupportContext();
 
-    return {
-      ok: true,
-      context: {
-        id: context.id,
-        label: context.label,
-        devices: context.devices,
-        deviceSummary: context.deviceSummary,
-        responseStyle: context.responseStyle,
-        scopeHighlights: context.scopeHighlights,
-        notableApps: context.notableApps
-      }
-    };
-  },
-  { name: "get_support_context", asType: "tool" }
-);
+  return {
+    ok: true,
+    context: {
+      id: context.id,
+      label: context.label,
+      devices: context.devices,
+      deviceSummary: context.deviceSummary,
+      responseStyle: context.responseStyle,
+      scopeHighlights: context.scopeHighlights,
+      notableApps: context.notableApps
+    }
+  };
+}
 
-const searchHelpLibraryTool = observe(
-  async (input: { question: string }) => {
-    const guides = searchGuides(input.question);
+async function searchHelpLibrary(input: { question: string }) {
+  const guides = searchGuides(input.question);
 
-    return {
-      ok: true,
-      results: guides.map((guide) => ({
-        id: guide.id,
-        title: guide.title,
-        summary: guide.summary,
-        steps: guide.steps,
-        caution: guide.caution ?? null
-      }))
-    };
-  },
-  { name: "search_help_library", asType: "tool" }
-);
+  return {
+    ok: true,
+    results: guides.map((guide) => ({
+      id: guide.id,
+      title: guide.title,
+      summary: guide.summary,
+      steps: guide.steps,
+      caution: guide.caution ?? null
+    }))
+  };
+}
 
-export async function executeTool(name: string, input: Record<string, unknown>): Promise<ToolResult> {
+export async function executeTool(
+  name: string,
+  input: Record<string, unknown>,
+  parentSpanContext?: SpanContext
+): Promise<ToolResult> {
   switch (name) {
     case "get_support_context":
-      return getSupportContextTool();
+      return observe(readSupportContext, {
+        name: "get_support_context",
+        asType: "tool",
+        parentSpanContext
+      })();
 
     case "search_help_library":
-      return searchHelpLibraryTool({ question: String(input.question ?? "") });
+      return observe(searchHelpLibrary, {
+        name: "search_help_library",
+        asType: "tool",
+        parentSpanContext
+      })({ question: String(input.question ?? "") });
 
     default:
       return { ok: false, error: `Unsupported tool: ${name}` };
@@ -219,7 +282,7 @@ If `npm run dev` stops with `Multiple exports with the same name "executeTool"`,
 - A single user turn creates one trace in Langfuse.
 - Root observation: `dad-it-support-chat-turn` (type `agent`).
 - Child generation from `observeOpenAI(...)` with prompt, response, tokens, latency.
-- Child tool observations: `get_support_context`, `search_help_library`.
+- `get_support_context` nested under the generation that requested it, and `search_help_library` nested under the later generation that requested it.
 - Root input is the chat request; root output is the chat response.
 
 ## Wrap-up
@@ -232,7 +295,7 @@ A more straightforward way to add rich tracing in line with Langfuse best practi
 
 ## Appendix/Bonus section: User and session IDs
 
-The walkthrough above gets you tracing with a clean parent → generation → tool shape. The next thing most teams want is to **slice traces by user and by session**, so you can pull up "every turn this user has had with the agent" or "the full multi-turn session from yesterday morning."
+The walkthrough above gets you tracing with a clean parent → generation → tool shape: each tool sits under the generation that requested it. The next thing most teams want is to **slice traces by user and by session**, so you can pull up "every turn this user has had with the agent" or "the full multi-turn session from yesterday morning."
 For simplicity reasons we skip this step in the live tracing walkthrough, but the checkpoints after tracing include it so later chapters can use session/user views without another code step. See information on [Sessions](https://langfuse.com/docs/observability/features/sessions) and [Users](https://langfuse.com/docs/observability/features/users) in the Langfuse docs.
 
 In short:
