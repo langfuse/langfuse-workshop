@@ -17,6 +17,7 @@ import "../src/server/load-env";
 //        the agent emits spans to Langfuse, exactly like the live server.
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { LangfuseSpanProcessor } from "@langfuse/otel";
+import { generationParentProcessor } from "../src/server/generation-parent";
 import { randomUUID } from "node:crypto";
 import { LangfuseClient } from "@langfuse/client";
 import OpenAI from "openai";
@@ -25,7 +26,9 @@ import { env } from "../src/server/env";
 import { runSupportConversation } from "../src/server/support-agent";
 
 const langfuseSpanProcessor = new LangfuseSpanProcessor();
-const sdk = new NodeSDK({ spanProcessors: [langfuseSpanProcessor] });
+const sdk = new NodeSDK({
+  spanProcessors: [generationParentProcessor, langfuseSpanProcessor]
+});
 sdk.start();
 
 // --- 2. Dataset item shape (must match data/seed-dataset.json).
