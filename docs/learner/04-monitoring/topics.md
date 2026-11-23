@@ -115,6 +115,8 @@ The groups are close to deterministic. A model names and describes them afterwar
 
 On **Intent**, look for two larger groups that are not iPhone tasks: one about the laptop's Wi-Fi, and one about printing from the laptop, including paper jams and paper in the tray.
 
+![Use the Intent facet to compare request groups before opening representative traces.](../../images/topics/insight-intent.png)
+
 The iPhone is the device Specs is built for. These requests sit outside that, and Specs answers them anyway. Open several traces. The answer does not ask which laptop Dad has. It hedges every time: if it is Windows, do this; if it is a Mac, do this.
 
 The agent is trying to be helpful, and it is missing the context it needs. This is a context problem, and we can provide that context through the `get_support_context` tool. `DEFAULT_SUPPORT_CONTEXT` in `src/server/support-data.ts` already lists Dad's iPhone under `devices`, and that is what the tool returns. Add the laptop there, next to the phone. Specs can then give the steps for that machine.
@@ -147,11 +149,15 @@ Open the group that is about connectivity or troubleshooting. The summaries shou
 
 A few messages are in all caps, such as "THIS STILL ISNT WORKING", and a few push back: "No, that menu isn't there." [Section 4.3 Capturing signals](./capturing-signals.md) is next, and it turns this feeling into two scores: Dad disagreeing with the steps, and Dad writing in all caps.
 
+![Use the Sentiment facet to find groups that warrant a closer read for frustration.](../../images/topics/insight-sentiment.png)
+
 ### Insight 3: Repeated steps after Dad says they failed
 
 On **Issues**, look for a group about repeated failed troubleshooting. The description should say that the response repeats prior instructions instead of adapting to the reported problem or investigating why they did not work.
 
 These are the two- and three-turn sessions where Dad says the steps did not work ("I did that, but nothing changed" or "I can't find that option") and Specs sends the same numbered list again. They hide inside ordinary intents such as Bluetooth or WhatsApp, which is why they show up together here.
+
+![Select an Issues group to inspect its description and the traces behind it.](../../images/topics/insight-issue-group.png)
 
 The fix could live in the system prompt: when Dad says a step failed, ask what he sees on screen and try a different path.
 
@@ -160,6 +166,8 @@ The fix could live in the system prompt: when Dad says a step failed, ask what h
 On **Issues**, you may find a group about mismatched help-library searches. The tile can describe traces where the lookup query or result does not match the request, while the final answer still covers what Dad asked.
 
 Open a few traces. The help-library query or result may be unrelated, and the final answer can still be useful. Leave this tile for a later look at the library. How often does `search_help_library` actually help, and which requests does it have nothing useful for? Look at the guides in `src/server/support-data.ts` before treating the tile as a broken answer.
+
+![The Issues facet surfaces model-generated guidance problems and trace summaries to investigate.](../../images/topics/insight-issues.png)
 
 Read enough traces to decide whether the group is a prompt problem, a tool problem, or missing library content. Halo can help with that reading. From the Topics page, ask it to open a group, point at the step in the trace that led to the issue, and flag tiles that look like false positives.
 
