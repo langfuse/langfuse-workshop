@@ -69,7 +69,7 @@ On a new project, Topics opens with **See what your traces are about** and a **S
 
    ![Choose the four facets and the recommended analysis models.](../../images/topics/setup-look-for-current.png)
 
-2. On **Select traces to analyze**, use **Query** or **Builder** to limit the map to the traces for this app. Topics runs on trace-level data. If the project contains several agents or applications, filtering keeps them from being mixed into one map. For this workshop, leave the filter empty so all seeded traces match.
+2. On **Select traces to analyze**, use **Query** or **Builder** to limit the map to the traces for this app. Topics runs on trace-level data. If the project contains several agents or applications, filtering keeps them from being mixed into one map. For this workshop, enter `tags:topics-seed` in **Query** so the map contains the 200-trace Topics seed. In a clean project where these are the only traces, an empty filter produces the same set.
 
    Leave the **Sampling rate** at `100%`. The wizard shows the matching-trace window and count on the review step; in the current UI capture, it reports the last 30 days. After a map exists, the **Edit map** preview may report a 7-day window instead. New traces can take about 5 minutes after their last activity to become eligible; the seed timestamps its newest trace more than 5 minutes in the past.
 
@@ -83,7 +83,7 @@ On a new project, Topics opens with **See what your traces are about** and a **S
 
    Click **Start analyzing**. The analysis runs in the background and may take a few minutes. New traces appear about 5 minutes after their last activity.
 
-After the first map exists, **Edit map** opens these settings again. Use it to rename the map, change facets or filters, toggle **Live updates**, or adjust the sampling rate.
+After the first map exists, **Edit map** opens these settings again. Use it to rename the map, change facets or filters, toggle **Live updates**, or adjust the sampling rate. The result screenshots in this lesson use a map filtered with `tags:topics-seed` and show 200 traces.
 
 If the map is marked **PAUSED**, it is not analyzing new traces. The header status tells you whether the selected map is active. The map selector can contain more than one map.
 
