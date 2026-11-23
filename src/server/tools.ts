@@ -1,4 +1,3 @@
-import type { SpanContext } from "@opentelemetry/api";
 import OpenAI from "openai";
 import { observe } from "@langfuse/tracing";
 import { getSupportContext, searchGuides } from "./support-data";
@@ -70,24 +69,18 @@ async function searchHelpLibrary(input: { question: string }) {
   };
 }
 
-export async function executeTool(
-  name: string,
-  input: Record<string, unknown>,
-  parentSpanContext?: SpanContext
-): Promise<ToolResult> {
+export async function executeTool(name: string, input: Record<string, unknown>): Promise<ToolResult> {
   switch (name) {
     case "get_support_context":
       return observe(readSupportContext, {
         name: "get_support_context",
-        asType: "tool",
-        parentSpanContext
+        asType: "tool"
       })();
 
     case "search_help_library":
       return observe(searchHelpLibrary, {
         name: "search_help_library",
-        asType: "tool",
-        parentSpanContext
+        asType: "tool"
       })({
         question: String(input.question ?? "")
       });
