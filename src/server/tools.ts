@@ -1,4 +1,3 @@
-import type { SpanContext } from "@opentelemetry/api";
 import OpenAI from "openai";
 import { observe } from "@langfuse/tracing";
 import { getSupportContext, searchGuides } from "./support-data";
@@ -38,57 +37,57 @@ export const TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] = [
   }
 ];
 
-async function readSupportContext() {
-  const context = getSupportContext();
+const getSupportContextTool = observe(
+  async () => {
+    const context = getSupportContext();
 
-  return {
-    ok: true,
-    context: {
-      id: context.id,
-      label: context.label,
-      devices: context.devices,
-      deviceSummary: context.deviceSummary,
-      responseStyle: context.responseStyle,
-      scopeHighlights: context.scopeHighlights,
-      notableApps: context.notableApps
-    }
-  };
-}
+    return {
+      ok: true,
+      context: {
+        id: context.id,
+        label: context.label,
+        devices: context.devices,
+        deviceSummary: context.deviceSummary,
+        responseStyle: context.responseStyle,
+        scopeHighlights: context.scopeHighlights,
+        notableApps: context.notableApps
+      }
+    };
+  },
+  {
+    name: "get_support_context",
+    asType: "tool"
+  }
+);
 
-async function searchHelpLibrary(input: { question: string }) {
-  const guides = searchGuides(input.question);
+const searchHelpLibraryTool = observe(
+  async (input: { question: string }) => {
+    const guides = searchGuides(input.question);
 
-  return {
-    ok: true,
-    results: guides.map((guide) => ({
-      id: guide.id,
-      title: guide.title,
-      summary: guide.summary,
-      steps: guide.steps,
-      caution: guide.caution ?? null
-    }))
-  };
-}
+    return {
+      ok: true,
+      results: guides.map((guide) => ({
+        id: guide.id,
+        title: guide.title,
+        summary: guide.summary,
+        steps: guide.steps,
+        caution: guide.caution ?? null
+      }))
+    };
+  },
+  {
+    name: "search_help_library",
+    asType: "tool"
+  }
+);
 
-export async function executeTool(
-  name: string,
-  input: Record<string, unknown>,
-  parentSpanContext?: SpanContext
-): Promise<ToolResult> {
+export async function executeTool(name: string, input: Record<string, unknown>): Promise<ToolResult> {
   switch (name) {
     case "get_support_context":
-      return observe(readSupportContext, {
-        name: "get_support_context",
-        asType: "tool",
-        parentSpanContext
-      })();
+      return getSupportContextTool();
 
     case "search_help_library":
-      return observe(searchHelpLibrary, {
-        name: "search_help_library",
-        asType: "tool",
-        parentSpanContext
-      })({
+      return searchHelpLibraryTool({
         question: String(input.question ?? "")
       });
 
