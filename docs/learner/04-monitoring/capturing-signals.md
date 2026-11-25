@@ -1,13 +1,15 @@
 ---
-title: "Workshop: 4.2 Capturing Signals"
+title: "Workshop: 4.3 Capturing Signals"
 description: "Score user disagreement and all-caps frustration on production traces so the turns worth reading stand out."
 ---
 
-# 4.2 Capturing signals
+# 4.3 Capturing signals
 
 ## Why capture signals
 
 Once traces are coming in, you want a judgment on them without opening each one. A production signal is something the user does or says that shows whether a turn went well: a correction, a retry, a request for a human, a thank-you. Stored as a score on the trace, it points you to the rows worth reading. Start with the negative ones: a user rarely corrects an answer they were happy with.
+
+On Sentiment in [section 4.2 Detect topics and issues](./topics.md), frustration showed up as its own tiles, including all-caps lines and pushback on the steps. These scores are how you find those turns without opening the map.
 
 Complementary materials:
 
@@ -29,7 +31,7 @@ git checkout checkpoint/04-monitoring
 
 ## Step 0: Set up the evaluator model
 
-The disagreement judge needs a model connection on the project. The keys in `.env` do not fill that list.
+The disagreement judge needs a model connection on the project. The keys in `.env` do not fill that list. [Section 4.2 Detect topics and issues](./topics.md) adds this connection. If it is already there, keep it and continue. If you skipped that section, add it now.
 
 1. In Langfuse, open **Project Settings → LLM Connections**.
 2. Click **Add LLM Connection**.
