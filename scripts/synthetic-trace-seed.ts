@@ -35,6 +35,8 @@ export type SyntheticSeedOptions = {
   seedSource: string;
   sessionPrefix: string;
   spacingMs: number;
+  /** Timestamp of the first trace. Defaults to a fixed date so other seeds stay stable. */
+  anchorMs?: number;
 };
 
 type Templates = { single: TraceSeedTraceBundle; followUp: TraceSeedTraceBundle };
@@ -100,7 +102,8 @@ function buildBundle(
 ): TraceSeedTraceBundle {
   const template = userTurnCount(scenario.turns) === 1 ? templates.single : templates.followUp;
   const bundle = JSON.parse(JSON.stringify(template)) as TraceSeedTraceBundle;
-  const targetTimestamp = Date.parse("2026-06-19T12:00:00.000Z") + index * options.spacingMs;
+  const anchorMs = options.anchorMs ?? Date.parse("2026-06-19T12:00:00.000Z");
+  const targetTimestamp = anchorMs + index * options.spacingMs;
   shiftTimestamps(bundle, targetTimestamp - Date.parse(bundle.trace.timestamp));
 
   const sessionId = `seed-session-${options.sessionPrefix}-${String(index + 1).padStart(3, "0")}`;
