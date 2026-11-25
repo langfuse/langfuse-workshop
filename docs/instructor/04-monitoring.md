@@ -1,6 +1,6 @@
 ---
 title: "Workshop: Instructor Notes for Monitoring"
-description: "Facilitator notes for the monitoring overview, error analysis, and the disagreement and all-caps signal evaluators."
+description: "Facilitator notes for the monitoring overview, error analysis, topics, and the disagreement and all-caps signal evaluators."
 ---
 
 # 04 Monitoring
@@ -8,18 +8,20 @@ description: "Facilitator notes for the monitoring overview, error analysis, and
 Learner guide: [04 Monitoring](../learner/04-monitoring.md)
 
 - [4.1 Error analysis](../learner/04-monitoring/error-analysis.md)
-- [4.2 Capturing signals](../learner/04-monitoring/capturing-signals.md)
+- [4.2 Detect topics and issues](../learner/04-monitoring/topics.md)
+- [4.3 Capturing signals](../learner/04-monitoring/capturing-signals.md)
 
 ## Instructor notes
 
-The chapter opens on the overview and goes straight into the three ways to work with production traces. There is no checkout block on that page. Dashboards are a link out, not a build exercise. Sections 4.1 Error analysis and 4.2 Capturing signals each have their own page.
+The chapter opens on the overview and goes straight into the four ways to work with production traces. There is no checkout block on that page. Dashboards are a link out, not a build exercise. Sections 4.1 Error analysis, 4.2 Detect topics and issues, and 4.3 Capturing signals each have their own page.
 
-Error analysis seeds its own traces. Do not seed on the overview.
+Each section seeds its own traces. Do not seed on the overview.
 
 Demo order:
 
 1. Error analysis, on its own 20 traces, while the room still has to read them.
-2. Capturing signals, so the two evaluators are the last thing they turn on. Learners add the OpenAI connection in this section.
+2. Topics, on the 200 traces that section seeds. Learners add the OpenAI connection, open the empty Topics page, click **Set up topics**, keep Intent, Sentiment, Outcome, and Issues with the recommended models, leave the single-agent project filter empty, keep sampling at 100%, review the matching-trace count, and click **Start analyzing**. After the first map exists, **Edit map** is the path for later changes.
+3. Capturing signals, so the two evaluators are the last thing they turn on. They reuse the connection from topics.
 
 ### 4.1 Error analysis
 
@@ -30,12 +32,21 @@ Demo order:
 - Ask Halo to create categorical scores for the clusters it found. If Halo words them differently, map those names to the three decisions before the second pass. They then assign each failing trace.
 - Halo builds the frequency dashboard. The page shows the shape: one bar per failure category, and the longest bar is the failure that shows up most often. The picture is the layout, not the counts from this 20-trace lab.
 - Open with why the lab is worth doing: concrete failures from real cases, an underspecified system prompt, a count you can prioritize, and a shared picture for engineers, domain experts, and PMs.
-- Close on the categories and what to do about them, then the more specific prompt. Out of scope: a friendly decline that points Dad back to iPhone help, plus a production monitor. Impersonation: the agent answers as the support agent, including when Dad asks who this is, with optional monitoring. Lengthy responses: short numbered steps, with an optional production monitor. Then read the Rules section: a short numbered list, a refusal for anything other than IT help, one clarifying question when the request is vague, clear instructions on what to tap, and a line that the agent does not speak as family. Do not publish it in this lab; learners publish it in 07 as the comparison against the baseline experiment. Then one line into capturing signals.
+- Close on the categories and what to do about them, then the more specific prompt. Out of scope: a friendly decline that points Dad back to iPhone help, plus a production monitor. Impersonation: the agent answers as the support agent, including when Dad asks who this is, with optional monitoring. Lengthy responses: short numbered steps, with an optional production monitor. Then read the Rules section: a short numbered list, a refusal for anything other than IT help, one clarifying question when the request is vague, clear instructions on what to tap, and a line that the agent does not speak as family. Do not publish it in this lab; learners publish it in 07 as the comparison against the baseline experiment. Then one line into topics.
 
-### 4.2 Capturing signals
+### 4.2 Detect topics and issues
+
+- This is a configuration-and-reading walkthrough. Seed first, then open the empty Topics page and click **Set up topics**. Keep Intent, Sentiment, Outcome, and Issues with the recommended models, filter **Query** to `tags:topics-seed` so the map contains the 200 workshop traces, keep sampling at 100%, review the matching-trace count, and click **Start analyzing**. After the first map exists, use **Edit map** for later changes. Do not assume every project map has all four facets.
+- Section 4.2 seeds its own 200 traces with `npm run langfuse:seed:topics`. 110 are ordinary iPhone requests. 60 are laptop requests, 30 about printing and paper and 30 about the laptop's Wi-Fi, and each answer offers a Windows path and an Apple path because Specs does not know which laptop Dad has. 30 are stuck follow-ups that repeat the same steps after Dad says they failed. At least 40% of the batch has Dad sounding frustrated. The seed is not idempotent. The newest trace is about 10 minutes old, and the batch spans about five days, so it sits inside the 7-day matching window.
+- Learners add the OpenAI connection in this section, before **Set up topics**. Capturing signals reuses it. Someone who skips topics adds the connection at the start of 4.3.
+- The wizard's review screenshot currently reports the last 30 days; after a map exists, the **Edit map** preview can report the last 7 days. New traces can take about 5 minutes after their last activity to appear. If the count is empty, do not save an empty map. Check the seed, the filter, and the window first. A map marked **PAUSED** is not analyzing new traces.
+- After analysis fills in, compare Treemap and Scatter, try the **Unassigned** toggle, click one tile on each enabled facet, and use **Open in Tracing**. The groups are close to deterministic. A model names and describes them afterward, so labels and counts vary. Ask learners to check each label in Tracing.
+- Land the insights in this order. First walk the facets as a map of how the system is used, including groups where the product is working. On Intent, laptop Wi-Fi and laptop printing are missing context: the answers hedge between Windows and Apple. Read the suggested prompt that names the phone and the laptop. Do not publish it. The prompt published in 07 is the error-analysis one. On Sentiment, connect unresolved Wi-Fi conversations, all-caps lines, and "No, that menu isn't there" to the disagreement and all-caps scores. On Issues, repeated failed troubleshooting is a possible prompt fix, and mismatched searches are a question about the help library. Halo can open a group, point at the step that led to an issue, and flag false positives.
+
+### 4.3 Capturing signals
 
 - Two signals: **Detect User Disagreement** uses LLM-as-a-judge, and **Detect User Frustration (ALL CAPS)** uses deterministic TypeScript.
-- The API keys in `.env` do not configure the judge model inside Langfuse. Learners add the OpenAI connection in this section, before they pick **5.6 Luna**.
+- The API keys in `.env` do not configure the judge model inside Langfuse. Learners added the OpenAI connection in topics. If they skipped that section, they add it here, before they pick **5.6 Luna**.
 - Both evaluators target the logical root `dad-it-support-chat-turn` agent observation, because that observation carries the conversation input and the final answer.
 - The disagreement judge should run on **5.6 Luna** (`gpt-5.6-luna`) from the OpenAI connection.
 - Have learners use the right-side sample panel, filtered to `production`. In **Map variables to data**, bind variables with **Use** on the observation tree: `conversation_history` on **Input → messages**, `last_user_message` on **Input → messages → last**. Do not have them type a JSONPath. Test before saving.
@@ -48,16 +59,22 @@ Demo order:
 
 ## Demo rhythm
 
-1. Walk the overview: volume, dashboards, error analysis, signals. Each way has one screenshot: the home dashboard, failure categories, and conversation signals. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
-2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 in `error analysis` with `open coding` (Text) and `pass or fail` (Categorical), mark pass or fail, write the notes, ask Halo to find clusters, compare them with the rough list on the page, ask Halo to create categorical scores for those clusters, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions and read the more specific prompt under them. Do not publish it in this lab. Point to capturing signals.
-3. Capturing signals: add the OpenAI connection, pick **5.6 Luna**, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
-4. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
-5. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them. If time remains, ask Halo on the **Dashboard** tab to chart those signals over time.
-6. If time remains, open the bonus: evaluator library → **Detect conversation signals**, test on one or two examples, save.
+1. Walk the overview: volume, dashboards, error analysis, topics, signals. Dashboards, error analysis, and signals each have one screenshot. Topics uses the map screenshot plus the Intent, Sentiment, and Issues screenshots beside the four insight prompts. Open the dashboards docs only long enough to show where cost and latency aggregates live, and say why those fields have to be on the trace.
+2. Error analysis: run `npm run langfuse:seed:error-analysis` once, queue the last 20 in `error analysis` with `open coding` (Text) and `pass or fail` (Categorical), mark pass or fail, write the notes, ask Halo to find clusters, compare them with the rough list on the page, ask Halo to create categorical scores for those clusters, assign them on a second pass, ask Halo for the frequency dashboard, then land the three decisions and read the more specific prompt under them. Do not publish it in this lab. Point to topics.
+3. Topics: add the OpenAI connection, run `npm run langfuse:seed:topics` once, open the empty Topics page, click **Set up topics**, keep the four facets and recommended models, filter **Query** to `tags:topics-seed`, keep sampling at 100%, review the matching-trace count, and click **Start analyzing**. Compare Treemap and Scatter, then use **Open in Tracing**. Investigate laptop printing as missing context, frustration as a lead-in to disagreement and all-caps scores, repeated failed troubleshooting as a prompt fix, and mismatched searches that did not change the answer. Do not publish the laptop prompt. If time remains, ask Halo to open one issue group and point at the step that caused it. Point to capturing signals.
+4. Capturing signals: reuse the OpenAI connection, pick **5.6 Luna**, create **Detect User Disagreement** on a production root observation, map both variables, test, create, and execute.
+5. Create **Detect User Frustration (ALL CAPS)** on the same root, test, create, and execute.
+6. Send one disagreement turn and one ALL-CAPS turn. In **Tracing**, filter by the evaluator score to find them. If time remains, ask Halo on the **Dashboard** tab to chart those signals over time.
+7. If time remains, open the bonus: evaluator library → **Detect conversation signals**, test on one or two examples, save.
 
 ## Watch for
 
-- Re-running the error-analysis seed. Each run mints new trace IDs.
+- Re-running the error-analysis seed or the topics seed. Each run mints new trace IDs.
+- Treating a topics tile name or count as exact. The groups are close to deterministic. A model names and describes them afterward.
+- Publishing the laptop prompt in this lab. The prompt published in 07 is the error-analysis one.
+- Saving a map with an empty matching-trace count. Check the seed, the filter, and the last 7 days first.
+- Treating a **PAUSED** map as if it were analyzing new traces.
+- Narrowing the topics filter on this project until the seeded traces drop out. It traces one agent. A broad or empty filter is the setup.
 - Treating the overview's dashboard link as a configuration step. The signals section is where Halo builds a chart of the scores.
 - Skipping the reading in error analysis and jumping straight to evaluator templates.
 - Starting the disagreement judge with an empty model list. That list is the project's LLM connections.
